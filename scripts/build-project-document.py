@@ -65,6 +65,8 @@ def inline(text):
     result = html.escape(text)
     result = re.sub(r'\*\*(.+?)\*\*', r'<b>\1</b>', result)
     result = re.sub(r'`([^`]+)`', r'<font color="#325E47">\1</font>', result)
+    result = re.sub(r'\[([^\]]+)\]\((https?://[^\s)]+)\)',
+                    r'<link href="\2" color="#325E47"><u>\1</u></link>', result)
     return result
 
 
@@ -78,7 +80,7 @@ def page_art(canvas, doc):
     canvas.line(LEFT, PAGE_H - 44, PAGE_W - RIGHT, PAGE_H - 44)
     canvas.line(LEFT, 35, PAGE_W - RIGHT, 35)
     canvas.setFont('NotoSC', 7.8)
-    canvas.drawString(LEFT, 22, '本地原型说明  ·  软件验证不等于科学审定或教学成效')
+    canvas.drawString(LEFT, 22, '在线演示版说明  ·  软件验证不等于科学审定或教学成效')
     canvas.drawRightString(PAGE_W - RIGHT, 22, f'{doc.page:02d}')
     canvas.restoreState()
 
@@ -123,10 +125,19 @@ def cover_art(canvas, doc):
     p = Paragraph(summary, ParagraphStyle('coverbody', fontName='NotoSC', fontSize=11,
                                           leading=21, textColor=MUTED))
     p.wrap(WIDTH, 100)
-    p.drawOn(canvas, LEFT, 245)
+    p.drawOn(canvas, LEFT, 265)
+    canvas.setFont('NotoSC', 9.5)
+    canvas.setFillColor(GREEN)
+    for label, url, y in [
+        ('在线体验', 'https://runner-cpu.github.io/River-of-Life/', 236),
+        ('源码仓库', 'https://github.com/runner-cpu/River-of-Life', 215),
+    ]:
+        text = f'{label}  {url}'
+        canvas.drawString(LEFT, y, text)
+        canvas.linkURL(url, (LEFT, y - 3, LEFT + pdfmetrics.stringWidth(text, 'NotoSC', 9.5), y + 12), relative=0)
     canvas.setFillColor(colors.HexColor('#E9EFE2'))
     canvas.roundRect(LEFT, 122, WIDTH, 75, 7, fill=1, stroke=0)
-    p = Paragraph('当前版本：可运行、可验证的本地原型。<br/>专业审校、真实课堂研究、真机AR及正式参赛成片仍待完成。',
+    p = Paragraph('当前版本：已上线、可验证的科普教育原型。<br/>专业审校、真实课堂研究、真机AR及正式参赛成片仍待完成。',
                   ParagraphStyle('covernote', fontName='NotoSC', fontSize=10, leading=19, textColor=INK))
     p.wrap(WIDTH - 28, 60)
     p.drawOn(canvas, LEFT + 14, 143)

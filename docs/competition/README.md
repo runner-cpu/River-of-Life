@@ -2,6 +2,8 @@
 
 定位：优先科普教育／智慧教育，按需拓展至数字展陈、游戏交互和挑战杯／大创。更新时间：2026-10-30。本目录是准备材料，不是已经提交的报名文件。
 
+在线体验：[https://runner-cpu.github.io/River-of-Life/](https://runner-cpu.github.io/River-of-Life/)；源码仓库：[runner-cpu/River-of-Life](https://github.com/runner-cpu/River-of-Life)；[详细项目介绍PDF](../project-introduction.pdf)。网站可直接在浏览器访问，无需安装或注册。
+
 ## 建议主张
 
 **《生命长河》：用三维观察和证据探究，把“认识古生物”推进到“解释为什么”。**

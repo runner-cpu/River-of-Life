@@ -2,6 +2,10 @@
 
 《生命长河》是一座在浏览器运行的生命演化史科普馆。它面向小学高年级与初中阶段的课堂试用，让学习者沿八个纪元观察生命、阅读档案、纠正误区，再把结论与证据联系起来。目标年龄与活动时长是设计假设，尚待教师和学生试测。
 
+在线体验：[https://runner-cpu.github.io/River-of-Life/](https://runner-cpu.github.io/River-of-Life/)。浏览器直接访问，无需安装或注册。
+
+源码仓库：[runner-cpu/River-of-Life](https://github.com/runner-cpu/River-of-Life)；详细资料见[完整项目介绍](../project-introduction.md)与[PDF](../project-introduction.pdf)。网站已于2026年10月30日上线。
+
 ## 要解决的问题
 
 古生物科普容易停在“认出名字、记住体型”。生动的复原形象也容易被误当成全部得到证实的事实。作品因此同时呈现可交互模型、知识来源与解释任务，让学习者区分：看到了什么、资料说明什么、哪些推断仍需更多证据。

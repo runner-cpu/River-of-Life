@@ -2,12 +2,16 @@
 
 一个可在浏览器运行的生命演化史科普馆：沿八个纪元认识 48 个生命档案，通过三维观察、证据探究和对照实验练习解释。优先按科普教育／智慧教育作品准备，兼顾数字展陈与创新实践。
 
-**当前是可运行、可验证的本地原型，尚未达到原设计全部验收条件。** 已入库 13 个许可核验的外部三维模型，其余 35 个档案使用明确标注的原创结构示意。设计目标是至少 24 个合格模型；真实手机 AR、课堂用时研究与参赛成片尚待完成。详见 [交付状态](docs/delivery-status.md)。
+**在线体验：[https://runner-cpu.github.io/River-of-Life/](https://runner-cpu.github.io/River-of-Life/)**
+
+源码仓库：[runner-cpu/River-of-Life](https://github.com/runner-cpu/River-of-Life)。直接在浏览器打开网站，无需安装、注册或启动本地服务。
+
+**当前是已上线、可验证的科普教育原型，尚未达到原设计全部验收条件。** 已入库 13 个许可核验的外部三维模型，其余 35 个档案使用明确标注的原创结构示意。设计目标是至少 24 个合格模型；真实手机 AR、课堂用时研究与参赛成片尚待完成。详见 [交付状态](docs/delivery-status.md)。
 
 ## 详细项目资料
 
 - [详细项目介绍](docs/project-introduction.md)：产品定位、五种模式、证据活动、教学模型、架构、资产、验证、展示与路线。
-- [排版PDF](docs/project-introduction.pdf)：22页，含目录、章节书签和实际截图；对应2026年10月30日本地验证版本，部署进展另见下方发布说明。
+- [排版PDF](docs/project-introduction.pdf)：含可点击的网站与源码链接、目录、章节书签和实际截图；已补充2026年10月30日上线信息，软件测试保留当日本地验证快照。
 - [30维度复核](evidence/comprehensive-refinement.md)：问题、修改、证据与剩余缺口。
 
 当前版本使用Vite 6.4.5；103项单元测试、36项浏览器回归通过。页面侧栏的“使用指南”可按个人探索、证据活动、教师展示、实验比较选择路线。
@@ -97,10 +101,10 @@ npm run preview         # 预览 dist，通常为 http://localhost:4173
 
 ## 发布
 
-仓库：[runner-cpu/River-of-Life](https://github.com/runner-cpu/River-of-Life)。Pages目标地址：[runner-cpu.github.io/River-of-Life/](https://runner-cpu.github.io/River-of-Life/)。实际部署状态以仓库Actions中的`Publish museum`及GitHub Pages部署记录为准。
+网站已于2026年10月30日发布到GitHub Pages：[runner-cpu.github.io/River-of-Life/](https://runner-cpu.github.io/River-of-Life/)。部署状态可在仓库的[发布工作流](https://github.com/runner-cpu/River-of-Life/actions/workflows/pages.yml)查看。
 
 推送到`main`会自动执行依赖安装、单元测试、内容/模型/类型检查、生产构建和完整浏览器回归；全部成功后发布`dist/`。也可手动运行`Publish museum`。Pages构建方式需选择GitHub Actions；相对资源路径支持仓库子目录。失败运行的验证材料会保留14天，便于定位。
 
-项目介绍PDF与既有验收记录保留当时的验证快照；其中“尚未远程发布”描述的是该快照的阶段，不代表后续部署状态。
+项目介绍与交付状态已同步上线信息；既有验收报告和独立展示包保留生成时的验证快照，历史记录中的未发布描述不代表当前状态。
 
 设计依据保存在 [docs/design-spec.md](docs/design-spec.md)。当前实现选择与未完成项在 [docs/delivery-status.md](docs/delivery-status.md)，后续可按该清单继续补齐。
