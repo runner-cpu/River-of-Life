@@ -1,0 +1,16 @@
+* text=auto
+
+# Preserve binary documents and media exactly on Windows and CI.
+*.pdf binary
+*.glb binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.wasm binary
+
+# Preserve upstream release and license bytes.
+public/** -text
+public/licenses/** -whitespace
+public/models/LICENSE* -whitespace
+public/models/ATTRIBUTION.md -whitespace
+evidence/assets-next/** -text -whitespace

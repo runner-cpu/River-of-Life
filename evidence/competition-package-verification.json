@@ -1,0 +1,215 @@
+{
+  "checkedAt": "2026-10-30T10:58:30.487Z",
+  "packagePath": "output/competition/life-museum-2026-10-30T10-57-07-750Z",
+  "manifestFiles": 58,
+  "servedFiles": [
+    {
+      "path": "/",
+      "status": 200,
+      "bytes": 857
+    },
+    {
+      "path": "assets/icons-BhmOmOak.js",
+      "status": 200,
+      "bytes": 25190
+    },
+    {
+      "path": "assets/index-BUoRCzB2.css",
+      "status": 200,
+      "bytes": 79484
+    },
+    {
+      "path": "assets/index-Dxzw1dCl.js",
+      "status": 200,
+      "bytes": 294310
+    },
+    {
+      "path": "assets/model-viewer-CX3B7jIh.js",
+      "status": 200,
+      "bytes": 429197
+    },
+    {
+      "path": "assets/three-cTFEnWFH.js",
+      "status": 200,
+      "bytes": 602983
+    },
+    {
+      "path": "draco/draco_decoder.js",
+      "status": 200,
+      "bytes": 512465
+    },
+    {
+      "path": "draco/draco_decoder.wasm",
+      "status": 200,
+      "bytes": 192420
+    },
+    {
+      "path": "draco/draco_wasm_wrapper.js",
+      "status": 200,
+      "bytes": 58456
+    },
+    {
+      "path": "favicon.svg",
+      "status": 200,
+      "bytes": 328
+    },
+    {
+      "path": "index.html",
+      "status": 200,
+      "bytes": 857
+    },
+    {
+      "path": "licenses/CC-BY-4.0.txt",
+      "status": 200,
+      "bytes": 18657
+    },
+    {
+      "path": "licenses/draco-Apache-2.0.txt",
+      "status": 200,
+      "bytes": 13898
+    },
+    {
+      "path": "licenses/lucide-ISC.txt",
+      "status": 200,
+      "bytes": 880
+    },
+    {
+      "path": "licenses/model-viewer-Apache-2.0.txt",
+      "status": 200,
+      "bytes": 11358
+    },
+    {
+      "path": "licenses/three-MIT.txt",
+      "status": 200,
+      "bytes": 1081
+    },
+    {
+      "path": "models/ATTRIBUTION.md",
+      "status": 200,
+      "bytes": 8516
+    },
+    {
+      "path": "models/LICENSE-Quaternius.txt",
+      "status": 200,
+      "bytes": 376
+    },
+    {
+      "path": "models/LICENSE-Smithsonian.txt",
+      "status": 200,
+      "bytes": 600
+    },
+    {
+      "path": "models/anomalocaris.glb",
+      "status": 200,
+      "bytes": 1189604
+    },
+    {
+      "path": "models/apatosaurus.glb",
+      "status": 200,
+      "bytes": 380792
+    },
+    {
+      "path": "models/archaeopteryx.glb",
+      "status": 200,
+      "bytes": 711172
+    },
+    {
+      "path": "models/dimetrodon.glb",
+      "status": 200,
+      "bytes": 1597172
+    },
+    {
+      "path": "models/hallucigenia.glb",
+      "status": 200,
+      "bytes": 1827404
+    },
+    {
+      "path": "models/lystrosaurus.glb",
+      "status": 200,
+      "bytes": 1032188
+    },
+    {
+      "path": "models/mammoth.glb",
+      "status": 200,
+      "bytes": 848344
+    },
+    {
+      "path": "models/manifest.json",
+      "status": 200,
+      "bytes": 14497
+    },
+    {
+      "path": "models/megalodon.glb",
+      "status": 200,
+      "bytes": 543096
+    },
+    {
+      "path": "models/mosasaurus.glb",
+      "status": 200,
+      "bytes": 2018572
+    },
+    {
+      "path": "models/opabinia.glb",
+      "status": 200,
+      "bytes": 772360
+    },
+    {
+      "path": "models/stegosaurus.glb",
+      "status": 200,
+      "bytes": 423020
+    },
+    {
+      "path": "models/triceratops.glb",
+      "status": 200,
+      "bytes": 309680
+    },
+    {
+      "path": "models/tyrannosaurus.glb",
+      "status": 200,
+      "bytes": 336568
+    }
+  ],
+  "boundaries": [
+    {
+      "path": "/",
+      "method": "HEAD",
+      "status": 200,
+      "bytes": 0
+    },
+    {
+      "path": "/",
+      "method": "POST",
+      "status": 405,
+      "bytes": 0
+    },
+    {
+      "path": "/missing-file",
+      "method": "GET",
+      "status": 404,
+      "bytes": 9
+    },
+    {
+      "path": "/%2e%2e%2fREADME.md",
+      "method": "GET",
+      "status": 403,
+      "bytes": 0
+    },
+    {
+      "path": "/%2e%2e%5cREADME.md",
+      "method": "GET",
+      "status": 403,
+      "bytes": 0
+    }
+  ],
+  "html": {
+    "bytes": 16168,
+    "sha256": "35fa009a21351cd765e77976ccd07460596fb518a191c2fd41fb343e6975fa7b",
+    "staticCheck": "Four complete sections, UTF-8 and print CSS verified; browser file-URL preview was blocked by URL policy, so visual PDF/print pagination is unverified."
+  },
+  "archive": {
+    "bytes": 8720949,
+    "verifiedEntries": 58,
+    "sha256": "524c7fefa7679acda79d1d693196b694755870eba8f9ac77ca5d781dc3cc9d4c",
+    "path": "D:\\Programming\\Objects\\life\\output\\competition\\life-museum-education-2026-10-30.zip"
+  }
+}

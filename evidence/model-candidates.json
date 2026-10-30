@@ -1,0 +1,68 @@
+[
+  {
+    "speciesId": "parasaurolophus",
+    "url": "evidence/tmp/candidates/parasaurolophus.glb",
+    "source": "https://quaternius.com/packs/animateddinosaurs.html",
+    "author": "Quaternius",
+    "license": "CC0-1.0",
+    "triangles": 1412,
+    "bytes": 290992,
+    "animations": [
+      "Armature|Parasaurolophus_Attack",
+      "Armature|Parasaurolophus_Death",
+      "Armature|Parasaurolophus_Idle",
+      "Armature|Parasaurolophus_Jump",
+      "Armature|Parasaurolophus_Run",
+      "Armature|Parasaurolophus_Walk"
+    ],
+    "static": false,
+    "representation": "reconstruction",
+    "note": "作者提供的低多边形风格化属级复原；颜色、行为及跳跃动画不是化石证据。"
+  },
+  {
+    "speciesId": "velociraptor",
+    "url": "evidence/tmp/candidates/velociraptor.glb",
+    "source": "https://quaternius.com/packs/animateddinosaurs.html",
+    "author": "Quaternius",
+    "license": "CC0-1.0",
+    "triangles": 1248,
+    "bytes": 285792,
+    "animations": [
+      "Armature|Velociraptor_Attack",
+      "Armature|Velociraptor_Death",
+      "Armature|Velociraptor_Idle",
+      "Armature|Velociraptor_Jump",
+      "Armature|Velociraptor_Run",
+      "Armature|Velociraptor_Walk"
+    ],
+    "static": false,
+    "representation": "reconstruction",
+    "note": "作者提供的低多边形风格化属级复原；颜色、行为及跳跃动画不是化石证据。"
+  },
+  {
+    "speciesId": "thrinaxodon",
+    "url": "evidence/tmp/candidates/thrinaxodon.glb",
+    "source": "https://3d-api.si.edu/content/document/3d_package:e0ac6fea-5384-4787-9abc-cdfffec833c1/document.json",
+    "author": "Smithsonian Institution, National Museum of Natural History",
+    "license": "CC0-1.0",
+    "triangles": 20000,
+    "bytes": 717520,
+    "animations": [],
+    "static": true,
+    "representation": "fossil",
+    "note": "史密森尼 Thrinaxodon liorhinus 犬齿兽化石扫描；候补，尚未绑定正式物种。"
+  },
+  {
+    "speciesId": "diademodon",
+    "url": "evidence/tmp/candidates/diademodon.glb",
+    "source": "https://3d-api.si.edu/content/document/3d_package:6758ddb3-2eea-49ad-89e2-a2973e7143eb/document.json",
+    "author": "Smithsonian Institution, National Museum of Natural History",
+    "license": "CC0-1.0",
+    "triangles": 20000,
+    "bytes": 635276,
+    "animations": [],
+    "static": true,
+    "representation": "fossil",
+    "note": "史密森尼 Diademodon tetragonus 犬齿兽头骨扫描；候补，尚未绑定正式物种。"
+  }
+]

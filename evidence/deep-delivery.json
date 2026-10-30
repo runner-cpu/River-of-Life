@@ -1,0 +1,15 @@
+{
+  "completedAt": "2026-10-30T12:36:47.733Z",
+  "package": "output/competition/life-museum-2026-10-30T12-31-04-806Z",
+  "archive": "output/competition/life-museum-refined-2026-10-30.zip",
+  "archiveBytes": 9975517,
+  "archiveSha256": "4003da6ac6fe2660e85b7f35d16b6c450b1acb3c0b2ac606789a3bdbaccf430e",
+  "document": "output/pdf/life-museum-project-introduction.pdf",
+  "documentSource": "docs/project-introduction.md",
+  "audit": "evidence/comprehensive-refinement.md",
+  "preview": "http://127.0.0.1:4180/",
+  "unitTests": 103,
+  "e2eTests": 36,
+  "packageFilesVerified": 85,
+  "documentPages": 22
+}

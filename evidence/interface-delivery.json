@@ -1,0 +1,13 @@
+{
+  "createdAt": "2026-10-30T11:39:13.436Z",
+  "folder": "output/competition/life-museum-2026-10-30T11-37-08-352Z",
+  "archive": "output/competition/life-museum-layout-2026-10-30-1937.zip",
+  "archiveBytes": 9235946,
+  "archiveSha256": "8a9032c7112392a3c8de6cd9ca9bb959443ceaa896a8f41b623eb1ce4c8a1792",
+  "releaseContentSha256": "ce5f886b394d5141cf5881e75c97417824c1dac6b23791028702c8656b0e1284",
+  "packageManifestFilesVerified": 71,
+  "packageServerStatus": 200,
+  "packageServerIndexSha256": "fd15afcfdd548da0b759e7a4f413471a2658f980eda0f29300af72029d782e8f",
+  "preview": "http://127.0.0.1:4173/",
+  "packagePreview": "http://127.0.0.1:4180/"
+}

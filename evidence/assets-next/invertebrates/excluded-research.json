@@ -1,0 +1,49 @@
+[
+  {
+    "speciesId": "trilobite",
+    "status": "research-only; excluded from release after visual review",
+    "identity": "Dalmanites sp., OUMNH C.29611; Herefordshire Lagerstatte, Coalbrookdale Formation, Silurian Wenlock",
+    "representation": "fragmentary serial-tomography fossil and scientifically segmented internal soft parts; not a living Cambrian reconstruction",
+    "author": "Mark Sutton; Derek J Siveter; Richard Fortey; Derek E G Briggs; David J Siveter",
+    "source": "https://datadryad.org/dataset/doi:10.5061/dryad.n2z34tmvv",
+    "doi": "10.5061/dryad.n2z34tmvv",
+    "license": "CC0-1.0",
+    "licenseUrl": "https://spdx.org/licenses/CC0-1.0.html",
+    "mirror": "https://zenodo.org/records/5115268",
+    "download": "https://zenodo.org/records/5115268/files/Dalmanites_sp_VAXML.zip?download=1",
+    "sourceBytes": 130644763,
+    "sourceSha256": "63e9701e5bd695005c4adf4b07ca1c48b0c0672e710e4ef09a8ecac5a2afb09b",
+    "sourceObjects": 105,
+    "sourceTriangles": 10340884,
+    "candidateBytes": 1378544,
+    "candidateTriangles": 18314,
+    "candidateSha256": "4e302eed04766d0dbfae526219752f6dfdbfa7e486d05f76296e0a22e15c9fee",
+    "changes": "Imported 105 VAXML objects and binary STL coordinates with supplied segment colours; proportional per-object mesh simplification to budget; smooth normals; GLB serialization. No invented morphology.",
+    "exclusionReason": "Source is a fragmentary tomography fossil. Reducing 10,340,884 source triangles below 20k obscures the visible three-lobed anatomy and produces a poor general specimen-stage exhibit; licensed data retained for a future specialist CT showcase."
+  },
+  {
+    "speciesId": "meganeura",
+    "status": "excluded pending original author redistribution permission",
+    "download": "https://raw.githubusercontent.com/s010s/prehistoric-animal-museum/main/src/content/animals/meganeura/model/model.glb",
+    "claimedOriginal": "https://sketchfab.com/3d-models/meganeura-dinoraul-but-it-is-a-bit-accurate-1aaab4a72fbc42b4901d5f1dde12a281",
+    "uploader": "Nobilis the Palaeovespa (@nobilishornet)",
+    "claimedLicense": "CC-BY-4.0",
+    "conflictingUpstream": "https://www.renderosity.com/marketplace/products/88353/meganeuradr",
+    "exclusionReason": "Original uploader title explicitly references Dinoraul; original Dinoraul product has proprietary Standard/Extended licensing. Authority for uploader CC BY relicensing is unresolved. Root identified conflict; no purchase or contact attempted."
+  },
+  {
+    "speciesId": "anomalocaris",
+    "status": "research-only alternative dataset, unused",
+    "source": "https://osf.io/pqc4r/",
+    "title": "Supplemental Data for Raptorial appendages of the Cambrian apex predator Anomalocaris canadensis are built for soft prey and speed",
+    "problem": "Public OSF metadata node_license=null and no license relationship; sole zip is2,504,628,673 bytes and appendage research rather than a general whole-animal reconstruction. Not downloaded."
+  },
+  {
+    "speciesId": "trilobite",
+    "status": "blocked alternative route",
+    "source": "https://sketchfab.com/3d-models/064e595dc6a147aca9cdeb8aa6494999",
+    "identity": "Dipleura dekayi PRI68155",
+    "license": "CC0-1.0",
+    "problem": "Sketchfab metadata explicitly CC0 and isDownloadable=true; public /v3/models/uid/download returns HTTP401 Unauthorized; authentication not bypassed."
+  }
+]

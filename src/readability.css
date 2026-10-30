@@ -1,0 +1,43 @@
+/* Readable body copy and controls across the existing museum layout. */
+:root{--muted:#65775d}
+#main-content:focus{outline:none}
+.welcome>div>p,.section-heading p{font-size:14px;color:#65745f;line-height:1.85}
+.sidebar-intro,.nav-caption,.collection-progress,.offline-label{font-size:11px;color:#617158}
+.sidebar-journey p{font-size:12px;color:#67775e;line-height:1.85}
+.guide-quote p{font-size:13px;color:#52674a}
+.task-row{padding:13px 0}.task-row strong{font-size:13px;color:#40573a;line-height:1.6}.task-row small{font-size:11px;color:#67735a}.task-row small b{color:#766031}.task-row>b{font-size:12px;color:#4f6544}.task-row>b i{color:#728168}
+.chapter-completion>div:first-child{font-size:11px;color:#607153}.chapter-completion>small,.expedition-foot{font-size:10px;color:#67795b}
+.section-row>div>span{font-size:12px;color:#637358}.section-row .text-btn{font-size:12px;color:#4d6845}
+.chapter-node strong{font-size:12px;color:#66765b}.chapter-node small{font-size:10px;color:#6d7e60}.chapter-node b,.chapter-node em{font-size:10px;color:#637856}
+.resident-card h3{font-size:17px}.resident-card i{font-size:12px;color:#647457}.resident-detail{font-size:11px;color:#617253}.resident-tag{font-size:10px;color:#776331}
+.scene-note{font-size:12px;line-height:1.8;color:#64745a}
+.codex-card-copy>p{font-size:13px;color:#586c4d;line-height:1.85}.codex-card-copy>i{font-size:12px;color:#67765b}.codex-card-bottom{font-size:11px;color:#5c704f}.codex-era{font-size:10px;color:#5d7354}
+.codex-results{font-size:12px;color:#5b7051;margin:-7px 0 17px}
+.filter-tabs button{font-size:12px;min-height:40px}.model-actions .btn,.learning-actions .btn{min-height:42px}
+.model-load-status{position:absolute;inset:0;display:grid;place-content:center;gap:12px;text-align:center;background:#edf2e9;color:#48613d;font-size:13px;pointer-events:none;z-index:2}
+.model-load-status svg{margin:auto}.model-load-notice{padding:12px 14px;margin-top:12px;background:#edf2e5;border:1px solid #cedbc2;border-radius:6px;color:#425d39;font-size:12px;line-height:1.8}.model-load-notice .btn{margin-top:8px}
+.drawer-close,.drawer-backdrop{display:none}
+.save-review{display:grid;gap:16px}.save-review p{line-height:1.85}.save-review-actions{display:flex;gap:10px;flex-wrap:wrap}
+@media(max-width:1250px){.chapter-timeline{overflow-x:auto;grid-template-columns:repeat(8,minmax(108px,1fr));padding-bottom:16px}.section-row>div{flex-wrap:wrap;gap:6px 15px}}
+@media(max-width:760px){
+ body.menu-open{overflow:hidden}
+ .drawer-close{display:block;align-self:flex-end;padding:7px 0;font-size:12px;color:#385535;margin-top:-10px;margin-bottom:12px}
+ .drawer-backdrop:not([hidden]){display:block;position:fixed;inset:0;z-index:29;background:#203d3759;backdrop-filter:blur(2px)}
+ .sidebar{width:min(285px,calc(100vw - 44px))}
+ .welcome>div>p,.section-heading p{font-size:13px}
+ .section-row h2{font-size:16px}.section-row .text-btn{font-size:11px}.section-row>div>span{font-size:11px}
+ .task-row strong{font-size:14px}.task-row small{font-size:11px}.guide-quote p{font-size:13px}
+ .resident-card h3{font-size:18px}.resident-detail{font-size:12px}.scene-note{font-size:11px}
+ .codex-card h3{font-size:16px}.codex-card-copy>p{font-size:12px;line-height:1.8}.codex-card-copy>i{font-size:11px}.codex-card-bottom{font-size:10px;flex-wrap:wrap;gap:5px}.codex-era{font-size:9px}
+ .codex-search-tools select,.search-field input{font-size:12px;min-height:30px}.filter-tabs button{font-size:12px;padding:8px 11px}
+ .settings-actions .btn{font-size:12px;min-height:42px}.facts dd,.fact-block p{font-size:14px;line-height:1.85}
+ .sources a{font-size:13px}.provenance,.sources small{font-size:11px;line-height:1.8}
+}
+
+.lab-controls>p,.lab-details p{font-size:12px;color:#5b6d50;line-height:1.85}
+.lab-insight p{font-size:13px;color:#566b4c}.slider-label,.lab-legend{font-size:12px;color:#52684a}
+.lab-chart>.lab-chart-frame{display:grid;grid-template-columns:36px minmax(0,1fr);gap:9px 8px;margin-top:18px;align-items:stretch}
+.lab-chart-frame #gene-chart{width:100%;height:120px;margin:0;overflow:visible}
+.chart-y-labels{display:flex;flex-direction:column;justify-content:space-between;padding-top:5px;transform:translateY(6px);text-align:right}
+.chart-x-labels{grid-column:2;display:flex;justify-content:space-between}
+.chart-y-labels,.chart-x-labels{font-size:11px;color:#52684a;line-height:1.3}

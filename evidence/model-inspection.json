@@ -1,0 +1,177 @@
+{
+  "checkedAt": "2026-10-30T06:12:29.347Z",
+  "results": [
+    {
+      "name": "apatosaurus",
+      "animations": [
+        "Armature|Apatosaurus_Attack",
+        "Armature|Apatosaurus_Idle",
+        "Armature|Apatosaurus_Jump",
+        "Armature|Apatosaurus_Run",
+        "Armature|Apatosaurus_Walk",
+        "Armature|Stegosaurus_Death"
+      ],
+      "bounds": [
+        5.730568746049674,
+        11.23717269277647,
+        48.958421700211915
+      ],
+      "renderedTriangles": 1438
+    },
+    {
+      "name": "stegosaurus",
+      "animations": [
+        "Armature|Stegosaurus_Attack",
+        "Armature|Stegosaurus_Death",
+        "Armature|Stegosaurus_Idle",
+        "Armature|Stegosaurus_Jump",
+        "Armature|Stegosaurus_Run",
+        "Armature|Stegosaurus_Walk"
+      ],
+      "bounds": [
+        5.130961641960656,
+        10.41365628037797,
+        23.066936003302786
+      ],
+      "renderedTriangles": 2282
+    },
+    {
+      "name": "tyrannosaurus",
+      "animations": [
+        "Armature|TRex_Attack",
+        "Armature|TRex_Death",
+        "Armature|TRex_Idle",
+        "Armature|TRex_Jump",
+        "Armature|TRex_Run",
+        "Armature|TRex_Walk"
+      ],
+      "bounds": [
+        7.957717310436058,
+        14.858822198516847,
+        31.152877762740665
+      ],
+      "renderedTriangles": 1820
+    },
+    {
+      "name": "triceratops",
+      "animations": [
+        "Armature|Triceratops_Attack",
+        "Armature|Triceratops_Death",
+        "Armature|Triceratops_Idle",
+        "Armature|Triceratops_Jump",
+        "Armature|Triceratops_Run",
+        "Armature|Triceratops_Walk"
+      ],
+      "bounds": [
+        5.8481410279007715,
+        8.717621589737044,
+        20.832615825653573
+      ],
+      "renderedTriangles": 1332
+    },
+    {
+      "name": "archaeopteryx",
+      "animations": [],
+      "bounds": [
+        0.4950414272285227,
+        0.41003223421711743,
+        0.02753912830352783
+      ],
+      "renderedTriangles": 19999
+    },
+    {
+      "name": "mammoth",
+      "animations": [],
+      "bounds": [
+        1.9237340087890626,
+        3.4428072001009404,
+        5.081158902024159
+      ],
+      "renderedTriangles": 20000
+    },
+    {
+      "name": "megalodon",
+      "animations": [],
+      "bounds": [
+        0.12221869659423829,
+        0.145157958984375,
+        0.043450813293457034
+      ],
+      "renderedTriangles": 20000
+    },
+    {
+      "name": "anomalocaris",
+      "animations": [
+        "Idle"
+      ],
+      "bounds": [
+        1.27078500135571,
+        0.41967440044945403,
+        0.7442430110683653
+      ],
+      "renderedTriangles": 18999
+    },
+    {
+      "name": "hallucigenia",
+      "animations": [
+        "Idle"
+      ],
+      "bounds": [
+        0.03000932679450053,
+        0.011691263625929217,
+        0.013679688346163182
+      ],
+      "renderedTriangles": 19000
+    },
+    {
+      "name": "opabinia",
+      "animations": [
+        "Idle"
+      ],
+      "bounds": [
+        3.1787908614894604,
+        1.013669265542458,
+        1.0006474981451485
+      ],
+      "renderedTriangles": 4836
+    },
+    {
+      "name": "dimetrodon",
+      "animations": [
+        "Idle",
+        "Walk"
+      ],
+      "bounds": [
+        2.993489716425308,
+        1.6780735445951729,
+        0.4419971218089184
+      ],
+      "renderedTriangles": 18996
+    },
+    {
+      "name": "mosasaurus",
+      "animations": [
+        "Idle"
+      ],
+      "bounds": [
+        3.1885590684830176,
+        0.58068178565326,
+        0.9003518504360133
+      ],
+      "renderedTriangles": 18998
+    },
+    {
+      "name": "lystrosaurus",
+      "animations": [
+        "Idle"
+      ],
+      "bounds": [
+        0.7450158846172771,
+        1.0332267513707591,
+        2.808434319500078
+      ],
+      "renderedTriangles": 19000
+    }
+  ],
+  "errors": []
+}

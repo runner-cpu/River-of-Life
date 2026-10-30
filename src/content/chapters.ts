@@ -1,0 +1,78 @@
+import type { Chapter } from '../core/types';
+
+const sceneNote = '本厅汇集这一时段的不同生物，场景不表示它们在同一地点、同一时刻共存。';
+
+export const chapters: Chapter[] = [
+  {
+    id: 1, name: '前寒武纪', subtitle: 'THE FIRST SPARK', range: '约 35 亿—5.39 亿年前', startMya: 3500, endMya: 538.8,
+    title: '一束光，改写海洋',
+    description: `从微生物的光合作用，到海底舒展的柔软身体，生命的早期历史远比动物化石的历史漫长。${sceneNote}`,
+    question: '在骨骼出现以前，生命会留下怎样的证据？',
+    takeaway: '微生物改变环境，岩层与分子也能保存生命线索。',
+    event: '大氧化事件', eventDescription: '约 24 亿年前，大气中的氧开始显著累积。蓝细菌的长期产氧改变了地表化学环境，也给厌氧生物带来压力。',
+    environment: 'ocean', accent: '#7b9b8d', icon: 'Sparkles', cost: 0,
+  },
+  {
+    id: 2, name: '寒武纪', subtitle: 'BODIES IN BLOOM', range: '约 5.39 亿—4.85 亿年前', startMya: 538.8, endMya: 485.4,
+    title: '身体的万种可能',
+    description: `硬壳、复眼、抓握附肢与柔软叶足，让海洋出现新的生活方式；寒武纪辐射持续了数千万年。${sceneNote}`,
+    question: '一副新身体，能带来哪些新的生活方式？',
+    takeaway: '今天熟悉的身体结构，来自长期分化与不断试探。',
+    event: '寒武纪生命辐射', eventDescription: '多种动物类群在化石记录中变得丰富，捕食、防御和运动能力相互影响。这不是一夜之间完成的“爆炸”。',
+    environment: 'reef', accent: '#71979b', icon: 'Shell', cost: 150,
+  },
+  {
+    id: 3, name: '奥陶纪—泥盆纪', subtitle: 'TOWARD THE SHORE', range: '约 4.85 亿—3.59 亿年前', startMya: 485.4, endMya: 358.9,
+    title: '潮线之外',
+    description: `海中有颌鱼壮大，陆地上出现微小的分枝植物；肉鳍鱼的骨骼让我们看见水陆之间的过渡。${sceneNote}`,
+    question: '离开水面，需要先改变什么？',
+    takeaway: '登陆不是单一物种的一次跳跃，而是多个支系在不同环境中的长期演化。',
+    event: '晚泥盆世生态危机', eventDescription: '多次环境扰动与海洋缺氧重塑了海洋生态系统。不同生物受到的影响不同，不能把危机写成某一天的单一事件。',
+    environment: 'reef', accent: '#849a8c', icon: 'Waves', cost: 150,
+  },
+  {
+    id: 4, name: '石炭纪—二叠纪', subtitle: 'FORESTS AND FIRE', range: '约 3.59 亿—2.52 亿年前', startMya: 358.9, endMya: 251.9,
+    title: '森林之高，危机之深',
+    description: `煤沼中高大的孢子植物与巨型节肢动物令人惊叹，较干燥的内陆则成为合弓动物的重要舞台。${sceneNote}`,
+    question: '当熟悉的环境消失，体型与强壮还能保证生存吗？',
+    takeaway: '适应总与环境有关，繁盛的类群也会在快速变化中衰退。',
+    event: '二叠纪末大灭绝', eventDescription: '约 2.52 亿年前，强烈火山活动及相关的升温、海洋缺氧等变化导致多数海洋物种灭绝，陆地生态系统也遭受重创。',
+    environment: 'forest', accent: '#9a9673', icon: 'Trees', cost: 150,
+  },
+  {
+    id: 5, name: '三叠纪', subtitle: 'LIFE BEGINS AGAIN', range: '约 2.52 亿—2.01 亿年前', startMya: 251.9, endMya: 201.4,
+    title: '废墟上的新脚步',
+    description: `水龙兽、早期恐龙、鳄类近亲与翼龙走进重建中的生态系统；恐龙此时尚未独占陆地。${sceneNote}`,
+    question: '灾变之后，谁能抓住新的机会？',
+    takeaway: '幸存者与新支系共同重建生态，未来的优势并非早已注定。',
+    event: '三叠纪末更替', eventDescription: '约 2.01 亿年前的大规模火山活动与环境变化影响多种生物。许多陆生主龙类消失，为侏罗纪恐龙的扩展留下空间。',
+    environment: 'desert', accent: '#a18d70', icon: 'Mountain', cost: 150,
+  },
+  {
+    id: 6, name: '侏罗纪—白垩纪', subtitle: 'GIANTS AND FEATHERS', range: '约 2.01 亿—6600 万年前', startMya: 201.4, endMya: 66,
+    title: '巨影与羽翼',
+    description: `从侏罗纪的长颈巨龙到白垩纪的角龙与沧龙，巨型身体之外，羽毛也打开了另一种未来。${sceneNote}`,
+    question: '恐龙时代结束了，恐龙真的全都消失了吗？',
+    takeaway: '海生爬行动物不等于恐龙；鸟类则是延续至今的恐龙支系。',
+    event: '白垩纪末大灭绝', eventDescription: '约 6600 万年前的小行星撞击及随后急剧的环境变化，使非鸟恐龙、沧龙和菊石等消失。鸟类与许多其他支系幸存。',
+    environment: 'forest', accent: '#8b9578', icon: 'Feather', cost: 150,
+  },
+  {
+    id: 7, name: '古近纪—新近纪', subtitle: 'A WORLD OF MAMMALS', range: '6600 万—258 万年前', startMya: 66, endMya: 2.58,
+    title: '新的巨兽，新的家园',
+    description: `鲸类回到海洋，巨犀在陆地取食，非洲的人族开始留下双足行走的线索；本厅少数支系延续进入下一纪。${sceneNote}`,
+    question: '同属哺乳动物，能走出多少条不同的路？',
+    takeaway: '演化呈现分枝：相似环境能塑造相似外形，亲缘关系仍须看证据。',
+    event: '降温与草地扩展', eventDescription: '新生代气候经历长期波动与总体降温，森林、草地和海洋生态系统反复变化。生物分布、食物资源与适应也随之调整。',
+    environment: 'plain', accent: '#9d947f', icon: 'Leaf', cost: 150,
+  },
+  {
+    id: 8, name: '第四纪', subtitle: 'THE WORLD WE SHARE', range: '258 万年前至今', startMya: 2.58, endMya: 0,
+    title: '冰退之后，轮到我们',
+    description: `冰期与暖期交替，人类与许多巨兽相遇；晚近的岛屿灭绝让遥远的生命史连接到今天。${sceneNote}`,
+    question: '我们将给下一层岩石留下什么？',
+    takeaway: '人类也是生命树的一支，理解过去能帮助我们选择与其他生命共处的方式。',
+    event: '冰期、迁徙与人类影响', eventDescription: '气候摆动与人类活动共同影响第四纪生态系统。今天正式地质划分仍属于全新世；“人类世”尚不是正式地质世。',
+    environment: 'ice', accent: '#8e9ca3', icon: 'Snowflake', cost: 150,
+  },
+];

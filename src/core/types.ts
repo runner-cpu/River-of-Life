@@ -1,0 +1,42 @@
+export type Mode = 'journey' | 'codex' | 'dig' | 'quiz' | 'lab';
+export type Source = { title: string; url: string; level: 'A' | 'B' | 'C' | 'D'; checked: string; doi?: string; scope?: string };
+export type Species = {
+  id: string;
+  name: string;
+  latin: string;
+  chapter: number;
+  period: string;
+  startMya: number;
+  endMya: number;
+  lengthM: number;
+  sizeLabel: string;
+  taxonomy: string;
+  diet: string;
+  habitat: string;
+  definition: string;
+  fact: string;
+  misconception: string;
+  extinction: string;
+  sources: Source[];
+  rarity: 'common' | 'rare' | 'star';
+  cost: number;
+  color: string;
+  form: 'cell' | 'stromatolite' | 'branching-plant' | 'lycopsid' | 'frond' | 'dickinsonia' | 'trilobite' | 'anomalocaris' | 'opabinia' | 'worm' | 'wiwaxia' | 'fish' | 'ammonite' | 'tetrapod' | 'dragonfly' | 'dimetrodon' | 'shark' | 'reptile' | 'pterosaur' | 'sauropod' | 'stegosaur' | 'theropod' | 'triceratops' | 'bird' | 'mammal' | 'mammoth' | 'human';
+  status: 'published' | 'review';
+};
+export type Chapter = {
+  id: number; name: string; subtitle: string; range: string; startMya: number; endMya: number;
+  title: string; description: string; question: string; takeaway: string;
+  event: string; eventDescription: string; environment: 'ocean' | 'reef' | 'forest' | 'desert' | 'plain' | 'ice';
+  accent: string; icon: string; cost: number;
+};
+export type Question = { id: string; speciesId: string; chapter: number; prompt: string; options: string[]; correct: number; explanation: string; field: 'definition' | 'fact' | 'misconception' | 'diet' | 'habitat' | 'period' };
+export type ModelAsset = { speciesId: string; url: string; source: string; author: string; license: string; licenseUrl?: string; title?: string; modifications?: string; derivativeSource?: string; triangles: number; bytes: number; animations: string[]; static: boolean; representation: 'reconstruction' | 'fossil' | 'diagram'; note: string };
+export type Progress = {
+  version: 1; points: number; totalEarned: number; chapter: number;
+  unlockedChapters: number[]; completedChapters: number[];
+  observed: string[]; read: string[]; collected: string[]; compared: string[];
+  answered: string[]; mistakes: string[]; excavated: number[]; events: string[];
+  badges: string[]; settings: { sound: boolean; reducedMotion: boolean; quality: 'auto' | 'high' | 'low'; projection: boolean };
+  updatedAt: string;
+};

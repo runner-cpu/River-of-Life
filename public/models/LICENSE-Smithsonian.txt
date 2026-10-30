@@ -1,0 +1,5 @@
+Smithsonian Open Access 3D assets: CC0. Source bucket: https://smithsonian-open-access.s3.us-west-2.amazonaws.com/
+License evidence: https://registry.opendata.aws/smithsonian-open-access/
+Registry source: https://raw.githubusercontent.com/awslabs/open-data-registry/main/datasets/smithsonian-open-access.yaml
+Official policy: https://www.si.edu/openaccess/faq (HTTP 403 verification page in this environment).
+GLB source document URLs and exact representation notes are in manifest.json. Draco geometry decoded; Smithsonian document model orientations retained; millimetres converted to metres.

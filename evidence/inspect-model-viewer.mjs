@@ -1,0 +1,14 @@
+import { chromium } from 'playwright';
+import fs from 'node:fs';
+const browser = await chromium.launch({headless:true,args:['--use-gl=angle','--use-angle=swiftshader','--enable-unsafe-swiftshader']});
+const page = await browser.newPage({viewport:{width:1560,height:1300}});
+const errors=[]; page.on('pageerror',e=>errors.push(e.message));
+const originalPose=process.argv.includes('--original-pose'), suffix=originalPose?'-original-pose':'';
+await page.goto(`http://127.0.0.1:5174/evidence/model-viewer-inspection.html${originalPose?'?original-pose':''}`);
+await page.waitForFunction(()=>window.ready || window.inspectionError,null,{timeout:30000}).catch(async error=>{console.error(JSON.stringify({error:error.message,errors,completed:await page.evaluate(()=>window.results)}));await browser.close();throw error;});
+await page.screenshot({path:`evidence/model-viewer-contact-sheet${suffix}.png`,fullPage:true});
+const results=await page.evaluate(()=>window.results);
+fs.writeFileSync(`evidence/model-viewer-inspection${suffix}.json`,JSON.stringify({checkedAt:new Date().toISOString(),results,errors},null,2));
+console.log(JSON.stringify({models:results.length,invisible:results.filter(row=>row.opaquePixelRatio<=.005).map(row=>({id:row.id,opaquePixelRatio:row.opaquePixelRatio})),errors}));
+await browser.close();
+if(errors.length) process.exitCode=1;

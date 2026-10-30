@@ -1,0 +1,60 @@
+[
+  {
+    "id": "anomalocaris",
+    "input": "evidence\\assets-next\\invertebrates\\anomalocaris-museum.glb",
+    "output": "evidence\\assets-next\\invertebrates\\anomalocaris.glb",
+    "sourceBytes": 1811652,
+    "sourceTriangles": [
+      134666
+    ],
+    "triangles": [
+      18999
+    ],
+    "bytes": 1189604,
+    "animations": [
+      "Idle"
+    ],
+    "extensions": [],
+    "textureChange": "512px JPEG quality 82"
+  },
+  {
+    "id": "hallucigenia",
+    "input": "evidence\\assets-next\\invertebrates\\hallucigenia-museum.glb",
+    "output": "evidence\\assets-next\\invertebrates\\hallucigenia.glb",
+    "sourceBytes": 5640768,
+    "sourceTriangles": [
+      50396
+    ],
+    "triangles": [
+      19000
+    ],
+    "bytes": 1826832,
+    "animations": [
+      "Idle"
+    ],
+    "extensions": [
+      "KHR_materials_ior",
+      "KHR_materials_specular"
+    ]
+  },
+  {
+    "id": "opabinia",
+    "input": "evidence\\assets-next\\invertebrates\\opabinia-museum.glb",
+    "output": "evidence\\assets-next\\invertebrates\\opabinia.glb",
+    "sourceBytes": 1444496,
+    "sourceTriangles": [
+      4836
+    ],
+    "triangles": [
+      4836
+    ],
+    "bytes": 772144,
+    "animations": [
+      "Idle"
+    ],
+    "extensions": [
+      "KHR_materials_ior",
+      "KHR_materials_specular"
+    ]
+  }
+]

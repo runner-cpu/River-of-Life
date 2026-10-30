@@ -1,0 +1,14 @@
+{
+  "document": "output/pdf/life-museum-project-introduction.pdf",
+  "source": "docs/project-introduction.md",
+  "pages": 22,
+  "sections": 20,
+  "markdownCharacters": 13427,
+  "sourceSha256": "32d46d85c5b51c4f15b480e55a1d548bbd5df0170bec8784bd5abf12e09db621",
+  "pdfSha256": "bc60976e6bc57f539e8a74d619d3532807c8319387c14ed93091ee1e4387e30c",
+  "pdfBytes": 490102,
+  "releaseContentSha256": "784388bd0d9579fe7144deb0b19eb6163c91ca6f0fe89303d800e71f6d8139ee",
+  "allSourceTextExtracted": true,
+  "visualReview": "All 22 pages rendered; all page layouts reviewed in contact sheets; enlarged checks for mobile figure, model equation, evidence table, operation commands and source index. Final formula-page wording rerendered. No clipping or missing glyphs observed.",
+  "format": "PDF with embedded Chinese font, linked contents and 20 section bookmarks; editable Markdown companion."
+}

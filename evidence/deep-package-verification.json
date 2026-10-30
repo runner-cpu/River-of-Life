@@ -1,0 +1,13 @@
+{
+  "verifiedAt": "2026-10-30T12:36:10.417Z",
+  "package": "output/competition/life-museum-2026-10-30T12-31-04-806Z",
+  "releaseContentSha256": "784388bd0d9579fe7144deb0b19eb6163c91ca6f0fe89303d800e71f6d8139ee",
+  "allManifestHashesVerified": true,
+  "servedIndexSha256": "93c05684611fb3a4f38db68f3d196670d95be26dc8c30e375ffa88f15c11b49f",
+  "servedUrl": "http://127.0.0.1:4180/",
+  "browserScript": "./assets/index-B7xP_END.js",
+  "browserObservation": "Current four-route guide visible after normal cache update/reload; no saved data cleared.",
+  "documentPages": 22,
+  "documentBytes": 490102,
+  "e2ePassing": 36
+}

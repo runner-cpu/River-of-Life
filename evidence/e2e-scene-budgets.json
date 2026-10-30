@@ -1,0 +1,141 @@
+{
+  "measuredAt": "2026-10-30T12:13:20.487Z",
+  "kind": "structural render counts only; headless FPS deliberately excluded",
+  "triangleBudget": 150000,
+  "scenes": [
+    {
+      "chapter": 1,
+      "name": "前寒武纪",
+      "triangles": 71280,
+      "drawCalls": 237,
+      "hotspots": [
+        "cyanobacteria",
+        "stromatolites",
+        "dickinsonia",
+        "charnia",
+        "spriggina",
+        "kimberella"
+      ],
+      "loadedSceneModels": []
+    },
+    {
+      "chapter": 2,
+      "name": "寒武纪",
+      "triangles": 87651,
+      "drawCalls": 171,
+      "hotspots": [
+        "trilobite",
+        "anomalocaris",
+        "opabinia",
+        "pikaia",
+        "wiwaxia",
+        "hallucigenia"
+      ],
+      "loadedSceneModels": [
+        "anomalocaris",
+        "hallucigenia",
+        "opabinia"
+      ]
+    },
+    {
+      "chapter": 3,
+      "name": "奥陶纪—泥盆纪",
+      "triangles": 53208,
+      "drawCalls": 171,
+      "hotspots": [
+        "dunkleosteus",
+        "cephalaspis",
+        "tiktaalik",
+        "agoniatites",
+        "eurypterid",
+        "cooksonia"
+      ],
+      "loadedSceneModels": []
+    },
+    {
+      "chapter": 4,
+      "name": "石炭纪—二叠纪",
+      "triangles": 80316,
+      "drawCalls": 184,
+      "hotspots": [
+        "eryops",
+        "meganeura",
+        "dimetrodon",
+        "helicoprion",
+        "arthropleura",
+        "lepidodendron"
+      ],
+      "loadedSceneModels": [
+        "dimetrodon"
+      ]
+    },
+    {
+      "chapter": 5,
+      "name": "三叠纪",
+      "triangles": 84176,
+      "drawCalls": 144,
+      "hotspots": [
+        "lystrosaurus",
+        "coelophysis",
+        "nothosaurus",
+        "eudimorphodon",
+        "postosuchus",
+        "plateosaurus"
+      ],
+      "loadedSceneModels": [
+        "lystrosaurus"
+      ]
+    },
+    {
+      "chapter": 6,
+      "name": "侏罗纪—白垩纪",
+      "triangles": 74632,
+      "drawCalls": 101,
+      "hotspots": [
+        "apatosaurus",
+        "stegosaurus",
+        "tyrannosaurus",
+        "triceratops",
+        "mosasaurus",
+        "archaeopteryx"
+      ],
+      "loadedSceneModels": [
+        "apatosaurus",
+        "stegosaurus",
+        "tyrannosaurus",
+        "triceratops",
+        "mosasaurus"
+      ]
+    },
+    {
+      "chapter": 7,
+      "name": "古近纪—新近纪",
+      "triangles": 63786,
+      "drawCalls": 145,
+      "hotspots": [
+        "hyracotherium",
+        "megalodon",
+        "paraceratherium",
+        "basilosaurus",
+        "australopithecus",
+        "deinotherium"
+      ],
+      "loadedSceneModels": []
+    },
+    {
+      "chapter": 8,
+      "name": "第四纪",
+      "triangles": 45376,
+      "drawCalls": 97,
+      "hotspots": [
+        "homo-sapiens",
+        "neanderthal",
+        "mammoth",
+        "smilodon",
+        "dodo",
+        "giant-deer"
+      ],
+      "loadedSceneModels": []
+    }
+  ]
+}

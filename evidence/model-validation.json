@@ -1,0 +1,194 @@
+{
+  "checkedAt": "2026-10-30T12:04:21.618Z",
+  "budgets": {
+    "maxTriangles": 20000,
+    "maxBytes": 2097152
+  },
+  "results": [
+    {
+      "speciesId": "apatosaurus",
+      "triangles": 1438,
+      "bytes": 380792,
+      "animations": [
+        "Armature|Apatosaurus_Attack",
+        "Armature|Apatosaurus_Idle",
+        "Armature|Apatosaurus_Jump",
+        "Armature|Apatosaurus_Run",
+        "Armature|Apatosaurus_Walk",
+        "Armature|Stegosaurus_Death"
+      ],
+      "static": false,
+      "embeddedImages": 0,
+      "externalResources": 0,
+      "requiredExtensions": [],
+      "sha256": "5ee493026e91d8f476ee1163b20b24a042f9b254b21c35b425bde005195bba0a"
+    },
+    {
+      "speciesId": "stegosaurus",
+      "triangles": 2282,
+      "bytes": 423020,
+      "animations": [
+        "Armature|Stegosaurus_Attack",
+        "Armature|Stegosaurus_Death",
+        "Armature|Stegosaurus_Idle",
+        "Armature|Stegosaurus_Jump",
+        "Armature|Stegosaurus_Run",
+        "Armature|Stegosaurus_Walk"
+      ],
+      "static": false,
+      "embeddedImages": 0,
+      "externalResources": 0,
+      "requiredExtensions": [],
+      "sha256": "866e70b637d95bd41d6e6e3d2eee571bf72b3be67e8ea3d90fe92fa8415ad031"
+    },
+    {
+      "speciesId": "tyrannosaurus",
+      "triangles": 1820,
+      "bytes": 336568,
+      "animations": [
+        "Armature|TRex_Attack",
+        "Armature|TRex_Death",
+        "Armature|TRex_Idle",
+        "Armature|TRex_Jump",
+        "Armature|TRex_Run",
+        "Armature|TRex_Walk"
+      ],
+      "static": false,
+      "embeddedImages": 0,
+      "externalResources": 0,
+      "requiredExtensions": [],
+      "sha256": "db9ac047e63a20bd1f33dd3094415fbca2c003ac08b08bd92d4a998f8659061d"
+    },
+    {
+      "speciesId": "triceratops",
+      "triangles": 1332,
+      "bytes": 309680,
+      "animations": [
+        "Armature|Triceratops_Attack",
+        "Armature|Triceratops_Death",
+        "Armature|Triceratops_Idle",
+        "Armature|Triceratops_Jump",
+        "Armature|Triceratops_Run",
+        "Armature|Triceratops_Walk"
+      ],
+      "static": false,
+      "embeddedImages": 0,
+      "externalResources": 0,
+      "requiredExtensions": [],
+      "sha256": "e55739c34295eca3edbbbdf3c22fb63f08d8c5498c4ff38bf52cff76edb6a2b4"
+    },
+    {
+      "speciesId": "archaeopteryx",
+      "triangles": 19999,
+      "bytes": 711172,
+      "animations": [],
+      "static": true,
+      "embeddedImages": 2,
+      "externalResources": 0,
+      "requiredExtensions": [],
+      "sha256": "0332f1c65dd7066e634e8b9a825b107c632d6b9510fd3102e0546b1ed37f9d35"
+    },
+    {
+      "speciesId": "mammoth",
+      "triangles": 20000,
+      "bytes": 848344,
+      "animations": [],
+      "static": true,
+      "embeddedImages": 1,
+      "externalResources": 0,
+      "requiredExtensions": [],
+      "sha256": "74937b6470d9cc33e2ad0238125b3b69db2e83e55d3074081de0dcfdfee237f2"
+    },
+    {
+      "speciesId": "megalodon",
+      "triangles": 20000,
+      "bytes": 543096,
+      "animations": [],
+      "static": true,
+      "embeddedImages": 2,
+      "externalResources": 0,
+      "requiredExtensions": [],
+      "sha256": "25342d9fd0d84efc147838684c376fec201f1e7282c897ca66b0c492a53a1090"
+    },
+    {
+      "speciesId": "anomalocaris",
+      "triangles": 18999,
+      "bytes": 1189604,
+      "animations": [
+        "Idle"
+      ],
+      "static": false,
+      "embeddedImages": 3,
+      "externalResources": 0,
+      "requiredExtensions": [],
+      "sha256": "6289f0f0fa8d6e7203d4f85839dec78b32682fbea3af7b0fa92bb8a64ea05537"
+    },
+    {
+      "speciesId": "hallucigenia",
+      "triangles": 19000,
+      "bytes": 1827404,
+      "animations": [
+        "Idle"
+      ],
+      "static": false,
+      "embeddedImages": 3,
+      "externalResources": 0,
+      "requiredExtensions": [],
+      "sha256": "84c761cd3eb485f18006d64164ea78fa417baf8c30f98e4868b70b143b93f339"
+    },
+    {
+      "speciesId": "opabinia",
+      "triangles": 4836,
+      "bytes": 772360,
+      "animations": [
+        "Idle"
+      ],
+      "static": false,
+      "embeddedImages": 2,
+      "externalResources": 0,
+      "requiredExtensions": [],
+      "sha256": "952c15bd13bcfcce63f24cacf36cf2ec926b251677dd9be87691a08bdd125165"
+    },
+    {
+      "speciesId": "dimetrodon",
+      "triangles": 18996,
+      "bytes": 1597172,
+      "animations": [
+        "Idle",
+        "Walk"
+      ],
+      "static": false,
+      "embeddedImages": 2,
+      "externalResources": 0,
+      "requiredExtensions": [],
+      "sha256": "83dd3e22e7296310ef299766747d14ed73aeaaa6a9df68da27d586893cad6f9b"
+    },
+    {
+      "speciesId": "mosasaurus",
+      "triangles": 18998,
+      "bytes": 2018572,
+      "animations": [
+        "Idle"
+      ],
+      "static": false,
+      "embeddedImages": 4,
+      "externalResources": 0,
+      "requiredExtensions": [],
+      "sha256": "8f24a95e1da246d2055a15dccd5bae8dc37bb82444b5ec8912e7af32e33ccef4"
+    },
+    {
+      "speciesId": "lystrosaurus",
+      "triangles": 19000,
+      "bytes": 1032188,
+      "animations": [
+        "Idle"
+      ],
+      "static": false,
+      "embeddedImages": 1,
+      "externalResources": 0,
+      "requiredExtensions": [],
+      "sha256": "67a60f59efb66447342d2a83fd559a61b2d07ad7d2e145a2c1f867204fe65abd"
+    }
+  ],
+  "errors": []
+}

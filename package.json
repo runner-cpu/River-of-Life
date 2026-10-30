@@ -1,0 +1,32 @@
+{
+  "name": "river-of-life",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 127.0.0.1",
+    "build": "npm run validate:species && npm run validate:models && tsc --noEmit && vite build",
+    "preview": "vite preview --host 127.0.0.1",
+    "test": "vitest run",
+    "test:e2e": "playwright test",
+    "validate:species": "tsx scripts/validate-species.ts",
+    "validate:models": "tsx scripts/validate-models.ts",
+    "verify:build": "tsx scripts/verify-build.ts",
+    "package:competition": "tsx scripts/package-competition.ts"
+  },
+  "dependencies": {
+    "@google/model-viewer": "4.4.0",
+    "lucide": "^0.468.0",
+    "three": "0.183.2"
+  },
+  "devDependencies": {
+    "@gltf-transform/cli": "^4.2.1",
+    "@playwright/test": "^1.56.1",
+    "@types/node": "^24.0.0",
+    "@types/three": "^0.183.0",
+    "tsx": "^4.20.0",
+    "typescript": "^5.9.3",
+    "vite": "6.4.5",
+    "vitest": "4.1.12"
+  }
+}

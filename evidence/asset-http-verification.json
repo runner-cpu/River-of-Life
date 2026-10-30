@@ -1,0 +1,122 @@
+{
+  "checkedAt": "2026-10-30T03:53:53.612717+00:00",
+  "results": [
+    {
+      "name": "quaternius-page",
+      "url": "https://quaternius.com/packs/animateddinosaurs.html",
+      "finalUrl": "https://quaternius.com/packs/animateddinosaurs.html",
+      "status": 200,
+      "bytes": 15102,
+      "contentType": "text/html; charset=utf-8",
+      "isGLB": false
+    },
+    {
+      "name": "smithsonian-license",
+      "url": "https://registry.opendata.aws/smithsonian-open-access/",
+      "finalUrl": "https://registry.opendata.aws/smithsonian-open-access/",
+      "status": 200,
+      "bytes": 6663,
+      "contentType": "text/html",
+      "isGLB": false
+    },
+    {
+      "name": "smithsonian-license-yaml",
+      "url": "https://raw.githubusercontent.com/awslabs/open-data-registry/main/datasets/smithsonian-open-access.yaml",
+      "finalUrl": "https://raw.githubusercontent.com/awslabs/open-data-registry/main/datasets/smithsonian-open-access.yaml",
+      "status": 200,
+      "bytes": 1274,
+      "contentType": "text/plain; charset=utf-8",
+      "isGLB": false
+    },
+    {
+      "name": "archaeopteryx-document",
+      "url": "https://3d-api.si.edu/content/document/3d_package:391660da-7c49-499c-91f5-88a298686c09/document.json",
+      "finalUrl": "https://3d-api.si.edu/content/document/3d_package:391660da-7c49-499c-91f5-88a298686c09/document.json",
+      "status": 200,
+      "bytes": 10730,
+      "contentType": "application/json;charset=utf-8",
+      "isGLB": false
+    },
+    {
+      "name": "archaeopteryx-download",
+      "url": "https://smithsonian-open-access.s3.us-west-2.amazonaws.com/3d/391660da-7c49-499c-91f5-88a298686c09/PAL509743-20k-thumb.glb",
+      "finalUrl": "https://smithsonian-open-access.s3.us-west-2.amazonaws.com/3d/391660da-7c49-499c-91f5-88a298686c09/PAL509743-20k-thumb.glb",
+      "status": 200,
+      "bytes": 160256,
+      "contentType": "application/octet-stream",
+      "isGLB": true
+    },
+    {
+      "name": "mammoth-document",
+      "url": "https://3d-api.si.edu/content/document/3d_package:341c96cd-f967-4540-8ed1-d3fc56d31f12/document.json",
+      "finalUrl": "https://3d-api.si.edu/content/document/3d_package:341c96cd-f967-4540-8ed1-d3fc56d31f12/document.json",
+      "status": 200,
+      "bytes": 22436,
+      "contentType": "application/json;charset=utf-8",
+      "isGLB": false
+    },
+    {
+      "name": "mammoth-download",
+      "url": "https://smithsonian-open-access.s3.us-west-2.amazonaws.com/3d/341c96cd-f967-4540-8ed1-d3fc56d31f12/woolly-mammoth-20k-512-thumb.glb",
+      "finalUrl": "https://smithsonian-open-access.s3.us-west-2.amazonaws.com/3d/341c96cd-f967-4540-8ed1-d3fc56d31f12/woolly-mammoth-20k-512-thumb.glb",
+      "status": 200,
+      "bytes": 214776,
+      "contentType": "application/octet-stream",
+      "isGLB": true
+    },
+    {
+      "name": "megalodon-document",
+      "url": "https://3d-api.si.edu/content/document/3d_package:106e215b-a829-40c6-8e4d-dfba37350f36/document.json",
+      "finalUrl": "https://3d-api.si.edu/content/document/3d_package:106e215b-a829-40c6-8e4d-dfba37350f36/document.json",
+      "status": 200,
+      "bytes": 13102,
+      "contentType": "application/json;charset=utf-8",
+      "isGLB": false
+    },
+    {
+      "name": "megalodon-download",
+      "url": "https://smithsonian-open-access.s3.us-west-2.amazonaws.com/3d/106e215b-a829-40c6-8e4d-dfba37350f36/carcharodon-megalodon-(usnm-v-10333)-20k-512-thumb.glb",
+      "finalUrl": "https://smithsonian-open-access.s3.us-west-2.amazonaws.com/3d/106e215b-a829-40c6-8e4d-dfba37350f36/carcharodon-megalodon-(usnm-v-10333)-20k-512-thumb.glb",
+      "status": 200,
+      "bytes": 107236,
+      "contentType": "application/octet-stream",
+      "isGLB": true
+    },
+    {
+      "name": "Apatosaurus-download",
+      "url": "https://drive.google.com/uc?export=download&id=1v3ZGBrJjA_zGQN6s-9NyZ1eYqbPOYDC2",
+      "finalUrl": "https://drive.usercontent.google.com/download?id=1v3ZGBrJjA_zGQN6s-9NyZ1eYqbPOYDC2&export=download",
+      "status": 200,
+      "bytes": 2040,
+      "contentType": "text/html; charset=utf-8",
+      "isGLB": false
+    },
+    {
+      "name": "Stegosaurus-download",
+      "url": "https://drive.google.com/uc?export=download&id=1MS0H-3g1tYRiMxmE0bJIGudG56y_h8G2",
+      "finalUrl": "https://drive.usercontent.google.com/download?id=1MS0H-3g1tYRiMxmE0bJIGudG56y_h8G2&export=download",
+      "status": 200,
+      "bytes": 2040,
+      "contentType": "text/html; charset=utf-8",
+      "isGLB": false
+    },
+    {
+      "name": "Trex-download",
+      "url": "https://drive.google.com/uc?export=download&id=1JvVm-GNg4nD4MMWRxhsYu1AaxprOIUmy",
+      "finalUrl": "https://drive.usercontent.google.com/download?id=1JvVm-GNg4nD4MMWRxhsYu1AaxprOIUmy&export=download",
+      "status": 200,
+      "bytes": 2040,
+      "contentType": "text/html; charset=utf-8",
+      "isGLB": false
+    },
+    {
+      "name": "Triceratops-download",
+      "url": "https://drive.google.com/uc?export=download&id=1M_CsgQ-e-H7XWBTNlTCRpP6RBe7cM-4A",
+      "finalUrl": "https://drive.usercontent.google.com/download?id=1M_CsgQ-e-H7XWBTNlTCRpP6RBe7cM-4A&export=download",
+      "status": 200,
+      "bytes": 2040,
+      "contentType": "text/html; charset=utf-8",
+      "isGLB": false
+    }
+  ]
+}

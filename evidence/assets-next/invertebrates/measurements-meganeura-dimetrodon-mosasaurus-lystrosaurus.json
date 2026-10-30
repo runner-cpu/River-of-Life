@@ -1,0 +1,74 @@
+[
+  {
+    "id": "meganeura",
+    "input": "evidence\\assets-next\\invertebrates\\meganeura-museum.glb",
+    "output": "evidence\\assets-next\\invertebrates\\meganeura.glb",
+    "sourceBytes": 1915624,
+    "sourceTriangles": [
+      51530
+    ],
+    "triangles": [
+      18990
+    ],
+    "bytes": 1798156,
+    "animations": [
+      "Idle"
+    ],
+    "extensions": [
+      "KHR_materials_specular"
+    ]
+  },
+  {
+    "id": "dimetrodon",
+    "input": "evidence\\assets-next\\invertebrates\\dimetrodon-museum.glb",
+    "output": "evidence\\assets-next\\invertebrates\\dimetrodon.glb",
+    "sourceBytes": 6578256,
+    "sourceTriangles": [
+      80247
+    ],
+    "triangles": [
+      18996
+    ],
+    "bytes": 1597172,
+    "animations": [
+      "Idle",
+      "Walk"
+    ],
+    "extensions": []
+  },
+  {
+    "id": "mosasaurus",
+    "input": "evidence\\assets-next\\invertebrates\\mosasaurus-museum.glb",
+    "output": "evidence\\assets-next\\invertebrates\\mosasaurus.glb",
+    "sourceBytes": 3392200,
+    "sourceTriangles": [
+      22964
+    ],
+    "triangles": [
+      18998
+    ],
+    "bytes": 2018572,
+    "animations": [
+      "Idle"
+    ],
+    "extensions": [],
+    "textureChange": "512px JPEG quality 82"
+  },
+  {
+    "id": "lystrosaurus",
+    "input": "evidence\\assets-next\\invertebrates\\lystrosaurus-museum.glb",
+    "output": "evidence\\assets-next\\invertebrates\\lystrosaurus.glb",
+    "sourceBytes": 339248,
+    "sourceTriangles": [
+      25216
+    ],
+    "triangles": [
+      19000
+    ],
+    "bytes": 1032188,
+    "animations": [
+      "Idle"
+    ],
+    "extensions": []
+  }
+]

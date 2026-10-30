@@ -1,0 +1,1510 @@
+{
+  "config": {
+    "argv": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "D:\\Programming\\Objects\\life\\node_modules\\@playwright\\test\\cli.js",
+      "test"
+    ],
+    "configFile": "D:\\Programming\\Objects\\life\\playwright.config.ts",
+    "rootDir": "D:/Programming/Objects/life/tests/e2e",
+    "failOnFlakyTests": false,
+    "forbidOnly": true,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "D:/Programming/Objects/life/evidence/e2e-artifacts",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "chromium",
+        "name": "chromium",
+        "testDir": "D:/Programming/Objects/life/tests/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 60000
+      }
+    ],
+    "filteredProjects": [
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "D:\\Programming\\Objects\\life\\evidence\\e2e-artifacts",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "name": "chromium",
+        "testDir": "D:\\Programming\\Objects\\life\\tests\\e2e",
+        "snapshotDir": "D:\\Programming\\Objects\\life\\tests\\e2e",
+        "testIgnore": [],
+        "testMatch": "**/*.@(spec|test).?(c|m)[jt]s?(x)",
+        "timeout": 60000,
+        "use": {
+          "baseURL": "http://127.0.0.1:4175",
+          "viewport": {
+            "width": 1440,
+            "height": 1000
+          },
+          "reducedMotion": "reduce",
+          "trace": "retain-on-failure",
+          "screenshot": "only-on-failure",
+          "launchOptions": {
+            "args": [
+              "--enable-unsafe-swiftshader"
+            ]
+          },
+          "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.8078.4 Safari/537.36",
+          "screen": {
+            "width": 1920,
+            "height": 1080
+          },
+          "deviceScaleFactor": 1,
+          "isMobile": false,
+          "hasTouch": false,
+          "defaultBrowserType": "chromium"
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": "chromium"
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": "evidence/e2e-results.json"
+        }
+      ],
+      [
+        "html",
+        {
+          "outputFolder": "evidence/e2e-report",
+          "open": "never"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "default",
+    "updateSourceMethod": "patch",
+    "version": "1.64.1",
+    "workers": 1,
+    "webServer": {
+      "command": "npm run preview -- --host 127.0.0.1 --port 4175 --strictPort",
+      "url": "http://127.0.0.1:4175",
+      "reuseExistingServer": false,
+      "timeout": 30000
+    }
+  },
+  "suites": [
+    {
+      "title": "audit.spec.ts",
+      "file": "audit.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "mobile navigation hides closed links, traps focus, restores focus and releases the page",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 793,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T12:11:44.818Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "45efdff6a4d2e1f7e786-db8c5fbdfda330627ed0",
+          "file": "audit.spec.ts",
+          "line": 12,
+          "column": 1
+        },
+        {
+          "title": "codex filters retain keyboard focus and quiz tabs support arrow navigation",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 910,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T12:11:45.744Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "45efdff6a4d2e1f7e786-68a83b985d198f846853",
+          "file": "audit.spec.ts",
+          "line": 26,
+          "column": 1
+        },
+        {
+          "title": "failed external model uses honest fallback credit and can be retried",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2395,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T12:11:46.658Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "45efdff6a4d2e1f7e786-62fecf0780c974e2cc25",
+          "file": "audit.spec.ts",
+          "line": 48,
+          "column": 1
+        },
+        {
+          "title": "reset requires a second decision and keyboard import rejects oversized files without changes",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1219,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T12:11:49.059Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "45efdff6a4d2e1f7e786-fbf8ec341f2490bacaae",
+          "file": "audit.spec.ts",
+          "line": 63,
+          "column": 1
+        },
+        {
+          "title": "paused, obscured and offscreen scenes stop rendering while controls still redraw",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 7080,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T12:11:50.284Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "45efdff6a4d2e1f7e786-fe1ebd39cbed08325402",
+          "file": "audit.spec.ts",
+          "line": 76,
+          "column": 1
+        },
+        {
+          "title": "small-screen species labels remain separate and inside the scene",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 483,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T12:11:57.381Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "45efdff6a4d2e1f7e786-e55e634d4f041f010743",
+          "file": "audit.spec.ts",
+          "line": 93,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "classroom.spec.ts",
+      "file": "classroom.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "classroom focus, labels, pause and specimen reading preserve personal progress",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3949,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T12:11:57.909Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "ee123a1e90c2c71e0969-d73c6c04c103a49c92eb",
+          "file": "classroom.spec.ts",
+          "line": 14,
+          "column": 1
+        },
+        {
+          "title": "mobile classroom provides every resident and keeps exit and teaching actions reachable",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2693,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T12:12:01.865Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "ee123a1e90c2c71e0969-fd7346cc0c5077aaa1dd",
+          "file": "classroom.spec.ts",
+          "line": 55,
+          "column": 1
+        },
+        {
+          "title": "inspection cycles through six species with matching facts and restores the overview",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2883,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T12:12:04.565Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "ee123a1e90c2c71e0969-7a00f43c898e698a34be",
+          "file": "classroom.spec.ts",
+          "line": 78,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "epochs.spec.ts",
+      "file": "epochs.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "all eight classroom highlights render distinct accessible scenes without changing progress",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 10729,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T12:12:07.479Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "79df0be0c36e2e605023-bc09a5ff3a97ce90d799",
+          "file": "epochs.spec.ts",
+          "line": 19,
+          "column": 1
+        },
+        {
+          "title": "highlight pause, keyboard focus, resume, summary and Escape clean up the active event",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 9396,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T12:12:18.214Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "79df0be0c36e2e605023-004680dfa00770f5c5ce",
+          "file": "epochs.spec.ts",
+          "line": 50,
+          "column": 1
+        },
+        {
+          "title": "mobile reduced-motion highlights fit a short viewport and replay cannot reward twice",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1954,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T12:12:27.622Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "79df0be0c36e2e605023-f7f81ebecc6be145b5d0",
+          "file": "epochs.spec.ts",
+          "line": 75,
+          "column": 1
+        },
+        {
+          "title": "missing WebGL keeps the full highlight narration and exit control usable",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 580,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T12:12:29.603Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "79df0be0c36e2e605023-236b42502bc55894e46f",
+          "file": "epochs.spec.ts",
+          "line": 97,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "learning.spec.ts",
+      "file": "learning.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "evidence inquiry opens a real exhibit, records reasoning and exports without changing the personal save",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3207,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T12:12:30.202Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e0ec79b0c4f511f16424-9e9492c11fc5fca77f61",
+          "file": "learning.spec.ts",
+          "line": 7,
+          "column": 1
+        },
+        {
+          "title": "all inquiry topics support a complete text route at a phone viewport",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2030,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T12:12:33.415Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e0ec79b0c4f511f16424-f860c7db48d1e6755521",
+          "file": "learning.spec.ts",
+          "line": 28,
+          "column": 1
+        },
+        {
+          "title": "controlled experiment preserves its run conditions, exports all generations and matches identical environments",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 631,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T12:12:35.452Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e0ec79b0c4f511f16424-fd5e491c937ab4373426",
+          "file": "learning.spec.ts",
+          "line": 43,
+          "column": 1
+        },
+        {
+          "title": "phone experiment navigation reaches each section without changing route or simulation",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 358,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T12:12:36.089Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e0ec79b0c4f511f16424-8dd6ad7a7cbcd23e535b",
+          "file": "learning.spec.ts",
+          "line": 66,
+          "column": 1
+        },
+        {
+          "title": "phone specimen scroll keeps close visible and restores the catalog position and focus",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 734,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T12:12:36.453Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e0ec79b0c4f511f16424-61b22c52603005345b29",
+          "file": "learning.spec.ts",
+          "line": 78,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "museum.spec.ts",
+      "file": "museum.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "first observation is a free collection; reading and reload preserve the ledger without duplicate rewards",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1746,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T12:12:37.222Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "5e1b554b8332ecd9026f-56cdec0e7f8a5a664812",
+          "file": "museum.spec.ts",
+          "line": 31,
+          "column": 1
+        },
+        {
+          "title": "complete chapter one through real learning actions and unlock chapter two",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3469,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T12:12:38.975Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "5e1b554b8332ecd9026f-ee7b698850e358bca884",
+          "file": "museum.spec.ts",
+          "line": 57,
+          "column": 1
+        },
+        {
+          "title": "IndexedDB preserves newer learning when localStorage writes fail",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1249,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T12:12:42.450Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "5e1b554b8332ecd9026f-567a3457ca94ce85bad8",
+          "file": "museum.spec.ts",
+          "line": 87,
+          "column": 1
+        },
+        {
+          "title": "excavation accepts pointer strokes and accessible cleaning, rewards once, and survives reload",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1412,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T12:12:43.706Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "5e1b554b8332ecd9026f-6351e9b63ba3711b3e86",
+          "file": "museum.spec.ts",
+          "line": 116,
+          "column": 1
+        },
+        {
+          "title": "demo preview learning, takeover, and full 90-second playback leave the personal save unchanged",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 8952,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T12:12:45.126Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "5e1b554b8332ecd9026f-5e5fe50fd0419601f63b",
+          "file": "museum.spec.ts",
+          "line": 138,
+          "column": 1
+        },
+        {
+          "title": "a manually selected demo hotspot in an unlocked chapter remains a preview",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2560,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T12:12:54.085Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "5e1b554b8332ecd9026f-d513a47031be3d8b1b56",
+          "file": "museum.spec.ts",
+          "line": 174,
+          "column": 1
+        },
+        {
+          "title": "mobile navigation closes the drawer and principal screens have no horizontal overflow",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1373,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T12:12:56.653Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "5e1b554b8332ecd9026f-db7f5044e50dc8fb4ba8",
+          "file": "museum.spec.ts",
+          "line": 195,
+          "column": 1
+        },
+        {
+          "title": "desktop navigation settings stay reachable at 1280 by 720",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 599,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T12:12:58.033Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "5e1b554b8332ecd9026f-c73cd5a8c52d4d73212a",
+          "file": "museum.spec.ts",
+          "line": 206,
+          "column": 1
+        },
+        {
+          "title": "local guide answers supported questions from the card and gives an honest fallback",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 989,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T12:12:58.637Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "5e1b554b8332ecd9026f-24e9ba67711b9b61a956",
+          "file": "museum.spec.ts",
+          "line": 212,
+          "column": 1
+        },
+        {
+          "title": "all manifest GLB exhibits visibly render in codex model-viewer with attribution",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 6885,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "steps": [
+                    {
+                      "title": "apatosaurus",
+                      "duration": 1150
+                    },
+                    {
+                      "title": "stegosaurus",
+                      "duration": 333
+                    },
+                    {
+                      "title": "tyrannosaurus",
+                      "duration": 317
+                    },
+                    {
+                      "title": "triceratops",
+                      "duration": 316
+                    },
+                    {
+                      "title": "archaeopteryx",
+                      "duration": 364
+                    },
+                    {
+                      "title": "mammoth",
+                      "duration": 352
+                    },
+                    {
+                      "title": "megalodon",
+                      "duration": 416
+                    },
+                    {
+                      "title": "anomalocaris",
+                      "duration": 511
+                    },
+                    {
+                      "title": "hallucigenia",
+                      "duration": 504
+                    },
+                    {
+                      "title": "opabinia",
+                      "duration": 418
+                    },
+                    {
+                      "title": "dimetrodon",
+                      "duration": 583
+                    },
+                    {
+                      "title": "mosasaurus",
+                      "duration": 581
+                    },
+                    {
+                      "title": "lystrosaurus",
+                      "duration": 418
+                    }
+                  ],
+                  "startTime": "2026-10-30T12:12:59.633Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "5e1b554b8332ecd9026f-634637eb8833d8ff2698",
+          "file": "museum.spec.ts",
+          "line": 231,
+          "column": 1
+        },
+        {
+          "title": "production service worker caches the gallery and loads a cached model after offline reload",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3576,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T12:13:20.573Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "5e1b554b8332ecd9026f-db1d1b4dbac73dfcc3a4",
+          "file": "museum.spec.ts",
+          "line": 365,
+          "column": 1
+        }
+      ],
+      "suites": [
+        {
+          "title": "structural scene verification",
+          "file": "museum.spec.ts",
+          "line": 269,
+          "column": 6,
+          "specs": [
+            {
+              "title": "all eight chapter scenes expose six sourced residents and stay within the structural triangle budget",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 14043,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "steps": [
+                        {
+                          "title": "1: 前寒武纪",
+                          "duration": 1419
+                        },
+                        {
+                          "title": "2: 寒武纪",
+                          "duration": 1863
+                        },
+                        {
+                          "title": "3: 奥陶纪—泥盆纪",
+                          "duration": 1354
+                        },
+                        {
+                          "title": "4: 石炭纪—二叠纪",
+                          "duration": 1569
+                        },
+                        {
+                          "title": "5: 三叠纪",
+                          "duration": 2531
+                        },
+                        {
+                          "title": "6: 侏罗纪—白垩纪",
+                          "duration": 2041
+                        },
+                        {
+                          "title": "7: 古近纪—新近纪",
+                          "duration": 1345
+                        },
+                        {
+                          "title": "8: 第四纪",
+                          "duration": 1218
+                        }
+                      ],
+                      "startTime": "2026-10-30T12:13:06.524Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "all-eight-scene-structural-budgets",
+                          "contentType": "application/json",
+                          "body": "ewogICJtZWFzdXJlZEF0IjogIjIwMjYtMTAtMzBUMTI6MTM6MjAuNDg3WiIsCiAgImtpbmQiOiAic3RydWN0dXJhbCByZW5kZXIgY291bnRzIG9ubHk7IGhlYWRsZXNzIEZQUyBkZWxpYmVyYXRlbHkgZXhjbHVkZWQiLAogICJ0cmlhbmdsZUJ1ZGdldCI6IDE1MDAwMCwKICAic2NlbmVzIjogWwogICAgewogICAgICAiY2hhcHRlciI6IDEsCiAgICAgICJuYW1lIjogIuWJjeWvkuatpue6qiIsCiAgICAgICJ0cmlhbmdsZXMiOiA3MTI4MCwKICAgICAgImRyYXdDYWxscyI6IDIzNywKICAgICAgImhvdHNwb3RzIjogWwogICAgICAgICJjeWFub2JhY3RlcmlhIiwKICAgICAgICAic3Ryb21hdG9saXRlcyIsCiAgICAgICAgImRpY2tpbnNvbmlhIiwKICAgICAgICAiY2hhcm5pYSIsCiAgICAgICAgInNwcmlnZ2luYSIsCiAgICAgICAgImtpbWJlcmVsbGEiCiAgICAgIF0sCiAgICAgICJsb2FkZWRTY2VuZU1vZGVscyI6IFtdCiAgICB9LAogICAgewogICAgICAiY2hhcHRlciI6IDIsCiAgICAgICJuYW1lIjogIuWvkuatpue6qiIsCiAgICAgICJ0cmlhbmdsZXMiOiA4NzY1MSwKICAgICAgImRyYXdDYWxscyI6IDE3MSwKICAgICAgImhvdHNwb3RzIjogWwogICAgICAgICJ0cmlsb2JpdGUiLAogICAgICAgICJhbm9tYWxvY2FyaXMiLAogICAgICAgICJvcGFiaW5pYSIsCiAgICAgICAgInBpa2FpYSIsCiAgICAgICAgIndpd2F4aWEiLAogICAgICAgICJoYWxsdWNpZ2VuaWEiCiAgICAgIF0sCiAgICAgICJsb2FkZWRTY2VuZU1vZGVscyI6IFsKICAgICAgICAiYW5vbWFsb2NhcmlzIiwKICAgICAgICAiaGFsbHVjaWdlbmlhIiwKICAgICAgICAib3BhYmluaWEiCiAgICAgIF0KICAgIH0sCiAgICB7CiAgICAgICJjaGFwdGVyIjogMywKICAgICAgIm5hbWUiOiAi5aWl6Zm257qq4oCU5rOl55uG57qqIiwKICAgICAgInRyaWFuZ2xlcyI6IDUzMjA4LAogICAgICAiZHJhd0NhbGxzIjogMTcxLAogICAgICAiaG90c3BvdHMiOiBbCiAgICAgICAgImR1bmtsZW9zdGV1cyIsCiAgICAgICAgImNlcGhhbGFzcGlzIiwKICAgICAgICAidGlrdGFhbGlrIiwKICAgICAgICAiYWdvbmlhdGl0ZXMiLAogICAgICAgICJldXJ5cHRlcmlkIiwKICAgICAgICAiY29va3NvbmlhIgogICAgICBdLAogICAgICAibG9hZGVkU2NlbmVNb2RlbHMiOiBbXQogICAgfSwKICAgIHsKICAgICAgImNoYXB0ZXIiOiA0LAogICAgICAibmFtZSI6ICLnn7Pngq3nuqrigJTkuozlj6DnuqoiLAogICAgICAidHJpYW5nbGVzIjogODAzMTYsCiAgICAgICJkcmF3Q2FsbHMiOiAxODQsCiAgICAgICJob3RzcG90cyI6IFsKICAgICAgICAiZXJ5b3BzIiwKICAgICAgICAibWVnYW5ldXJhIiwKICAgICAgICAiZGltZXRyb2RvbiIsCiAgICAgICAgImhlbGljb3ByaW9uIiwKICAgICAgICAiYXJ0aHJvcGxldXJhIiwKICAgICAgICAibGVwaWRvZGVuZHJvbiIKICAgICAgXSwKICAgICAgImxvYWRlZFNjZW5lTW9kZWxzIjogWwogICAgICAgICJkaW1ldHJvZG9uIgogICAgICBdCiAgICB9LAogICAgewogICAgICAiY2hhcHRlciI6IDUsCiAgICAgICJuYW1lIjogIuS4ieWPoOe6qiIsCiAgICAgICJ0cmlhbmdsZXMiOiA4NDE3NiwKICAgICAgImRyYXdDYWxscyI6IDE0NCwKICAgICAgImhvdHNwb3RzIjogWwogICAgICAgICJseXN0cm9zYXVydXMiLAogICAgICAgICJjb2Vsb3BoeXNpcyIsCiAgICAgICAgIm5vdGhvc2F1cnVzIiwKICAgICAgICAiZXVkaW1vcnBob2RvbiIsCiAgICAgICAgInBvc3Rvc3VjaHVzIiwKICAgICAgICAicGxhdGVvc2F1cnVzIgogICAgICBdLAogICAgICAibG9hZGVkU2NlbmVNb2RlbHMiOiBbCiAgICAgICAgImx5c3Ryb3NhdXJ1cyIKICAgICAgXQogICAgfSwKICAgIHsKICAgICAgImNoYXB0ZXIiOiA2LAogICAgICAibmFtZSI6ICLkvo/nvZfnuqrigJTnmb3lnqnnuqoiLAogICAgICAidHJpYW5nbGVzIjogNzQ2MzIsCiAgICAgICJkcmF3Q2FsbHMiOiAxMDEsCiAgICAgICJob3RzcG90cyI6IFsKICAgICAgICAiYXBhdG9zYXVydXMiLAogICAgICAgICJzdGVnb3NhdXJ1cyIsCiAgICAgICAgInR5cmFubm9zYXVydXMiLAogICAgICAgICJ0cmljZXJhdG9wcyIsCiAgICAgICAgIm1vc2FzYXVydXMiLAogICAgICAgICJhcmNoYWVvcHRlcnl4IgogICAgICBdLAogICAgICAibG9hZGVkU2NlbmVNb2RlbHMiOiBbCiAgICAgICAgImFwYXRvc2F1cnVzIiwKICAgICAgICAic3RlZ29zYXVydXMiLAogICAgICAgICJ0eXJhbm5vc2F1cnVzIiwKICAgICAgICAidHJpY2VyYXRvcHMiLAogICAgICAgICJtb3Nhc2F1cnVzIgogICAgICBdCiAgICB9LAogICAgewogICAgICAiY2hhcHRlciI6IDcsCiAgICAgICJuYW1lIjogIuWPpOi/kee6quKAlOaWsOi/kee6qiIsCiAgICAgICJ0cmlhbmdsZXMiOiA2Mzc4NiwKICAgICAgImRyYXdDYWxscyI6IDE0NSwKICAgICAgImhvdHNwb3RzIjogWwogICAgICAgICJoeXJhY290aGVyaXVtIiwKICAgICAgICAibWVnYWxvZG9uIiwKICAgICAgICAicGFyYWNlcmF0aGVyaXVtIiwKICAgICAgICAiYmFzaWxvc2F1cnVzIiwKICAgICAgICAiYXVzdHJhbG9waXRoZWN1cyIsCiAgICAgICAgImRlaW5vdGhlcml1bSIKICAgICAgXSwKICAgICAgImxvYWRlZFNjZW5lTW9kZWxzIjogW10KICAgIH0sCiAgICB7CiAgICAgICJjaGFwdGVyIjogOCwKICAgICAgIm5hbWUiOiAi56ys5Zub57qqIiwKICAgICAgInRyaWFuZ2xlcyI6IDQ1Mzc2LAogICAgICAiZHJhd0NhbGxzIjogOTcsCiAgICAgICJob3RzcG90cyI6IFsKICAgICAgICAiaG9tby1zYXBpZW5zIiwKICAgICAgICAibmVhbmRlcnRoYWwiLAogICAgICAgICJtYW1tb3RoIiwKICAgICAgICAic21pbG9kb24iLAogICAgICAgICJkb2RvIiwKICAgICAgICAiZ2lhbnQtZGVlciIKICAgICAgXSwKICAgICAgImxvYWRlZFNjZW5lTW9kZWxzIjogW10KICAgIH0KICBdCn0="
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "5e1b554b8332ecd9026f-b5ac59a0c93fb0302863",
+              "file": "museum.spec.ts",
+              "line": 271,
+              "column": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "refinement.spec.ts",
+      "file": "refinement.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "browser back and forward preserve navigation, filters and close obsolete dialogs",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1001,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T12:13:24.167Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "2cba574eae72c893644c-f45f19f381ebc474e404",
+          "file": "refinement.spec.ts",
+          "line": 6,
+          "column": 1
+        },
+        {
+          "title": "first catalog observation immediately synchronizes count, card label and keyboard focus",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 482,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T12:13:25.174Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "2cba574eae72c893644c-3f31f6d93d83177bb04b",
+          "file": "refinement.spec.ts",
+          "line": 15,
+          "column": 1
+        },
+        {
+          "title": "a failed model catalog can recover without a page reload and without false attribution",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1753,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T12:13:25.661Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "2cba574eae72c893644c-b5d2114d5ca223ef69e9",
+          "file": "refinement.spec.ts",
+          "line": 22,
+          "column": 1
+        },
+        {
+          "title": "quiz feedback names the selected and correct choices and keeps a keyboard path forward",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 341,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T12:13:27.420Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "2cba574eae72c893644c-79f2fcc9d53dd57dff12",
+          "file": "refinement.spec.ts",
+          "line": 30,
+          "column": 1
+        },
+        {
+          "title": "opening a guide pauses the experiment and only an explicit action resumes it",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 475,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T12:13:27.766Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "2cba574eae72c893644c-c65578485f78e6bceaf6",
+          "file": "refinement.spec.ts",
+          "line": 41,
+          "column": 1
+        },
+        {
+          "title": "help offers working inquiry and settings routes without modifying personal learning",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 954,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T12:13:28.245Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "2cba574eae72c893644c-0715cb511760b2d06e2d",
+          "file": "refinement.spec.ts",
+          "line": 51,
+          "column": 1
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-10-30T12:11:43.313Z",
+    "duration": 106494.39300000001,
+    "expected": 36,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}

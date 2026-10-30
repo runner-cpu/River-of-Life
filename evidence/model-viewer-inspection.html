@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>Specimen framing inspection</title>
+<style>body{margin:0;background:#f5f7ef;font:14px sans-serif}main{display:grid;grid-template-columns:repeat(4,1fr)}figure{margin:8px;border:1px solid #ccd4c5}model-viewer{display:block;width:100%;height:260px}figcaption{padding:8px}</style></head>
+<body><main></main><script type="module">
+import '@google/model-viewer';
+const assets = await (await fetch('/models/manifest.json')).json();
+const originalPose = new URLSearchParams(location.search).has('original-pose');
+window.results = [];
+for (const asset of assets) {
+  const figure = document.createElement('figure');
+  const viewer = document.createElement('model-viewer');
+  viewer.src = originalPose && ['hallucigenia','opabinia'].includes(asset.speciesId) ? `/evidence/assets-next/invertebrates/${asset.speciesId}.glb` : asset.url;
+  viewer.setAttribute('camera-controls','');
+  viewer.setAttribute('exposure','1.1');
+  if (asset.representation === 'reconstruction') viewer.setAttribute('camera-orbit','55deg 70deg auto');
+  viewer.setAttribute('autoplay','');
+  const idle=asset.animations.find(name=>/idle/i.test(name));
+  if(idle) viewer.setAttribute('animation-name',idle);
+  figure.append(viewer);
+  const caption=document.createElement('figcaption');caption.textContent=asset.speciesId;figure.append(caption);
+  document.querySelector('main').append(figure);
+  await new Promise((resolve,reject)=>{viewer.addEventListener('load',resolve,{once:true});viewer.addEventListener('error',reject,{once:true});});
+  await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
+  const bitmap=await createImageBitmap(await viewer.toBlob());
+  const canvas=document.createElement('canvas');canvas.width=bitmap.width;canvas.height=bitmap.height;
+  const context=canvas.getContext('2d');context.drawImage(bitmap,0,0);bitmap.close();
+  const pixels=context.getImageData(0,0,canvas.width,canvas.height).data;let opaque=0;
+  for(let index=3;index<pixels.length;index+=4)if(pixels[index]>250)opaque++;
+  window.results.push({id:asset.speciesId,opaquePixelRatio:opaque/(canvas.width*canvas.height),dimensions:viewer.getDimensions(),center:viewer.getBoundingBoxCenter(),orbit:viewer.getCameraOrbit(),target:viewer.getCameraTarget(),animation:viewer.animationName,time:viewer.currentTime});
+}
+window.ready = true;
+</script></body></html>
