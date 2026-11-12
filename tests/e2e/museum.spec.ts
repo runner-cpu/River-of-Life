@@ -396,8 +396,10 @@ test('production service worker caches the gallery and loads a cached model afte
   await page.locator('.inquiry-question button[type="submit"]').click();
   await page.locator('#inquiry-text').click();
   await page.locator('#inquiry-continue').click();
-  await page.locator('input[value="1"]').check();
-  await page.locator('.inquiry-question button[type="submit"]').click();
+  await page.locator('[data-category="support"]').nth(0).click();
+  await page.locator('[data-category="more-information"]').nth(1).click();
+  await page.locator('#inquiry-show-graph').click();
+  await page.locator('#inquiry-transfer').click();
   await page.locator('input[value="0"]').check();
   await page.locator('.inquiry-question button[type="submit"]').click();
   await expect(page.locator('#inquiry-export')).toBeVisible();

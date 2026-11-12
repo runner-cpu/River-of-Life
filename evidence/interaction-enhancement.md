@@ -18,3 +18,26 @@ No dependencies or runtime requests were added. Progress fields, version and imp
 An initial full browser run with the first four new tests passed 40/40. After adding recovery/offline and the collapse edge case, a 42-case run passed 41 and failed the forced failure fixture because an active service worker served the manifest despite Playwright network abortion. The forced-network-failure test now scopes `serviceWorkers: 'block'`, as existing recovery tests do; the actual production offline test retains service workers. No assertion was removed or weakened and no existing test changed.
 
 Automated screenshots: `relationships-desktop.png`, `relationships-390.png`, `relationships-320.png`, `relationships-model-restored.png`. Actual desktop, 390px, 320px and recovered Smithsonian fossil exhibit images were opened and visually inspected: time ranges/reference text, branch labels, selected epoch/archive highlights, detail text and button, and mobile wrapped chapter labels were readable and fit the page; narrow layouts default to the full list and have no document overflow. This visual inspection is a manual review of automated captures, not a separate manual browser interaction session. Keyboard/reduced-motion/model/offline claims are automated Chromium checks; no screen-reader audit, physical touch device, Safari/Firefox or human learning evaluation was performed. Diagram rows may be horizontally scrolled within their component if explicitly chosen on narrow screens; list is the narrow default. No zoom/pan interaction or inferred evolutionary ancestry was added.
+
+## 任务2 — 证据归类与关系反馈（2026-11-12）
+
+三主题各提供两张稳定ID的证据卡，复用原文字记录及登记来源；四类为支持、无关、反对、需要更多信息。允许待归类，全部卡片归类才开放只读SVG。按钮和原生拖放共用同一状态入口；归类不评分、不写Progress。初始判断和迁移选项保持原含义，旧依据单选在新活动中不伪造答案。
+
+文件职责：`src/content/inquiries.ts`增加卡片数据，`src/content/learning-sources.ts`保留来源映射并按已记录的机构页面核对更新日期；`src/core/inquiry.ts`管理归类、阶段保护、返回修改及解释临时状态；`src/core/inquiry-record.ts`提供独立v1记录快照、JSON序列化/解析/验证；`src/modes/inquiry.ts`负责归类按钮、桌面拖放、修改、字数、HTML和JSON下载、关闭/刷新前的可见导出提醒与刷新提醒；`src/modes/inquiry-graph.ts`只读呈现四区/初始判断、虚线及文字等价列表和来源详情；`src/learning.css`提供卡片、四区与手机单列。
+
+JSON协议独立于个人存档：`type: life-inquiry-record`、`version: 1`；包含主题、完成阶段、ISO导出时间、初始/迁移选项、查看方式、归类卡片/来源/核对范围、最多1200字符解释；`answers.evidence`为null。验证拒绝错误版本、不同主题、非法选项/类别、重复/未知/缺失卡片、来源替换、超长解释；解析器拒绝HTML并限制原文100000字符。失败仅抛出明确错误，不替换活动。HTML保留原栏目、教学限制和转义；依据未记录不作一致性判断，独立增加归类栏目。解释在图/修改/完成之间保存；无修改次数指标。同伴导入UI留给任务5，徽章回调留给任务6。
+
+来源范围：按`.superpowers/sdd/interaction-enhancement-plan/source-review.md`中2026-11-12实际机构页面核对记录，仅复用始祖鸟羽毛/牙齿/骨尾/手爪、沧龙有鳞类及头骨比较、提塔利克鳍鳞与四足动物相似结构的窄范围；不声称整卡科学审查，不新增精确祖先、飞行、食性或模型内部结构结论。外部来源仅为链接，不执行运行时fetch。
+
+未新增依赖。归类/解释/图均为临时会话，不修改个人存档协议、点数或持久化数据；现有课堂预览隔离继续由原展台路线测试验证。JS/CSS/内容随dist枚举缓存；SVG本地生成。下载HTML/JSON是本地文件，不属于站点缓存；外部网页、语音和AR不承诺离线。
+
+验证：
+
+- `npm run build`通过：48卡片/8章节/144问题、13 GLB及TypeScript和Vite构建。
+- `npm test`：16文件116/116通过。`tests/inquiry.test.ts`保留阶段前置保护、错误尝试可完成、输出转义测试，并新增不完整/未知卡/继承类别拒绝和修改保留解释；原单选依据步骤替换为归类/图/迁移。`tests/inquiry-record.test.ts`新增5个测试（三主题往返及null旧字段、协议/HTML/长度/主题拒绝、卡片/类别/选项/来源/解释完整性和独立快照）。
+- `npm run test:e2e`：46/46通过（1.9分钟，生产端口4175）。新增`inquiry-classification.spec.ts`4例：1440/390/320宽度、减少动态、键盘目标按钮/图标题焦点/修改解释/两种下载内容，以及桌面真实拖放。原`learning.spec.ts`保留真实展台/读取/来源、HTML转义和教学边界、三主题文字路线、字数、下载和个人存档隔离，换归类步骤并增加三主题JSON检查；原`museum.spec.ts`只更换离线探究的单选依据步骤，继续验证生产缓存、断网刷新、本地模型、指南、探究与实验。初次运行44/45通过，离线旧单选测试超时；其已解析的旧步骤等待不存在的radio。更新该步骤后完整46例通过；没有删除保障断言、跳过或设置flaky。
+- `npm run verify:build`通过；13模型/11,989,972字节，JS+CSS gzip 550,123字节，app chunk gzip 430,236字节，非模型gzip 636,631字节。生产清单和内容哈希随构建更新，见`build-verification.json`。
+
+实际打开并检查了最终`task2-graph-1440.png`、`task2-graph-390.png`、`task2-graph-320.png`：桌面六阶段一行，手机两行、四区文字清楚、无横向溢出，初始判断可读；小屏使用270×310独立SVG，上下排列四区及初始判断，320px标签仍清晰可读；下方完整文字列表提供等价内容，来源可用details查看。截图视觉检查是人工查看自动截图，非另行人工浏览器交互；键盘/减少动态/离线/真实模型成功、回退和恢复由完整Chromium套件验证。未进行屏幕阅读器审计、物理触控设备或跨浏览器测评；没有教学效果或学习能力评价。本地验证并不代表已上线。
+
+最终视觉修订：根据320px截图将SVG改为窄屏独立排版；活动提醒只说明临时保存及导出，兼容说明移至下载旁。类别验证先检查字符串类型，拒绝将数组隐式转换成类别；负向测试覆盖该路径。修订后重新运行build、116单元及完整46浏览器测试。

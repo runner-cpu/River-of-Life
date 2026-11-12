@@ -13,7 +13,7 @@ test('evidence inquiry opens a real exhibit, records reasoning and exports witho
   const exhibit=page.getByRole('dialog',{name:'始祖鸟',exact:true});await expect(exhibit.locator('#model-stage')).toHaveAttribute('data-state','loaded');
   await expect(exhibit.locator('.sources')).toContainText('核对范围');await exhibit.locator('#mark-read').click();await exhibit.locator('.close-modal').click();
   await expect(page.locator('#inquiry-model')).toBeFocused();await page.locator('#inquiry-continue').click();
-  await page.locator('input[value="2"]').check();await page.locator('.inquiry-question button[type="submit"]').click();
+  await page.locator('[data-category="support"]').nth(0).click();await page.locator('[data-category="more-information"]').nth(1).click();await page.locator('#inquiry-show-graph').click();await page.locator('#inquiry-transfer').click();
   await page.locator('input[value="0"]').check();await page.locator('.inquiry-question button[type="submit"]').click();
   await expect(page.locator('.inquiry-review')).toContainText('与本活动参考解释一致');
   await page.locator('#inquiry-explanation').fill('<script>test</script>羽毛不能代替多项特征比较。');
@@ -32,10 +32,15 @@ test('all inquiry topics support a complete text route at a phone viewport',asyn
     await page.locator('#start-inquiry').click();await page.locator(`[data-inquiry="${activity.id}"]`).click();
     await page.locator(`input[value="${activity.initial.correct}"]`).check();await page.locator('.inquiry-question button[type="submit"]').click();
     await page.locator('#inquiry-text').click();await page.locator('#inquiry-continue').click();
-    await page.locator(`input[value="${activity.evidence.correct}"]`).check();await page.locator('.inquiry-question button[type="submit"]').click();
+    for (const card of activity.cards) await page.locator(`[data-card="${card.id}"] [data-category="support"]`).click();
+    await page.locator('#inquiry-show-graph').click();await page.locator('#inquiry-transfer').click();
     await page.locator(`input[value="${activity.transfer.correct}"]`).check();await page.locator('.inquiry-question button[type="submit"]').click();
     const overflow=await page.locator('.inquiry-dialog .modal-body').evaluate(el=>el.scrollWidth>el.clientWidth+1);expect(overflow).toBe(false);
-    await expect(page.locator('#inquiry-export')).toBeVisible();await page.locator('#inquiry-finish').click();
+    await expect(page.locator('#inquiry-export')).toBeVisible();
+    const exported = page.waitForEvent('download');await page.locator('#inquiry-export-json').click();
+    const record = JSON.parse(readFileSync((await (await exported).path())!, 'utf8'));
+    expect(record.inquiryId).toBe(activity.id);expect(record.classifications).toHaveLength(activity.cards.length);
+    await page.locator('#inquiry-finish').click();
   }
   expect(await page.evaluate(key=>localStorage.getItem(key),saveKey)).toBe(before);
 });

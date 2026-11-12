@@ -1,14 +1,15 @@
 import { learningSources } from './learning-sources';
 import type { Source } from '../core/types';
 
+export type EvidenceCard = { id: string; text: string; sourceRef: string; scope: string };
 export type InquiryQuestion = { prompt: string; options: string[]; correct: number; explanation: string };
 export type Inquiry = {
   id: string; speciesId: string; title: string; skill: string; objective: string;
   initial: InquiryQuestion; observations: string[]; observeHint: string;
-  evidence: InquiryQuestion; transfer: InquiryQuestion; source: Source;
+  cards: EvidenceCard[]; evidence: InquiryQuestion; transfer: InquiryQuestion; source: Source;
 };
 
-export const inquiries: Inquiry[] = [
+const topics = [
   {
     id: 'feathers-and-evidence', speciesId: 'archaeopteryx', title: '有羽毛，就和今天的鸟一样吗？', skill: '比较特征',
     objective: '用多个身体特征解释联系，区分化石证据与复原想象。',
@@ -49,3 +50,14 @@ export const inquiries: Inquiry[] = [
     source: learningSources.tiktaalik,
   },
 ];
+
+
+export const inquiries: Inquiry[] = topics.map(topic => ({
+  ...topic,
+  cards: topic.observations.map((text, index) => ({
+    id: `${topic.id}-evidence-${index + 1}`,
+    text,
+    sourceRef: topic.speciesId,
+    scope: topic.source.scope!,
+  })),
+}));
