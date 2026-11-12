@@ -4,6 +4,7 @@ import { species } from '../src/content/species';
 import { questions } from '../src/content/questions';
 const harness=vi.hoisted(()=>({elements:new Map<string, {hidden:boolean;innerHTML:string;dataset:Record<string,string>;textContent:string;listeners:Map<string,(e:unknown)=>void>;addEventListener:(name:string,fn:(e:unknown)=>void)=>void;querySelector:()=>null}>()}));
 vi.mock('../src/core/ui',()=>({escape:String,icon:()=>'',toast:vi.fn(),speak:vi.fn(),modal:()=>({dialog:{isConnected:true,querySelector:(selector:string)=>{if(!harness.elements.has(selector)){const el={hidden:true,innerHTML:'',dataset:{},textContent:'',listeners:new Map(),addEventListener(name:string,fn:(e:unknown)=>void){this.listeners.set(name,fn);},querySelector:()=>null};harness.elements.set(selector,el);}return harness.elements.get(selector);}},close:vi.fn()})}));
+vi.mock('../src/modes/specimen-annotations',()=>({mountSpecimenAnnotations:()=>({bind:vi.fn(),dispose:vi.fn()})}));
 vi.mock('../src/modes/guide',()=>({guideMarkup:()=>'',mountGuide:()=>()=>{}}));
 vi.mock('../src/scene/life-scene',()=>({getModels:()=>new Promise(()=>{}),SpecimenStage:class{}}));
 import { showSpecimen } from '../src/modes/specimen';

@@ -1,0 +1,79 @@
+#model-stage {
+  position: relative;
+}
+.annotation-hotspot {
+  position: absolute;
+  min-width: 30px;
+  min-height: 30px;
+  border: 2px solid #fff7da;
+  border-radius: 50%;
+  background: #174e4d;
+  color: white;
+  font-weight: 800;
+  cursor: pointer;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 2px 8px #0006;
+  z-index: 2;
+}
+.annotation-hotspot:focus-visible {
+  outline: 3px solid #e5ad4b;
+  outline-offset: 3px;
+}
+.annotation-hotspot[aria-expanded="true"] {
+  background: #805419;
+}
+.annotation-caution {
+  font-size: 0.76rem;
+  color: var(--muted);
+  margin: 0.5rem 0;
+}
+.annotation-reading {
+  margin-top: 0.6rem;
+}
+.annotation-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+.annotation-description {
+  margin-top: 0.6rem;
+  padding: 0.8rem;
+  border: 1px solid #9aa898;
+  border-radius: 8px;
+  background: #f3f1e5;
+  color: #233e3b;
+  overflow-wrap: anywhere;
+}
+.annotation-description h3 {
+  font-size: 1rem;
+  margin: 0 0 0.4rem;
+}
+.annotation-description p {
+  font-size: 0.83rem;
+  margin: 0.45rem 0;
+}
+.annotation-description small {
+  display: block;
+  margin: 0.4rem 0;
+}
+.annotation-description a {
+  font-size: 0.8rem;
+}
+.annotation-close {
+  display: block;
+}
+#specimen-annotations {
+  margin: 0.7rem 0;
+}
+@media (max-width: 440px) {
+  .annotation-list .btn {
+    font-size: 0.75rem;
+    padding: 0.4rem 0.5rem;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .annotation-hotspot {
+    animation: none;
+    transition: none;
+  }
+}

@@ -1,3 +1,4 @@
+import { mountSpecimenAnnotations } from './specimen-annotations';
 import type { Species } from '../core/types';
 import type { GameStore } from '../core/store';
 import { escape, icon, modal, toast, speak } from '../core/ui';
@@ -18,7 +19,7 @@ export function showSpecimen(s: Species, store: GameStore, onLab: () => void, op
       <div class="specimen-left"><div class="model-stage" id="model-stage"><span class="stage-loading">${icon('LoaderCircle')} 正在准备展台</span></div>
       <div class="stage-caption"><span id="representation">结构示意模型</span><span>拖动旋转 · 双指缩放</span></div>
       <div class="model-actions"><button class="btn small" id="rotate-model" aria-pressed="false">${icon('Rotate3d', 17)} 自动旋转</button><button class="btn small" id="compare-model">${icon('Ruler', 17)} 代表尺寸对比</button><button class="btn small" id="speak-species">${icon('Volume2', 17)} 听讲解</button></div>
-      <div id="model-load-notice" role="status" hidden></div><div id="size-comparison" hidden></div>
+      <div id="specimen-annotations"></div><div id="model-load-notice" role="status" hidden></div><div id="size-comparison" hidden></div>
       <div class="provenance" id="model-credit">模型用于解释身体结构；颜色、姿态与运动为艺术示意，不是化石扫描。</div></div>
       <div class="specimen-copy"><span class="eyebrow">${escape(s.latin)}</span><div class="specimen-meta"><span>${escape(s.period)}</span><span>${s.rarity === 'star' ? '明星物种' : s.rarity === 'rare' ? '珍稀发现' : '生命档案'}</span></div>
       <p class="definition">${escape(s.definition)}</p>
@@ -32,6 +33,7 @@ export function showSpecimen(s: Species, store: GameStore, onLab: () => void, op
       <div id="darwin-guide">${guideMarkup(s)}</div>
       <button class="text-btn lab-link" id="specimen-lab" ${readOnly ? 'disabled' : ''}>在实验室理解自然选择 ${icon('ArrowRight', 16)}</button></div>
     </div>`, true);
+  const annotations = mountSpecimenAnnotations(dialog, s.id);
   let stage: SpecimenStage | undefined;
   let model: Viewer | undefined;
   let disposed = false, rotating = false, loadSequence = 0;
@@ -44,23 +46,24 @@ export function showSpecimen(s: Species, store: GameStore, onLab: () => void, op
   const disposeGuide = mountGuide(dialog.querySelector<HTMLElement>('#darwin-guide')!, s);
   const observer = new MutationObserver(() => {
     if (!dialog.isConnected) {
-      disposed = true;loadSequence++;clearTimeout(loadTimer);disposeGuide();stage?.dispose();observer.disconnect();
+      disposed = true;loadSequence++;clearTimeout(loadTimer);disposeGuide();annotations.dispose();stage?.dispose();observer.disconnect();
       if ('speechSynthesis' in window) speechSynthesis.cancel();
     }
   });
   observer.observe(document.body, { childList: true });
   function diagram(reason?: string) {
-    clearTimeout(loadTimer);stage?.dispose();stage=undefined;model=undefined;container.innerHTML='';
+    annotations.bind(undefined,undefined);clearTimeout(loadTimer);stage?.dispose();stage=undefined;model=undefined;container.innerHTML='';
     container.dataset.state=reason?'fallback':'diagram';representation.textContent='原创结构示意';credit.textContent=diagramCredit;
     try {stage=new SpecimenStage(container,s,store.state.settings.reducedMotion);stage.rotate(rotating);}
     catch {container.textContent='当前设备无法显示 3D，你仍可阅读完整档案。';container.dataset.state='unavailable';}
+    annotations.bind(undefined,stage);
     notice.hidden=!reason;notice.className='model-load-notice';
     notice.innerHTML=reason?`<p>${escape(reason)} 当前已切换为结构示意，知识卡可以继续阅读。</p><button class="btn small" id="retry-model">重新加载原模型</button>`:'';
     notice.querySelector('#retry-model')?.addEventListener('click',()=>void loadModel());
   }
   async function loadModel() {
     const sequence=++loadSequence;
-    clearTimeout(loadTimer);stage?.dispose();stage=undefined;model=undefined;notice.hidden=true;
+    annotations.bind(undefined,undefined);clearTimeout(loadTimer);stage?.dispose();stage=undefined;model=undefined;notice.hidden=true;
     container.dataset.state='loading';container.innerHTML=`<span class="model-load-status" role="status">${icon('LoaderCircle')} 正在加载三维展台</span>`;
     representation.textContent='准备模型';credit.textContent='加载完成后将显示对应模型的来源与许可。';
     let finished=false, assetKey:string|undefined;
@@ -87,7 +90,7 @@ export function showSpecimen(s: Species, store: GameStore, onLab: () => void, op
       viewer.addEventListener('error',()=>failed('原模型未能加载。'),{once:true});
       viewer.addEventListener('load',()=>{
         if(disposed || sequence!==loadSequence || finished)return;
-        finished=true;clearTimeout(loadTimer);container.dataset.state='loaded';container.querySelector('.model-load-status')?.remove();
+        finished=true;clearTimeout(loadTimer);annotations.bind(viewer,undefined,asset.representation);container.dataset.state='loaded';container.querySelector('.model-load-status')?.remove();
         representation.textContent=asset.representation==='fossil'?'馆藏化石 · 3D 扫描':asset.representation==='diagram'?'开放许可 · 结构示意':'开放许可 · 3D 复原';
         const licenseUrl=asset.licenseUrl || (asset.license==='CC0-1.0'?'https://creativecommons.org/publicdomain/zero/1.0/':undefined);
         credit.innerHTML=`${asset.title?`${escape(asset.title)}<br>`:''}${escape(asset.author)} · ${licenseUrl?`<a target="_blank" rel="noopener noreferrer" href="${escape(licenseUrl)}">${escape(asset.license)}</a>`:escape(asset.license)} · <a target="_blank" rel="noopener noreferrer" href="${escape(asset.source)}">模型来源 ${icon('ArrowUpRight',12)}</a><br>${escape(asset.note)}${asset.modifications?`<details><summary>查看模型处理记录</summary><p>${escape(asset.modifications)}</p>${asset.derivativeSource?`<a target="_blank" rel="noopener noreferrer" href="${escape(asset.derivativeSource)}">衍生模型与动画来源 ${icon('ArrowUpRight',12)}</a>`:''}</details>`:''}<br>AR 需要兼容的手机与 HTTPS；模型比例以知识卡为准。`;

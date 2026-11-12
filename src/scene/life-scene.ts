@@ -235,6 +235,26 @@ export class LifeScene {
 }
 
 export class SpecimenStage {
+  private projections = new Set<() => void>();
+  onProjection(
+    points: readonly (readonly [number, number, number])[],
+    update: (positions: { x: number; y: number; visible: boolean }[]) => void,
+  ) {
+    const bounds = new THREE.Box3().setFromObject(this.object);
+    const size = bounds.getSize(new THREE.Vector3());
+    const local = points.map(point => new THREE.Vector3(...point).multiply(size).add(bounds.min));
+    const project = () => update(local.map(point => {
+      const projected = point.clone().project(this.camera);
+      return {
+        x: (projected.x * .5 + .5) * this.element.clientWidth,
+        y: (-projected.y * .5 + .5) * this.element.clientHeight,
+        visible: projected.z >= -1 && projected.z <= 1 && Math.abs(projected.x) < 1 && Math.abs(projected.y) < 1,
+      };
+    }));
+    this.projections.add(project);
+    this.loop.request();
+    return () => { this.projections.delete(project); };
+  }
   renderer: THREE.WebGLRenderer; private scene = new THREE.Scene(); private camera = new THREE.PerspectiveCamera(38, 1, .01, 100); private controls: OrbitControls; private object: THREE.Group; private loop: RenderLoop; private observer: ResizeObserver; private time = 0; private last = 0; private paused = false; private rotating = false;
   constructor(private element: HTMLElement, species: Species, reducedMotion = false) {
     this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, preserveDrawingBuffer: true }); this.renderer.setPixelRatio(Math.min(devicePixelRatio, 1.5)); this.renderer.toneMapping = THREE.ACESFilmicToneMapping; this.renderer.toneMappingExposure = 1.2; element.append(this.renderer.domElement);
@@ -248,10 +268,10 @@ export class SpecimenStage {
     if (!this.paused) this.time += dt;
     animateCreature(this.object,this.time);
     this.controls.autoRotate=this.rotating;this.controls.autoRotateSpeed=.8;
-    this.controls.update(dt);this.renderer.render(this.scene,this.camera);
+    this.controls.update(dt);this.renderer.render(this.scene,this.camera);this.projections.forEach(project=>project());
     return !this.paused || this.rotating;
   };
   rotate(value: boolean) { this.rotating = value; this.loop.request(); }
   pause(value: boolean) { this.paused = value; this.loop.request(); }
-  dispose() { this.loop.dispose(); this.observer.disconnect(); this.controls.dispose(); releaseObjectResources(this.object); this.renderer.dispose(); this.renderer.domElement.remove(); }
+  dispose() { this.projections.clear(); this.loop.dispose(); this.observer.disconnect(); this.controls.dispose(); releaseObjectResources(this.object); this.renderer.dispose(); this.renderer.domElement.remove(); }
 }
