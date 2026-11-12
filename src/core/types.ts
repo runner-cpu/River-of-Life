@@ -1,4 +1,4 @@
-export type Mode = 'journey' | 'codex' | 'dig' | 'quiz' | 'lab';
+export type Mode = 'journey' | 'relationships' | 'codex' | 'dig' | 'quiz' | 'lab';
 export type Source = { title: string; url: string; level: 'A' | 'B' | 'C' | 'D'; checked: string; doi?: string; scope?: string };
 export type Species = {
   id: string;

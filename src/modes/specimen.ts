@@ -8,9 +8,10 @@ type Viewer = HTMLElement & { autoRotate: boolean };
 // a later attempt, preserving the network URL and the offline cache entry.
 const modelLoadVersions = new Map<string, number>();
 
-export function showSpecimen(s: Species, store: GameStore, onLab: () => void) {
+export function showSpecimen(s: Species, store: GameStore, onLab: () => void, options: { readOnly?: boolean } = {}) {
+  const readOnly = options.readOnly === true;
   const accessible = store.state.unlockedChapters.includes(s.chapter);
-  const gained = accessible ? store.observe(s.id) : 0;
+  const gained = accessible && !readOnly ? store.observe(s.id) : 0;
   if (gained) toast(`发现${s.name} · +${gained} 演化点`);
   const { dialog, close } = modal(s.name, `
     <div class="specimen-layout">
@@ -25,11 +26,11 @@ export function showSpecimen(s: Species, store: GameStore, onLab: () => void) {
       <div class="fact-block"><h3>${icon('Sparkles', 16)} 一个有趣的发现</h3><p>${escape(s.fact)}</p></div>
       <div class="fact-block misconception"><h3>${icon('Focus', 16)} 换一个角度认识它</h3><p>${escape(s.misconception)}</p></div>
       <p class="extinction"><strong>它的后来</strong> ${escape(s.extinction)}</p>
-      <div class="learning-actions"><button class="btn primary" id="mark-read" ${!accessible ? 'disabled' : ''}>${icon('Check', 17)} ${store.state.read.includes(s.id) ? '已阅读' : '我已阅读 · +3 演化点'}</button><button class="btn" id="collect-species" ${!accessible ? 'disabled' : ''}>${icon('BookmarkPlus', 17)} ${store.state.collected.includes(s.id) ? '已加入图鉴' : !store.state.collected.length ? '免费收藏' : `收藏 · ${s.cost} 演化点`}</button></div>
+      ${readOnly ? '<p class="muted">只读浏览 · 不记录个人学习进度</p>' : ''}<div class="learning-actions"><button class="btn primary" id="mark-read" ${!accessible || readOnly ? 'disabled' : ''}>${icon('Check', 17)} ${store.state.read.includes(s.id) ? '已阅读' : '我已阅读 · +3 演化点'}</button><button class="btn" id="collect-species" ${!accessible || readOnly ? 'disabled' : ''}>${icon('BookmarkPlus', 17)} ${store.state.collected.includes(s.id) ? '已加入图鉴' : !store.state.collected.length ? '免费收藏' : `收藏 · ${s.cost} 演化点`}</button></div>
       ${!accessible ? '<p class="muted">这张卡片可以提前阅读；开启所属纪元后可记录学习进度。</p>' : ''}
       <details class="sources"><summary>${icon('BookMarked', 16)} 查阅知识来源 · ${s.sources.length} 条</summary>${s.sources.map(source => `<a href="${escape(source.url)}" target="_blank" rel="noopener noreferrer"><span class="source-level">${source.level}</span>${escape(source.title)} ${icon('ArrowUpRight', 13)}</a><small>核对于 ${escape(source.checked)} · ${source.level === 'A' ? '学术文献' : source.level === 'B' ? '科研/博物馆机构' : '百科参考，内容仍需人工复核'}${source.scope ? `<br>核对范围：${escape(source.scope)}` : ''}</small>`).join('')}</details>
       <div id="darwin-guide">${guideMarkup(s)}</div>
-      <button class="text-btn lab-link" id="specimen-lab">在实验室理解自然选择 ${icon('ArrowRight', 16)}</button></div>
+      <button class="text-btn lab-link" id="specimen-lab" ${readOnly ? 'disabled' : ''}>在实验室理解自然选择 ${icon('ArrowRight', 16)}</button></div>
     </div>`, true);
   let stage: SpecimenStage | undefined;
   let model: Viewer | undefined;
@@ -98,11 +99,11 @@ export function showSpecimen(s: Species, store: GameStore, onLab: () => void) {
   dialog.querySelector('#rotate-model')!.addEventListener('click', e => { rotating = !rotating; stage?.rotate(rotating); if (model) model.autoRotate = rotating; (e.currentTarget as HTMLElement).classList.toggle('active', rotating); (e.currentTarget as HTMLElement).setAttribute('aria-pressed', String(rotating)); });
   dialog.querySelector('#compare-model')!.addEventListener('click', () => {
     const el = dialog.querySelector<HTMLElement>('#size-comparison')!; el.hidden = !el.hidden;
-    if (!el.hidden) { store.compare(s.id); const max = Math.max(s.lengthM, 1.7); el.innerHTML = `<h3>代表尺寸 · 放到身边看一看</h3><div class="scale-row"><span>${escape(s.name)}</span><i style="width:${Math.max(.3, s.lengthM / max * 100)}%"></i><b>${escape(s.sizeLabel)}</b></div><div class="scale-row human"><span>成人身高参照</span><i style="width:${1.7 / max * 100}%"></i><b>1.7 米</b></div><p class="muted">条形按卡片的代表尺寸线性缩放；体长、身高、翼展与结构尺度等含义见各自标注，不同个体有差异。${s.lengthM < .01 ? '微小生物的条形为便于辨认而放大，不代表实际比例。' : ''}</p>`; }
+    if (!el.hidden) { if (!readOnly) store.compare(s.id); const max = Math.max(s.lengthM, 1.7); el.innerHTML = `<h3>代表尺寸 · 放到身边看一看</h3><div class="scale-row"><span>${escape(s.name)}</span><i style="width:${Math.max(.3, s.lengthM / max * 100)}%"></i><b>${escape(s.sizeLabel)}</b></div><div class="scale-row human"><span>成人身高参照</span><i style="width:${1.7 / max * 100}%"></i><b>1.7 米</b></div><p class="muted">条形按卡片的代表尺寸线性缩放；体长、身高、翼展与结构尺度等含义见各自标注，不同个体有差异。${s.lengthM < .01 ? '微小生物的条形为便于辨认而放大，不代表实际比例。' : ''}</p>`; }
   });
   dialog.querySelector('#speak-species')!.addEventListener('click', () => speak(`${s.name}。${s.definition}。${s.fact}。${s.misconception}`));
-  dialog.querySelector('#mark-read')!.addEventListener('click', e => { const gain = store.read(s.id); (e.currentTarget as HTMLElement).innerHTML = `${icon('Check', 17)} 已阅读`; if (gain) toast(`读懂一段生命故事 · +${gain} 演化点`); });
-  dialog.querySelector('#collect-species')!.addEventListener('click', e => { toast(store.collect(s.id)); if (store.state.collected.includes(s.id)) (e.currentTarget as HTMLElement).innerHTML = `${icon('Check', 17)} 已加入图鉴`; });
-  dialog.querySelector('#specimen-lab')!.addEventListener('click', () => { close(); onLab(); });
+  dialog.querySelector('#mark-read')!.addEventListener('click', e => { if (readOnly) return; const gain = store.read(s.id); (e.currentTarget as HTMLElement).innerHTML = `${icon('Check', 17)} 已阅读`; if (gain) toast(`读懂一段生命故事 · +${gain} 演化点`); });
+  dialog.querySelector('#collect-species')!.addEventListener('click', e => { if (readOnly) return; toast(store.collect(s.id)); if (store.state.collected.includes(s.id)) (e.currentTarget as HTMLElement).innerHTML = `${icon('Check', 17)} 已加入图鉴`; });
+  dialog.querySelector('#specimen-lab')!.addEventListener('click', () => { if (readOnly) return; close(); onLab(); });
   return { close, dialog };
 }

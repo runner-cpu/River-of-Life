@@ -2,6 +2,7 @@ import './styles.css';
 import './readability.css';
 import './learning.css';
 import './polish.css';
+import { mountRelationships } from './modes/relationships';
 import { openHelp } from './modes/help';
 import { openInquiry } from './modes/inquiry';
 import { setupMobileNavigation } from './core/navigation';
@@ -25,6 +26,7 @@ const species = allSpecies.filter(s => s.status === 'published' && s.sources.len
 const store = new GameStore(species, questions);
 const nav: { id: Mode; label: string; en: string; icon: string }[] = [
   { id: 'journey', label: '演化之旅', en: 'Journey', icon: 'Orbit' },
+  { id: 'relationships', label: '纪元关系', en: 'Relationships', icon: 'Orbit' },
   { id: 'codex', label: '物种图鉴', en: 'Collection', icon: 'BookOpen' },
   { id: 'dig', label: '化石挖掘', en: 'Excavation', icon: 'Pickaxe' },
   { id: 'quiz', label: '知识挑战', en: 'Challenge', icon: 'Lightbulb' },
@@ -45,7 +47,7 @@ function shell() {
   $('#app').innerHTML = `<a class="skip-link" href="#main-content">跳到主要内容</a><aside class="sidebar" aria-label="主导航"><a class="brand" href="#journey" aria-label="生命长河首页"><div class="brand-mark">${icon('Dna', 31)}</div><div><strong>生命长河</strong><span>RIVER OF LIFE</span></div></a><div class="sidebar-intro">一场跨越 38 亿年的相遇</div><div class="nav-caption">开启你的探索</div><nav>${nav.map(item => `<button data-mode="${item.id}" class="nav-item ${mode === item.id ? 'active' : ''}">${icon(item.icon, 21)}<span>${item.label}</span>${item.id === 'codex' ? '<small id="nav-collected">0</small>' : ''}<i></i></button>`).join('')}</nav><div class="sidebar-journey"><span class="eyebrow">YOUR FIELD JOURNAL</span><div class="journal-icon">${icon('Sprout', 28)}</div><h3>好奇心，是旅程的起点。</h3><p>每一次发现，都让生命的故事更完整。</p><div class="collection-progress"><span>我的生命收藏</span><b id="sidebar-count">0 / 48</b></div><div class="progress-track"><i id="sidebar-progress"></i></div><button class="text-btn" id="my-collection">翻开我的图鉴 ${icon('ArrowUpRight', 15)}</button></div><div class="sidebar-bottom"><button id="help">${icon('BookOpen', 18)} 使用指南</button><button id="classroom">${icon('Presentation', 18)} 课堂模式</button><button id="settings">${icon('Settings2', 18)} 探索设置</button><div class="offline-label"><span class="status-dot"></span><span id="offline-label">本地保存 · 无需注册</span></div></div></aside><div class="app-body"><header class="topbar"><div class="breadcrumb"><button class="mobile-menu icon-btn" aria-label="打开导航">${icon('Menu')}</button><span>线上自然博物馆</span><span class="crumb-slash">/</span><strong id="breadcrumb-current">演化之旅</strong></div><div class="topbar-actions"><button class="icon-btn" id="search" aria-label="搜索物种">${icon('Search', 19)}</button><button class="points-pill" id="points-info" title="演化点记录已完成的学习活动"><span>${icon('Sparkles', 17)}</span><strong id="points">0</strong><span>演化点</span></button><button class="avatar" id="profile" aria-label="查看探索者记录">${icon('Leaf', 19)}</button></div></header><main id="main-content" tabindex="-1"></main><footer class="footer"><span>每一种生命，都值得被认识。</span><button id="about">关于作品与来源 ${icon('ArrowUpRight', 12)}</button></footer></div><div class="toast-region" id="toasts" aria-live="polite" aria-atomic="false"></div><div id="demo-overlay"></div>`;
   document.querySelectorAll<HTMLButtonElement>('[data-mode]').forEach(button => button.addEventListener('click', () => navigate(button.dataset.mode as Mode)));
   $('#my-collection').addEventListener('click', () => { codexFilter = 'collected'; navigate('codex'); });
-  $('#help').addEventListener('click', () => openHelp({ onJourney: () => navigate('journey'), onInquiry: showInquiry, onClassroom: showClassroom, onLab: () => navigate('lab'), onSettings: showSettings }));
+  $('#help').addEventListener('click', () => openHelp({ onJourney: () => navigate('journey'), onRelationships: () => navigate('relationships'), onInquiry: showInquiry, onClassroom: showClassroom, onLab: () => navigate('lab'), onSettings: showSettings }));
   $('#settings').addEventListener('click', showSettings); $('#classroom').addEventListener('click', showClassroom); $('#profile').addEventListener('click', showProfile); $('#about').addEventListener('click', showAbout);
   $('#search').addEventListener('click', () => { navigate('codex'); $('#codex-search').focus(); });
   $('#points-info').addEventListener('click', () => modal('学习，让旅程向前', `<p class="definition">演化点只来自实际学习。没有挂机收益，也不用反复点击。</p><div class="economy-list">${[['首次观察生物', '+5'], ['首次读完知识卡', '+3'], ['每题首次答对', '+10'], ['完成化石挖掘', '+20'], ['完成章节学习任务', '+50'], ['见证纪元事件', '+100']].map(([label, value]) => `<div><span>${label}</span><strong>${value}</strong></div>`).join('')}</div><p class="muted">第一件藏品免费收藏。后续可用演化点收藏，纪元开启需 150 点。体型对比与阅读始终免费。</p>`));
@@ -80,6 +82,7 @@ function navigate(next: Mode, replaceHash = false) {
   $('#breadcrumb-current').textContent = pageName; document.title = `${pageName} · 生命长河`;
   const main = $('#main-content');
   if (mode === 'journey') renderJourney(main);
+  if (mode === 'relationships') mountRelationships(main, s => { const specimen = showSpecimen(s, store, () => {}, { readOnly: true }); specimenClose = specimen.close; });
   if (mode === 'codex') renderCodex(main);
   if (mode === 'dig') cleanup = mountDig(main, currentChapter(), currentSpecies()[0], store, () => openSpecies(currentSpecies()[0]));
   if (mode === 'quiz') cleanup = mountQuiz(main, currentChapter(), species, questions, store, s => openSpecies(s));
@@ -274,6 +277,6 @@ async function init() {
   connectionLabel(); window.addEventListener('offline', connectionLabel); window.addEventListener('online', connectionLabel);
   if (import.meta.env.PROD && 'serviceWorker' in navigator) void registerOfflineWorker();
   // Read-only diagnostics for reproducible performance evidence.
-  Object.defineProperty(window, '__lifeDiagnostics', { value: () => ({ scene: scene?.stats, epochEvent: epochEvent?.stats, species: species.length, questions: questions.length, mode, chapter: store.state.chapter }), configurable: true });
+  Object.defineProperty(window, '__lifeDiagnostics', { value: () => ({ scene: scene?.stats, epochEvent: epochEvent?.stats, progress: structuredClone(store.state), species: species.length, questions: questions.length, mode, chapter: store.state.chapter }), configurable: true });
 }
 void init();

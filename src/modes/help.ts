@@ -1,11 +1,11 @@
 import { icon, modal } from '../core/ui';
 
-type HelpActions = { onJourney: () => void; onInquiry: () => void; onClassroom: () => void; onLab: () => void; onSettings: () => void };
+type HelpActions = { onJourney: () => void; onRelationships: () => void; onInquiry: () => void; onClassroom: () => void; onLab: () => void; onSettings: () => void };
 
 export function openHelp(actions: HelpActions) {
   const { dialog, close } = modal('从这里开始你的探索', `
     <p class="definition">选择一条适合你的路线。个人探索会保存进度，课堂预览与证据探究使用临时记录。</p>
-    <div class="help-paths">
+    <div class="help-paths"><section><h3>在时间中寻找生命</h3><p>纪元关系按纪元与年代组织全部档案，不代表完整系统发生关系。可切换图形与键盘列表，展开纪元并打开只读展台。</p><button class="btn" data-help="onRelationships">打开纪元关系</button></section>
       <section><span class="eyebrow">自己探索</span><h3>观察一个生命，读懂一张档案</h3><p>点击场景中的生物名称，旋转模型并阅读知识卡。第一次发现会免费加入图鉴；完成本章任务后开启下一纪元。</p><button class="btn primary" data-help="onJourney">${icon('Orbit',17)} 进入演化之旅</button></section>
       <section><span class="eyebrow">练习证据解释</span><h3>先判断，再用资料修订解释</h3><p>任选一个主题，查证后完成迁移问题。三维和文字路线都能完成活动；离开前可导出本次解释。</p><button class="btn" data-help="onInquiry">${icon('Compass',17)} 开始证据探究</button></section>
       <section><span class="eyebrow">教师展示</span><h3>直接选择纪元，带着问题观察</h3><p>课堂模式开放全部章节，可逐个查看物种、播放纪元高光并导出学习单。课堂操作不改变个人收藏。</p><button class="btn" data-help="onClassroom">${icon('Presentation',17)} 打开课堂模式</button></section>

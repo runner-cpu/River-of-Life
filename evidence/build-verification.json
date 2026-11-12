@@ -1,13 +1,13 @@
 {
-  "builtAt": "2026-10-30T12:04:26.388Z",
-  "indexSha256": "93c05684611fb3a4f38db68f3d196670d95be26dc8c30e375ffa88f15c11b49f",
-  "releaseContentSha256": "784388bd0d9579fe7144deb0b19eb6163c91ca6f0fe89303d800e71f6d8139ee",
+  "builtAt": "2026-11-12T01:37:24.758Z",
+  "indexSha256": "04c076ccee6e4075cfd5661694aee290407a2954337d0748c1efe26c76b7c9c0",
+  "releaseContentSha256": "e52aa5736fd70e83664c14cbb3aa62b98f29552e6bd937cac047554e47620728",
   "manifestSha256": "2ba693c7569c71a60f06863f0cea32c7f532fb518ef810d278e341ea1472c5ef",
-  "jsCssGzipBytes": 543794,
+  "jsCssGzipBytes": 547026,
   "models": 13,
   "modelBytes": 11989972,
-  "appChunkGzipBytes": 423907,
-  "nonModelGzipBytes": 630296,
+  "appChunkGzipBytes": 427139,
+  "nonModelGzipBytes": 633533,
   "gzipMethod": "Independent files, gzip level 6, mtime 0 (Node zlib).",
   "releaseContentHashMethod": "SHA-256 over each UTF-8 relative path followed by its file bytes, in lexicographically sorted offline-manifest.json order; excludes sw.js and offline-manifest.json, matching Vite offline build revision."
 }
