@@ -1,16 +1,19 @@
 {
   "document": "output/pdf/life-museum-project-introduction.pdf",
+  "repositoryDocument": "docs/project-introduction.pdf",
   "source": "docs/project-introduction.md",
-  "pages": 22,
-  "sections": 20,
-  "markdownCharacters": 13881,
-  "sourceSha256": "eae780491f095cdba02cfe188d4fdfd16d8414b319d8b8f835211861a9d13b50",
-  "pdfSha256": "4bafc452be20fcf16c894bbb99d943dd2d5cb0def21a0ee9e1d2d1b65e1d5279",
-  "pdfBytes": 492639,
+  "revisionDate": "2026-11-02",
+  "sourceBaselineCommit": "7c5d904ba7e381c76a872fcf2ce415e0c99fa281",
+  "pages": 26,
+  "sections": 24,
+  "markdownCharacters": 16948,
+  "sourceSha256": "f07a7c057363e40e9c6f7346c9fe0a86471ec7d0b94237bb35b8fea3b44d5aee",
+  "pdfSha256": "0b38163bb22923cbb4f402b5c769a07816c14da92d7ae12df9a1cfafbd93ac10",
+  "pdfBytes": 598230,
   "releaseContentSha256": "784388bd0d9579fe7144deb0b19eb6163c91ca6f0fe89303d800e71f6d8139ee",
+  "softwareRegressionDate": "2026-10-30",
   "allSourceTextExtracted": true,
-  "visualReview": "All 22 updated pages rendered and reviewed in a contact sheet; cover, overview and online access pages inspected at 125 dpi. No clipping, overlap or missing glyphs observed. Website, repository and workflow link annotations verified.",
-  "format": "PDF with embedded Chinese font, linked contents, 20 section bookmarks and clickable website/repository/workflow links; editable Markdown companion.",
+  "contentsAndBookmarksChecked": true,
   "externalLinks": [
     {
       "page": 1,
@@ -25,17 +28,33 @@
       "url": "https://runner-cpu.github.io/River-of-Life/"
     },
     {
-      "page": 20,
-      "url": "https://runner-cpu.github.io/River-of-Life/"
-    },
-    {
-      "page": 20,
+      "page": 3,
       "url": "https://github.com/runner-cpu/River-of-Life"
     },
     {
-      "page": 20,
+      "page": 23,
+      "url": "https://runner-cpu.github.io/River-of-Life/"
+    },
+    {
+      "page": 23,
+      "url": "https://github.com/runner-cpu/River-of-Life"
+    },
+    {
+      "page": 23,
       "url": "https://github.com/runner-cpu/River-of-Life/actions/workflows/pages.yml"
     }
   ],
-  "revision": "2026-10-30: Add live website and repository links; update deployment status while preserving the local build/test snapshot."
+  "figures": {
+    "screenshots": 4,
+    "architectureDiagrams": 1
+  },
+  "experimentEvidence": "evidence/project-document-examples.json",
+  "liveSiteCheck": {
+    "date": "2026-11-02",
+    "url": "https://runner-cpu.github.io/River-of-Life/",
+    "httpStatus": 200,
+    "entryScript": "./assets/index-B7xP_END.js"
+  },
+  "visualReview": "All 26 page PNGs inspected individually. Corrected caption and prose pages rerendered at 100 dpi and inspected. Contents, tables, figures, formula, architecture diagram, links and page boundaries verified; no clipping or missing glyphs observed.",
+  "format": "PDF with embedded Chinese font, clickable contents and 24 section bookmarks, website/repository/workflow links; editable Markdown companion."
 }

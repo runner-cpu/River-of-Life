@@ -6,6 +6,8 @@ from pathlib import Path
 import re
 import html
 import json
+import xml.etree.ElementTree as ET
+from reportlab.graphics.shapes import Drawing, Rect, Line, Polygon, String
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.lib import colors
@@ -17,8 +19,6 @@ from reportlab.platypus import (
 )
 from reportlab.platypus.tableofcontents import TableOfContents
 from PIL import Image as PILImage
-from fontTools.ttLib import TTFont as SourceFont
-from fontTools.varLib.instancer import instantiateVariableFont
 
 ROOT = Path(__file__).resolve().parent.parent
 OUT = ROOT / 'output/pdf/life-museum-project-introduction.pdf'
@@ -30,6 +30,8 @@ FONT_CACHE.mkdir(parents=True, exist_ok=True)
 for name, weight in [('NotoSC', 400), ('NotoSCBold', 650)]:
     target = FONT_CACHE / f'{name}.ttf'
     if not target.exists():
+        from fontTools.ttLib import TTFont as SourceFont
+        from fontTools.varLib.instancer import instantiateVariableFont
         font = SourceFont(str(FONT_DIR / 'NotoSansSC-VF.ttf'))
         instantiateVariableFont(font, {'wght': weight}, inplace=True).save(str(target))
     pdfmetrics.registerFont(TTFont(name, str(target)))
@@ -75,7 +77,7 @@ def page_art(canvas, doc):
     canvas.setFillColor(MUTED)
     canvas.setFont('NotoSC', 8)
     canvas.drawString(LEFT, PAGE_H - 34, '生命长河  /  RIVER OF LIFE')
-    canvas.drawRightString(PAGE_W - RIGHT, PAGE_H - 34, '项目介绍 · 2026.10.30')
+    canvas.drawRightString(PAGE_W - RIGHT, PAGE_H - 34, '项目介绍 · 2026.11.02')
     canvas.setStrokeColor(LINE)
     canvas.line(LEFT, PAGE_H - 44, PAGE_W - RIGHT, PAGE_H - 44)
     canvas.line(LEFT, 35, PAGE_W - RIGHT, 35)
@@ -101,7 +103,7 @@ def cover_art(canvas, doc):
     canvas.drawString(LEFT, 608, '详细项目介绍')
     canvas.setFont('NotoSC', 13)
     canvas.setFillColor(MUTED)
-    canvas.drawString(LEFT, 561, '从观察生命，到用证据解释生命。')
+    canvas.drawString(LEFT, 561, '科普教育交互项目与在线展馆')
     canvas.setStrokeColor(LINE)
     canvas.line(LEFT, 526, PAGE_W - RIGHT, 526)
     # A restrained vector timeline, not a newly generated raster asset.
@@ -121,7 +123,7 @@ def cover_art(canvas, doc):
     canvas.setFont('NotoSCBold', 14)
     canvas.setFillColor(INK)
     canvas.drawString(LEFT, 342, '8个纪元  ·  48个生命档案  ·  3组证据探究')
-    summary = '科普教育优先 / 兼顾数字展陈与创新实践<br/>涵盖产品定位、教学活动、视觉交互、工程实现、<br/>软件验证、比赛展示与后续路线。'
+    summary = '科普教育优先 / 兼顾数字展陈与创新实践<br/>24个主题，涵盖产品、教学案例、技术架构、<br/>验证记录、比赛展示与后续规划。'
     p = Paragraph(summary, ParagraphStyle('coverbody', fontName='NotoSC', fontSize=11,
                                           leading=21, textColor=MUTED))
     p.wrap(WIDTH, 100)
@@ -143,7 +145,7 @@ def cover_art(canvas, doc):
     p.drawOn(canvas, LEFT + 14, 143)
     canvas.setFont('NotoSC', 9)
     canvas.setFillColor(MUTED)
-    canvas.drawString(LEFT, 65, '版本日期  2026年10月30日')
+    canvas.drawString(LEFT, 65, '文档更新  2026年11月2日')
     canvas.drawRightString(PAGE_W - RIGHT, 65, '项目源码与验证记录配套文档')
     canvas.restoreState()
 
@@ -187,12 +189,52 @@ def table(rows):
     return [t, Spacer(1, 14)]
 
 
+def svg_diagram(path):
+    """Render the project-owned architecture SVG as vector PDF elements."""
+    root = ET.parse(path).getroot()
+    width, height = float(root.attrib['width']), float(root.attrib['height'])
+    drawing = Drawing(width, height)
+    color = lambda value: colors.HexColor(value) if value and value != 'none' else None
+    for el in root:
+        tag = el.tag.rsplit('}', 1)[-1]
+        a = el.attrib
+        stroke = color(a.get('stroke'))
+        fill = color(a.get('fill'))
+        if tag == 'rect':
+            drawing.add(Rect(float(a['x']), height - float(a['y']) - float(a['height']),
+                             float(a['width']), float(a['height']), rx=float(a.get('rx', 0)),
+                             ry=float(a.get('rx', 0)), fillColor=fill, strokeColor=stroke))
+        elif tag == 'line':
+            drawing.add(Line(float(a['x1']), height-float(a['y1']), float(a['x2']),
+                             height-float(a['y2']), strokeColor=stroke,
+                             strokeWidth=float(a.get('stroke-width', 1))))
+        elif tag == 'polygon':
+            values = [float(n) for n in re.split(r'[ ,]+', a['points'])]
+            points = [v if i % 2 == 0 else height-v for i,v in enumerate(values)]
+            drawing.add(Polygon(points, fillColor=fill, strokeColor=stroke))
+        elif tag == 'text':
+            drawing.add(String(float(a['x']), height-float(a['y']), el.text or '',
+                               fontName=a['font-family'], fontSize=float(a['font-size']),
+                               textAnchor=a.get('text-anchor', 'start'), fillColor=fill))
+        else:
+            raise ValueError(f'Unsupported diagram element: {tag}')
+    scale = WIDTH / width
+    drawing.scale(scale, scale)
+    drawing.width, drawing.height = width*scale, height*scale
+    return drawing
+
+
 story = [Spacer(1, 1), NextPageTemplate('body'), PageBreak()]
 story.append(Paragraph('阅读导航', styles['heading']))
-story.append(Paragraph('初次了解项目可先阅读第01至09节；工程复核重点见第10至16节；准备展示和交付可阅读第17至20节。目录页码及章节书签可点击跳转。', styles['body']))
+story.append(Paragraph('了解项目与功能可阅读第01至11节；教学、设计与工程见第12至19节；特色、部署、展示与后续规划见第20至24节。目录页码与章节书签可点击跳转。', styles['body']))
 toc = TableOfContents()
 toc.levelStyles = [ParagraphStyle('toc', fontName='NotoSC', fontSize=10.5, leading=21,
                                   textColor=INK, leftIndent=0, firstLineIndent=0, spaceBefore=0)]
+toc.tableStyle = TableStyle([
+    ('VALIGN', (0, 0), (-1, -1), 'TOP'),
+    ('LEFTPADDING', (0, 0), (-1, -1), 0), ('RIGHTPADDING', (0, 0), (-1, -1), 0),
+    ('TOPPADDING', (0, 0), (-1, -1), 1), ('BOTTOMPADDING', (0, 0), (-1, -1), 1),
+])
 toc.dotsMinLevel = 0
 story.append(toc)
 story.append(Spacer(1, 15))
@@ -213,7 +255,7 @@ while i < len(lines):
         p.bookmark = 'section-' + title[:2]
         story.append(p)
         i += 1
-        if title.startswith('07 '):
+        if title.startswith('08 '):
             section = []
             while i < len(lines) and not lines[i].startswith('## '):
                 if lines[i].strip():
@@ -226,7 +268,7 @@ while i < len(lines):
                 iw, ih = im.size
             image_width = 207
             left = [Image(str(image_path), width=image_width, height=image_width * ih / iw),
-                    Spacer(1, 8), Paragraph(caption + '。截图摄于本轮本地生产预览。', styles['caption'])]
+                    Spacer(1, 8), Paragraph(caption, styles['caption'])]
             right = [Paragraph(inline(text), styles['body']) for text in section if not text.startswith('![')]
             layout = Table([[left, right]], colWidths=[222, WIDTH - 222], hAlign='LEFT')
             layout.setStyle(TableStyle([('VALIGN', (0, 0), (-1, -1), 'TOP'),
@@ -241,12 +283,16 @@ while i < len(lines):
     if image_match:
         caption, path = image_match.groups()
         image_path = (SOURCE.parent / path).resolve()
+        if image_path.suffix == '.svg':
+            story.append(KeepTogether([svg_diagram(image_path), Spacer(1, 7), Paragraph(caption, styles['caption'])]))
+            i += 1
+            continue
         with PILImage.open(image_path) as im:
             width, height = im.size
         max_height = 233 if height > width else 260
         scale = min(WIDTH / width, max_height / height)
         img = Image(str(image_path), width=width * scale, height=height * scale, hAlign='CENTER')
-        story.append(KeepTogether([img, Spacer(1, 7), Paragraph(caption + '。截图摄于本轮本地生产预览。', styles['caption'])]))
+        story.append(KeepTogether([img, Spacer(1, 7), Paragraph(caption, styles['caption'])]))
         i += 1
         continue
     if line.startswith('|'):

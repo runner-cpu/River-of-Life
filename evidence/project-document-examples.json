@@ -1,0 +1,85 @@
+{
+  "verifiedOn": "2026-11-02",
+  "timezone": "Asia/Shanghai",
+  "scope": "Deterministic output of the existing educational model, not biological observations or classroom data.",
+  "sourceFiles": {
+    "src/core/lab.ts": "ba8ffe22a568decd56d1b4b455d691252a64f1c51126f0e8a9872dd23d5d2f8f",
+    "src/core/lab-comparison.ts": "7709bde6f68f9400d7ab2e9046fc54cd213d03cc60b503f22d95e8491e2370ed"
+  },
+  "cases": [
+    {
+      "settings": {
+        "seed": 20261025,
+        "generations": 30,
+        "drought": 0.8,
+        "predation": 0.2
+      },
+      "population": 100,
+      "mutation": 0.003,
+      "controlDrought": 0,
+      "rows": [
+        {
+          "generation": 0,
+          "control": 0.51,
+          "treatment": 0.51
+        },
+        {
+          "generation": 10,
+          "control": 0.23,
+          "treatment": 0.99
+        },
+        {
+          "generation": 20,
+          "control": 0.09,
+          "treatment": 0.99
+        },
+        {
+          "generation": 30,
+          "control": 0.05,
+          "treatment": 0.96
+        }
+      ],
+      "energyResiduals": {
+        "control": 0,
+        "treatment": 0
+      }
+    },
+    {
+      "settings": {
+        "seed": 42,
+        "generations": 30,
+        "drought": 0.8,
+        "predation": 0.2
+      },
+      "population": 100,
+      "mutation": 0.003,
+      "controlDrought": 0,
+      "rows": [
+        {
+          "generation": 0,
+          "control": 0.55,
+          "treatment": 0.55
+        },
+        {
+          "generation": 10,
+          "control": 0.24,
+          "treatment": 0.96
+        },
+        {
+          "generation": 20,
+          "control": 0.24,
+          "treatment": 1
+        },
+        {
+          "generation": 30,
+          "control": 0.01,
+          "treatment": 1
+        }
+      ],
+      "energyResiduals": {
+        "control": 0,
+        "treatment": 0
+      }
+    }
+  ]
+}
