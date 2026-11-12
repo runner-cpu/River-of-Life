@@ -13,7 +13,7 @@
   "mirrorIdentical": true,
   "releaseContentSha256": "9f74b9f8062f60ebcaa4d235872c924da9577c057be2381d225e4b5f6b009fc8",
   "softwareRegressionDate": "2026-11-12",
-  "softwareRegressionScope": "Task 6 at acd3757: build, 132/132 unit, 69/69 e2e, verify:build. Task 7: build and 132/132 unit rerun. Controller final branch regression pending.",
+  "softwareRegressionScope": "Task 6 at acd3757: build, 132/132 unit, 69/69 e2e, verify:build. Task 7: build and 132/132 unit rerun. Controller after 349e898: fresh build, 132/132 unit (20 files), complete 69/69 production Chromium, verify:build; 0 unexpected/flaky/skipped. Final review: tsc, 135/135 unit (21 files), isolated Vite build; all 32 release files byte-identical to the controller-tested dist. PDF and source unchanged.",
   "allSourceTextExtracted": true,
   "contentCheckMethod": "Normalize extracted body and Markdown to Chinese characters and ASCII alphanumerics; every prose line, table cell and figure caption is contained after removing Markdown formatting/targets and repeated PDF headers/footers.",
   "unmatchedSourceSegments": [],
@@ -239,5 +239,25 @@
       "32": "e9bb1d9ac4df3bf40bf9ccb63770d33088c3486d8e44b23cf39926131c858bd9"
     }
   },
-  "format": "Embedded Chinese font; clickable contents, 24 section bookmarks; website/repository/workflow links; editable Markdown companion."
+  "format": "Embedded Chinese font; clickable contents, 24 section bookmarks; website/repository/workflow links; editable Markdown companion.",
+  "finalRegression": {
+    "status": "passed",
+    "reviewedCommit": "349e898",
+    "controllerBuildTime": "2026-11-12T05:07:45.412Z",
+    "controllerBrowserStart": "2026-11-12T05:08:40.291Z",
+    "controllerBrowserDurationMs": 147752.512,
+    "controllerBrowser": {
+      "passed": 69,
+      "unexpected": 0,
+      "flaky": 0,
+      "skipped": 0
+    },
+    "finalReviewUnit": {
+      "files": 21,
+      "passed": 135
+    },
+    "productionIdentity": "32 release files byte-identical; original fresh full browser evidence retained",
+    "documentIdentity": "PDF and source hashes unchanged; no reauthoring required",
+    "deploymentVerified": false
+  }
 }

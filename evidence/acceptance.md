@@ -1,14 +1,20 @@
 # 本地软件验收记录
 
-日期：2026-11-12（Asia/Shanghai）。实现基线：`acd3757`（任务6最终代码），不是部署证明。
+日期：2026-11-12（Asia/Shanghai）。功能基线：`acd3757`（任务6最终代码）；控制器最终整分支复核基线：`349e898`。本记录不是部署证明。
 
 ## 已实际执行的验证
 
-任务6最终实现：`npm run build`通过（48档案、8章节、144题、13 GLB、严格TypeScript/Vite）；`npm test`为20文件132/132；`npm run test:e2e`为69/69生产Chromium、约2.6分钟；`npm run verify:build`通过。具体测试、失败修复、截图与限制见[交互增强证据](interaction-enhancement.md)。这些是任务6实际执行结果，不冒充文档提交后的最终回归；控制器仍须在材料完成后进行最终浏览器与构建身份核验。
+任务6最终实现：`npm run build`通过（48档案、8章节、144题、13 GLB、严格TypeScript/Vite）；`npm test`为20文件132/132；`npm run test:e2e`为69/69生产Chromium、约2.6分钟；`npm run verify:build`通过。具体测试、失败修复、截图与限制见[交互增强证据](interaction-enhancement.md)。以上保留任务6的历史验证范围。控制器已在`349e898`后完成最终整分支`npm run build`、20文件132/132单元、完整69/69生产Chromium（0失败、0不稳定、0跳过）与`npm run verify:build`；生产构建时间为2026-11-12T05:07:45.412Z，浏览器开始于05:08:40.291Z，历时147752.512ms。现有JSON证据保留该次完整结果。
 
 构建证据`build-verification.json`：index SHA256 `78c74b553dae30ef9a0a879dfd05daf15faaf654336452e01aa03418a452cb0e`；发布内容SHA256 `9f74b9f8062f60ebcaa4d235872c924da9577c057be2381d225e4b5f6b009fc8`；JS/CSS逐文件gzip557442字节，app437555字节，非模型643949字节；13模型11989972字节。gzip级别6，独立文件统计，不等于首屏传输量。
 
 自动证据包含关系只读的完整Progress/updatedAt及双存储不变、分类/导出、同伴文件只读与拒绝错误、点阵/曲线/表格一致、结构点加载/回退/恢复、Progress迁移/两枚零点徽章，以及生产缓存断网重载新增交互。保留原经济、确定性、存储异常与资源清理测试。桌面、390×844、320px、键盘/减少动态为Chromium自动检查；人工查看相应自动截图不等于独立真机操作。每任务检查范围和数量见其证据段。
+
+## 统一终审修复的限定验证
+
+展示包按源路径到包路径递归收集文稿、证据、10张实际截图和架构SVG；重写各自基址的Markdown与HTML链接，包内核对本地目标存在且非空、PDF SHA256及全部manifest文件哈希。完整记录随实际生成包保存在`verification/package-checks.json`与`package-manifest.json`。入口文稿精简后保留详细介绍链接和原现实缺口；结构关系源码/CSS只格式化，annotations负向用例标题收窄为实际覆盖的三角形权重。
+
+终审执行`npx tsc --noEmit`、`npm test`（21文件135/135）和隔离`npx vite build --outDir tmp/final-fix-dist`。隔离产物与控制器已测dist的32个发布文件逐字节一致，发布内容SHA256不变，保留真实完整浏览器证据；没有为打包或文稿维护重复浏览器全套或PDF生成。PDF仍32页/24书签，两个镜像SHA256仍`0ae6a423f51f134174bb6255c92e9a565b26a204ecb8102c5392158fc22978d7`，正文Markdown未改。
 
 ## 发布与历史
 

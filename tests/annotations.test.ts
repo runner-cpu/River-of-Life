@@ -24,7 +24,7 @@ it("rejects count, duplicate ids, missing source/scope and invalid coordinates",
   );
 });
 
-it('rejects invalid surface triangle weights and unknown representation',()=>{
+it('rejects invalid surface triangle weights',()=>{
  const point=structuredClone(specimenAnnotations.mosasaurus[0]);
  point.surfaces={reconstruction:'0 0 1 2 3 3 -1 -1'};
  expect(validateAnnotations({bad:[point,point,point]})).toContain('bad: invalid surface');
