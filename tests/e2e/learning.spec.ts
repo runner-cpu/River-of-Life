@@ -22,7 +22,9 @@ test('evidence inquiry opens a real exhibit, records reasoning and exports witho
   const html=readFileSync((await download.path())!,'utf8');expect(html).toContain('&lt;script&gt;');expect(html).not.toContain('<script>');
   expect(html).toContain('不是标准化测验');expect(html).toContain(inquiries[0].source.url);
   await page.screenshot({path:'evidence/competition-inquiry-result.png'});await page.locator('#inquiry-finish').click();
-  expect(await page.evaluate(key=>localStorage.getItem(key),saveKey)).toBe(before);await expect(page.locator('#start-inquiry')).toBeFocused();
+  const after = JSON.parse((await page.evaluate(key=>localStorage.getItem(key),saveKey))!);
+  expect(after.badges).toEqual([...JSON.parse(before!).badges, 'inquiry-reserved-judgment']);
+  expect({...after,badges:JSON.parse(before!).badges,updatedAt:JSON.parse(before!).updatedAt}).toEqual(JSON.parse(before!));await expect(page.locator('#start-inquiry')).toBeFocused();
 });
 
 test('all inquiry topics support a complete text route at a phone viewport',async({page})=>{

@@ -1,8 +1,10 @@
+import { ReproductionBehavior, type InquiryBadgeCallback } from '../core/inquiry-badges';
 import { renderPopulation } from './population-view';
 import { compareEnvironments, comparisonCSV } from '../core/lab-comparison';
 import { download, escape, icon } from '../core/ui';
 
-export function mountComparison(container: HTMLElement, environment: () => { drought: number; predation: number }) {
+export function mountComparison(container: HTMLElement, environment: () => { drought: number; predation: number }, onBadge?: InquiryBadgeCallback) {
+  const behavior = new ReproductionBehavior();
   let lastConditions: { drought: number; predation: number; seed: number; prediction: string } | undefined;
   container.innerHTML = `<div class="comparison-heading"><div><span class="eyebrow">让解释经得起一次对照</span><h2>同一个起点，两个环境。</h2><p>保留相同初始种群，只改变干旱强度。先预测，再运行 30 代，比较两条曲线。</p></div><span class="outline-tag">对照探究 · 独立于上方实验</span></div><div class="comparison-setup"><label for="comparison-prediction">你的预测<select id="comparison-prediction"><option value="">先选一个预测</option><option value="higher">实验组耐旱频率更高</option><option value="same">两组频率相同</option><option value="lower">实验组耐旱频率更低</option><option value="unsure">不确定，先记录结果</option></select></label><label for="comparison-seed">随机种子<input id="comparison-seed" type="number" min="0" max="4294967295" step="1" value="20261025"></label><button class="btn primary" id="run-comparison">${icon('FlaskConical',17)} 运行对照实验</button></div><p class="comparison-current" id="comparison-current"></p><p class="comparison-conditions">对照组：干旱 0%；实验组：运行时取上方干旱值。两组捕食选择相同、种群各 100、突变率 0.3%，起点与随机种子相同。0% 干旱仍含模型设定的耐旱性状成本，不能称为“无选择”。</p><div id="comparison-feedback" role="status"></div><p class="comparison-pending" id="comparison-pending" role="status" hidden>参数或预测已调整。下方仍是上一次运行的结果与记录，请重新运行。</p><div id="comparison-result"></div>`;
   const refreshConditions = () => {
@@ -19,6 +21,7 @@ export function mountComparison(container: HTMLElement, environment: () => { dro
     if (!prediction.value) { container.querySelector('#comparison-feedback')!.textContent = '先记录一个预测，再开始比较。'; prediction.focus(); return; }
     if (!seedInput.value.trim() || !seedInput.checkValidity()) { seedInput.reportValidity(); return; }
     const result = compareEnvironments({ seed: Number(seedInput.value), generations: 30, ...environment() });
+    const runId = behavior.completed(result.settings.seed);
     lastConditions = {drought:result.settings.drought,predation:result.settings.predation,seed:result.settings.seed,prediction:prediction.value}; refreshConditions();
     const first = result.rows[0], last = result.rows.at(-1)!;
     const difference = Math.round((last.treatment - last.control) * 100);
@@ -75,6 +78,20 @@ export function mountComparison(container: HTMLElement, environment: () => { dro
       });
     }
     updateGeneration();
+    resultContainer.insertAdjacentHTML('beforeend', `<div class="comparison-note"><label for="comparison-note">本次运行备注（种子 ${result.settings.seed}）</label><textarea id="comparison-note" maxlength="1200" rows="3" placeholder="记录这次重跑的观察；请勿填写个人信息。"></textarea><button class="btn" id="save-comparison-note" type="button">保存本次备注</button><p class="muted">备注仅在本次活动暂存；重新运行、刷新或离开页面后会丢失，不进入永久存档。</p><p id="comparison-note-status" role="status"></p><p id="comparison-saved-note" hidden></p></div>`);
+    container.querySelector('#save-comparison-note')!.addEventListener('click', () => {
+      const input = container.querySelector<HTMLTextAreaElement>('#comparison-note')!;
+      const saved = behavior.saveNote(runId, input.value, onBadge);
+      if (saved) {
+        input.value = behavior.savedNote(runId)!;
+        const snapshot = container.querySelector<HTMLElement>('#comparison-saved-note')!;
+        snapshot.textContent = `已暂存备注：${behavior.savedNote(runId)}`; snapshot.hidden = false;
+      }
+      container.querySelector('#comparison-note-status')!.textContent = saved ? '本次运行备注已暂存。行为记录仅描述发生过的操作，不评估科学能力。' : '请先为本次运行填写非空备注。';
+    });
+    container.querySelector('#comparison-note')!.addEventListener('input', () => {
+      container.querySelector('#comparison-note-status')!.textContent = '备注已编辑，点击保存才会更新该次运行的暂存备注。';
+    });
     container.querySelector('#export-comparison')!.addEventListener('click', () => download(`生命长河-对照实验-${result.settings.seed}.csv`, '\ufeff'+comparisonCSV(result),'text/csv;charset=utf-8'));
   });
   return refreshConditions;

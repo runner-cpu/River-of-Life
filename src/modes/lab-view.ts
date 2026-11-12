@@ -27,7 +27,7 @@ export function mountLab(container: HTMLElement, store: GameStore) {
   container.querySelector<HTMLInputElement>('#drought')!.addEventListener('input', e => { drought = Number((e.target as HTMLInputElement).value) / 100; container.querySelector('#drought-value')!.textContent = `${Math.round(drought * 100)}%`; paint(); });
   container.querySelector<HTMLInputElement>('#predation')!.addEventListener('input', e => { predation = Number((e.target as HTMLInputElement).value) / 100; container.querySelector('#predation-value')!.textContent = `${Math.round(predation * 100)}%`; });
   const comparison=document.createElement('section');comparison.className='lab-comparison';comparison.id='lab-comparison';comparison.tabIndex=-1;comparison.setAttribute('aria-label','同起点对照实验');container.append(comparison);
-  const refreshComparison = mountComparison(comparison,()=>({drought,predation}));
+  const refreshComparison = mountComparison(comparison,()=>({drought,predation}), id => { if (store.inquiryBadge(id)) container.querySelector('#lab-insight')!.textContent = '你记录了一次换种子重跑与备注。行为记录不评估科学能力，也不增加演化点。'; });
   container.addEventListener('input',event => {
     if (event.target instanceof HTMLInputElement && ['drought','predation'].includes(event.target.id)) refreshComparison();
   });

@@ -1,3 +1,4 @@
+import { exportedInquiry, type InquiryBadgeCallback } from '../core/inquiry-badges';
 import { mountInquiryComparison } from './inquiry-comparison';
 import { learningSources } from '../content/learning-sources';
 import { inquiryRecord, serializeInquiryRecord, type InquiryRecord } from '../core/inquiry-record';
@@ -14,7 +15,7 @@ export function inquiryReport(session: InquirySession, explanation: string) {
   return `<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>生命长河 · 探究记录</title><style>body{max-width:780px;margin:40px auto;padding:24px;font:16px/1.9 system-ui;color:#203d37}h1{font-size:28px}section{border-top:1px solid #ccd5cb;margin-top:24px;padding-top:16px}p{white-space:pre-wrap}small{color:#52644f}@media print{body{margin:0;padding:0}}</style><h1>${escape(a.title)}</h1><p>学习目标：${escape(a.objective)}</p><small>课堂活动临时记录 · 不含姓名／账号 · 不写入个人图鉴。此记录不是标准化测验，也不能单独证明教学成效。</small>${(['initial','evidence','transfer'] as const).map((key,index) => `<section><h2>${['起初的判断','证据选择','新情境解释'][index]}</h2><p>${escape(a[key].prompt)}</p><p>本次选择：${escape(session.answers[key] === undefined ? '未记录' : a[key].options[session.answers[key]!])}</p>${key !== 'initial' && session.answers[key] !== undefined ? `<p>与本活动参考解释${session.answers[key] === a[key].correct ? '一致' : '尚不一致'}。</p>` : ''}<p>参考解释：${escape(a[key].explanation)}</p></section>`).join('')}<section><h2>证据归类（独立新增栏目）</h2>${a.cards.map(card => `<p>${escape(card.text)}：${escape(categories[session.classifications[card.id]])}<br>来源引用：${escape(card.sourceRef)}<br>核对范围：${escape(card.scope)}</p>`).join('')}</section><section><h2>我的解释</h2><p>${escape(explanation.trim() || '本次没有填写文字解释。')}</p><small>文字解释由学习者填写，未作自动评分；请由教师核对“观点—证据—理由”是否连贯。</small></section><section><h2>证据来源与边界</h2><p>${escape(a.observations.join('\n'))}</p><a href="${escape(a.source.url)}">[${a.source.level}] ${escape(a.source.title)}</a><p>核对范围：${escape(a.source.scope)}</p><p>查看方式：${session.observation === 'model' ? '打开过三维档案' : '使用文字证据'}。模型配色、姿态和舞台位置不能替代化石证据。</p></section></html>`;
 }
 
-export function openInquiry(species: Species[], onSpecimen: (specimen: Species) => void) {
+export function openInquiry(species: Species[], onSpecimen: (specimen: Species) => void, onBadge?: InquiryBadgeCallback) {
   const { dialog, close } = modal('用证据，重新认识生命', '<div id="inquiry-content"></div>', true);
   dialog.classList.add('inquiry-dialog');
   const host = dialog.querySelector<HTMLElement>('#inquiry-content')!;
@@ -124,14 +125,14 @@ export function openInquiry(species: Species[], onSpecimen: (specimen: Species) 
       const peerHost = document.createElement('div');
       step.querySelector('.inquiry-result')!.append(peerHost);
       const comparison = mountInquiryComparison(peerHost, () => inquiryRecord(state), peerMemory);
-      step.querySelector('#inquiry-export-json')!.addEventListener('click', () => { download(`生命长河-${a.id}-探究记录.json`, serializeInquiryRecord(state), 'application/json'); });
+      step.querySelector('#inquiry-export-json')!.addEventListener('click', () => { try { download(`生命长河-${a.id}-探究记录.json`, serializeInquiryRecord(state), 'application/json'); exportedInquiry(state, onBadge); toast('已发起记录下载，请在浏览器中确认保存。'); } catch { toast('未能发起下载，请重试。'); } });
       step.querySelector<HTMLTextAreaElement>('#inquiry-explanation')!.addEventListener('input', event => {
         state.explanation = (event.target as HTMLTextAreaElement).value;
         comparison.refresh();
         step.querySelector('#inquiry-character-count')!.textContent = `${(event.target as HTMLTextAreaElement).value.length} / 1200`;
       });
       step.querySelector('#inquiry-export')!.addEventListener('click', () => {
-        download(`生命长河-${a.id}-探究记录.html`, inquiryReport(state,step.querySelector<HTMLTextAreaElement>('#inquiry-explanation')!.value),'text/html;charset=utf-8'); toast('探究记录已导出，可用浏览器打开或打印。');
+        try { download(`生命长河-${a.id}-探究记录.html`, inquiryReport(state,step.querySelector<HTMLTextAreaElement>('#inquiry-explanation')!.value),'text/html;charset=utf-8'); exportedInquiry(state, onBadge); toast('已发起记录下载，请在浏览器中确认保存。'); } catch { toast('未能发起下载，请重试。'); }
       });
       step.querySelector('#inquiry-finish')!.addEventListener('click',close);
     } else {

@@ -1,3 +1,4 @@
+import { isInquiryBadge, type InquiryBadgeId } from '../content/inquiry-badges';
 import type { Progress, Species, Question } from './types';
 import { openProgressDatabase, readCurrentProgress } from './persistence';
 
@@ -15,7 +16,7 @@ const chapterTasks = (p: Progress, chapter: number, species: Species[], question
   ];
 };
 export const freshProgress = (): Progress => ({
-  version: 1, points: 0, totalEarned: 0, chapter: 1, unlockedChapters: [1], completedChapters: [],
+  version: 2, points: 0, totalEarned: 0, chapter: 1, unlockedChapters: [1], completedChapters: [],
   observed: [], read: [], collected: [], compared: [], answered: [], mistakes: [], excavated: [], events: [], badges: [],
   settings: { sound: false, reducedMotion: typeof matchMedia !== 'undefined' && matchMedia('(prefers-reduced-motion: reduce)').matches, quality: 'auto', projection: false },
   updatedAt: new Date().toISOString(),
@@ -23,8 +24,8 @@ export const freshProgress = (): Progress => ({
 
 export function validateProgress(input: unknown, species: Species[], questions: Question[]): Progress {
   if (!input || typeof input !== 'object') throw new Error('这不是有效的探索记录。');
-  const p = input as Progress;
-  if (p.version !== 1) throw new Error('暂不支持这个版本的探索记录。');
+  const p = input as Omit<Progress, 'version'> & { version: number };
+  if (p.version !== 1 && p.version !== 2) throw new Error('暂不支持这个版本的探索记录。');
   const result = freshProgress();
   const ids = new Set(species.filter(publishable).map(s => s.id)), qids = new Set(questions.filter(q => ids.has(q.speciesId)).map(q => q.id));
   for (const key of ['points', 'totalEarned'] as const) {
@@ -57,7 +58,9 @@ export function validateProgress(input: unknown, species: Species[], questions: 
   if (result.collected.some((id, i) => i > 0 && !fossils.includes(id) && !result.read.includes(id))) throw new Error('藏品缺少阅读记录。');
   if (result.completedChapters.some(chapter => !chapterTasks(result, chapter, species, questions).slice(0, 3).every(t => t.current >= t.target))) throw new Error('通关记录缺少学习任务。');
   if (p.events !== undefined && (!Array.isArray(p.events) || p.events.length > 3000 || p.events.some(e => typeof e !== 'string' || e.length > 150))) throw new Error('学习事件记录无效。');
-  result.badges = Array.isArray(p.badges) ? p.badges.filter(b => typeof b === 'string' && b.length < 50).slice(0, 30) : [];
+  result.badges = Array.isArray(p.badges) ? p.badges.filter(b => typeof b === 'string' && b.length < 50).slice(0, p.version === 1 ? 30 : 32) : [];
+  // Validate the full v1 ledger before returning v2; reserved IDs in old saves are not awards.
+  result.badges = [...new Set(result.badges)].filter(id => p.version === 2 || !isInquiryBadge(id));
   result.chapter = result.unlockedChapters.includes(p.chapter) ? p.chapter : 1;
   if (p.settings) {
     result.settings.sound = p.settings.sound === true;
@@ -225,6 +228,10 @@ export class GameStore {
   }
   setChapter(chapter: number) { if (this.state.unlockedChapters.includes(chapter)) { this.state.chapter = chapter; this.changed(); } }
   badge(name: string) { if (!this.state.badges.includes(name)) { this.state.badges.push(name); this.changed(); } }
+  inquiryBadge(id: InquiryBadgeId) {
+    if (this.options.persist === false || !isInquiryBadge(id) || this.state.badges.includes(id)) return false;
+    this.state.badges.push(id); this.changed(); return true;
+  }
   settings(settings: Partial<Progress['settings']>) { Object.assign(this.state.settings, settings); this.changed(); }
   export() { return JSON.stringify(this.state, null, 2); }
   import(raw: string) { if (raw.length > 250000) throw new Error('记录文件过大。'); this.state = validateProgress(JSON.parse(raw), this.species, this.questions); this.checkTasks(); this.changed(); }

@@ -65,3 +65,5 @@
 .inquiry-peer-explanation { white-space: pre-wrap; }
 .inquiry-peer-differences { margin-top: 20px; }
 @media (max-width: 600px) { .inquiry-peer-columns { grid-template-columns: minmax(0, 1fr); } .inquiry-peer-column { padding: 12px; } }
+
+.comparison-note{display:grid;gap:12px;margin-top:24px;min-width:0}.comparison-note textarea{box-sizing:border-box;width:100%;max-width:100%;font:inherit;padding:12px;border:1px solid #aab8ad;border-radius:8px}.comparison-note .btn{justify-self:start}.comparison-note p{overflow-wrap:anywhere}

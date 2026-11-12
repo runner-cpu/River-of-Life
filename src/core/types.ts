@@ -33,7 +33,7 @@ export type Chapter = {
 export type Question = { id: string; speciesId: string; chapter: number; prompt: string; options: string[]; correct: number; explanation: string; field: 'definition' | 'fact' | 'misconception' | 'diet' | 'habitat' | 'period' };
 export type ModelAsset = { speciesId: string; url: string; source: string; author: string; license: string; licenseUrl?: string; title?: string; modifications?: string; derivativeSource?: string; triangles: number; bytes: number; animations: string[]; static: boolean; representation: 'reconstruction' | 'fossil' | 'diagram'; note: string };
 export type Progress = {
-  version: 1; points: number; totalEarned: number; chapter: number;
+  version: 2; points: number; totalEarned: number; chapter: number;
   unlockedChapters: number[]; completedChapters: number[];
   observed: string[]; read: string[]; collected: string[]; compared: string[];
   answered: string[]; mistakes: string[]; excavated: number[]; events: string[];

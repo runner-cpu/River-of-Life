@@ -265,7 +265,7 @@ describe('safe save handling', () => {
     (p: Record<string, any>) => { p.unlockedChapters.push(3); },
     (p: Record<string, any>) => { p.mistakes.push(chapterQuestions(2)[0].id); },
     (p: Record<string, any>) => { p.events = [{}]; },
-    (p: Record<string, any>) => { p.version = 2; },
+    (p: Record<string, any>) => { p.version = 3; },
   ])('rejects inconsistent imports atomically (%#)', mutate => {
     const store = create(); store.observe(species[0].id); const before = store.export(); const payload = JSON.parse(before); mutate(payload);
     expect(() => store.import(JSON.stringify(payload))).toThrow(); expect(store.export()).toBe(before);
@@ -300,5 +300,25 @@ describe('safe save handling', () => {
     const store = create(), notice = vi.fn(); store.onNotice(notice); await store.init();
     expect(store.state.points).toBe(0); expect(store.state.observed).toEqual([]); expect(notice).toHaveBeenCalled();
     expect(storage.setItem).not.toHaveBeenCalled(); expect(storage.getItem(saveKey)).toBe(invalid);
+  });
+});
+
+
+describe('Progress v1 migration', () => {
+  it('reconciles migrated v1 and v2 replicas by original timestamp without startup writes', async () => {
+    const original = create(); original.observe(species[0].id);
+    const legacy = {...original.state, version:1, badges:['old','inquiry-reserved-judgment'], updatedAt:'2026-10-29T00:00:00Z'};
+    const newer = {...original.state, badges:['inquiry-reproduction'], updatedAt:'2026-10-30T00:00:00Z'};
+    storage.setItem(saveKey, JSON.stringify(legacy)); const database = databaseStorage(newer); storage.setItem.mockClear();
+    const next = create(); await next.init(); expect(next.state).toEqual(newer); expect(storage.setItem).not.toHaveBeenCalled(); expect(database.put).not.toHaveBeenCalled();
+    storage.setItem(saveKey, JSON.stringify({...legacy,updatedAt:'2026-11-01T00:00:00Z'})); storage.setItem.mockClear();
+    const migrated = create(); await migrated.init(); expect(migrated.state.version).toBe(2); expect(migrated.state.badges).toEqual(['old']);
+    expect(migrated.state.updatedAt).toBe('2026-11-01T00:00:00Z'); expect(migrated.state.points).toBe(original.state.points); expect(storage.setItem).not.toHaveBeenCalled();
+  });
+  it('imports v1 without retroactive badges and rejects an invalid legacy ledger atomically', () => {
+    const store = create(); store.observe(species[0].id); const legacy = {...store.state,version:1,badges:['legacy','inquiry-reproduction']};
+    store.import(JSON.stringify(legacy)); expect(store.state.version).toBe(2); expect(store.state.badges).toEqual(['legacy']); expect(store.state.points).toBe(5);
+    const before=store.export(); expect(()=>store.import(JSON.stringify({...legacy,totalEarned:999}))).toThrow(); expect(store.export()).toBe(before);
+    expect(validateProgress(JSON.parse(before),species,questions)).toEqual(store.state);
   });
 });
