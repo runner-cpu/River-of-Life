@@ -110,3 +110,15 @@ Verification on the final implementation:
 Screenshots: `task6-inquiry-{1440,390,320}.png`, `task6-lab-{1440,390,320}.png`, `task6-profile-{1440,390,320}.png`. Focused captures preceded the full suite and were reviewed by the controller. Actual opened captures show readable neutral Chinese badge labels, a Chinese example note, visible keyboard focus, permanent note-lifetime text after saving, and no horizontal overflow. Automated 390×844 and 320px width checks passed; tests use reduced motion and native keyboard activation. This is inspection of automated screenshots, not a physical-device or screen-reader study. Full regression includes loaded models, failure fallback/component retry and real prepared-cache disconnect/reload paths for relationships, cards, population and peer files. No runtime dependencies or external service calls were added; all badge/migration work is local and bundled through the existing offline revision mechanism. External source pages, device voice and AR retain their prior limits. This local change is not deployed.
 
 An intermediate new import test initially attempted the second file upload after successful import had closed Settings; it was fixed to reopen Settings, then focused and full suites passed. Initial focused invocation inherited the known NO_COLOR/FORCE_COLOR warning; final commands explicitly set process-local FORCE_COLOR and removed process-local NO_COLOR, with no global configuration changes or warnings in the final checks.
+
+## Task 7 — 展示材料与边界说明（2026-11-12）
+
+代码基线 acd3757；本次只修订材料与PDF生成排版。README、delivery-status、competition五篇、AI_USAGE和详细介绍对齐六项交互、Progress2迁移、独立探究JSON、临时记录与离线范围。同伴比较实际为“具体差异”文本列表，已逐处纠正文稿和图7，未添加开关。
+
+submission-readiness保留14项四段说明（已有证据、尚缺什么、最小行动、完成凭据），包括13/至少24外部模型、10复原+3扫描/35示意、高清图卡、真机AR/尺度、真实性能、60–90分钟通关/课堂研究、科学审校、正式视频、S1–S5、可选在线导览、真实团队/签署/软著与具体赛事条件。旧验收全文归档，当前验收明确区分2026-10-30已上线旧站、11月12日本地增强和后续发布核验；无学生、专家、奖项或学习效果宣称。
+
+实际检查：Task7 `npm run build`通过（48档案、8章节、144题、13 GLB及TypeScript/Vite）；`npm test`20文件132/132通过。本轮未重跑浏览器或verify:build；材料中的69/69浏览器与构建核验属于Task6 acd3757，完整最终回归由控制器执行。
+
+详细介绍保留24节，重建为32页；docs/project-introduction.pdf与output/pdf镜像逐字节相同。全部正文段、表格单元格与图注经过规范化提取比对，零遗漏；24个书签页码与生成目录一致，48内部链接和7外部URI已盘点。完整哈希、页数、逐页PNG哈希及检查方式见project-document-verification.json。最终32页均有单页人工检查记录（原实现者1–24，控制器补看所有变化页13/14/16/20及25–32；其他页SHA256相同），接手者另看全32页原比例拼图并独立复看20页最终改动，无截断/重叠/缺字。图片为真实界面讲解样例，不是真实课堂数据；未生成新栅格素材。
+
+限制：未增加依赖或运行时行为，下载文件不属于站点缓存；外部来源、语音、AR不保证离线。物理设备、跨浏览器、读屏、科学审校与课堂研究继续未完成。独立展示包需控制器整分支审查时重新核验页数与新增截图打包，不把旧包称为新版完整交付。检查时点未验证增强上线，发布后的Actions/线上哈希另记。

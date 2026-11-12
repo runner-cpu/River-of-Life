@@ -77,12 +77,12 @@ def page_art(canvas, doc):
     canvas.setFillColor(MUTED)
     canvas.setFont('NotoSC', 8)
     canvas.drawString(LEFT, PAGE_H - 34, '生命长河  /  RIVER OF LIFE')
-    canvas.drawRightString(PAGE_W - RIGHT, PAGE_H - 34, '项目介绍 · 2026.11.02')
+    canvas.drawRightString(PAGE_W - RIGHT, PAGE_H - 34, '项目介绍 · 2026.11.12')
     canvas.setStrokeColor(LINE)
     canvas.line(LEFT, PAGE_H - 44, PAGE_W - RIGHT, PAGE_H - 44)
     canvas.line(LEFT, 35, PAGE_W - RIGHT, 35)
     canvas.setFont('NotoSC', 7.8)
-    canvas.drawString(LEFT, 22, '在线演示版说明  ·  软件验证不等于科学审定或教学成效')
+    canvas.drawString(LEFT, 22, '本地增强版说明  ·  软件验证不等于科学审定或教学成效')
     canvas.drawRightString(PAGE_W - RIGHT, 22, f'{doc.page:02d}')
     canvas.restoreState()
 
@@ -139,13 +139,13 @@ def cover_art(canvas, doc):
         canvas.linkURL(url, (LEFT, y - 3, LEFT + pdfmetrics.stringWidth(text, 'NotoSC', 9.5), y + 12), relative=0)
     canvas.setFillColor(colors.HexColor('#E9EFE2'))
     canvas.roundRect(LEFT, 122, WIDTH, 75, 7, fill=1, stroke=0)
-    p = Paragraph('当前版本：已上线、可验证的科普教育原型。<br/>专业审校、真实课堂研究、真机AR及正式参赛成片仍待完成。',
+    p = Paragraph('网站入口已上线；功能以所列本地构建为准。<br/>专业审校、真实课堂研究、真机AR及正式参赛成片仍待完成。',
                   ParagraphStyle('covernote', fontName='NotoSC', fontSize=10, leading=19, textColor=INK))
     p.wrap(WIDTH - 28, 60)
     p.drawOn(canvas, LEFT + 14, 143)
     canvas.setFont('NotoSC', 9)
     canvas.setFillColor(MUTED)
-    canvas.drawString(LEFT, 65, '文档更新  2026年11月2日')
+    canvas.drawString(LEFT, 65, '文档更新  2026年11月12日')
     canvas.drawRightString(PAGE_W - RIGHT, 65, '项目源码与验证记录配套文档')
     canvas.restoreState()
 
@@ -289,7 +289,10 @@ while i < len(lines):
             continue
         with PILImage.open(image_path) as im:
             width, height = im.size
-        max_height = 233 if height > width else 260
+        # Added full-page teaching captures need readable labels, particularly
+        # the tall relationship/annotation views. Retain original figure sizes.
+        enhanced = any(name in image_path.name for name in ('relationships-', 'annotations-', 'task2-', 'task3-', 'task5-'))
+        max_height = (540 if height > width else 360) if enhanced else (233 if height > width else 260)
         scale = min(WIDTH / width, max_height / height)
         img = Image(str(image_path), width=width * scale, height=height * scale, hAlign='CENTER')
         story.append(KeepTogether([img, Spacer(1, 7), Paragraph(caption, styles['caption'])]))
