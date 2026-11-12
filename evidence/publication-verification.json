@@ -1,0 +1,15 @@
+{
+  "checkedAt": "2026-11-12T05:56:19.536Z",
+  "website": "https://runner-cpu.github.io/River-of-Life/",
+  "deploymentCommit": "cbba61b9f2408708d916ca18d54cba4b6dbfd7a3",
+  "workflowUrl": "https://github.com/runner-cpu/River-of-Life/actions/runs/43163925143",
+  "homepageHttpStatus": 200,
+  "entryScript": "./assets/index-BULCSN90.js",
+  "releaseContentSha256": "f6d695033f650b161bee7cd54d0e059ddcaa66cd02b02f589fa434dbb38d3718",
+  "indexSha256": "155b1289b63869d00575b71b257a12bbee1b156d8f7c3788709c824036a2fb97",
+  "offlineManifestMatches": true,
+  "serviceWorkerRevisionMatches": true,
+  "verifiedAssetCount": 32,
+  "everyLiveAssetMatchesLocalBuild": true,
+  "method": "Fetched the live index, offline manifest, service worker and every manifest resource with cache-busting URLs; compared each SHA-256 and the complete content revision with the local production build."
+}

@@ -142,3 +142,12 @@ submission-readiness保留14项四段说明（已有证据、尚缺什么、最�
 当前发布内容SHA256为 f6d695033f650b161bee7cd54d0e059ddcaa66cd02b02f589fa434dbb38d3718；index SHA256为 155b1289b63869d00575b71b257a12bbee1b156d8f7c3788709c824036a2fb97。JS/CSS gzip 557442字节、app 437555字节、非模型 643943字节；13模型 11989972字节。与工作树历史构建相比仅首页12处CRLF转为LF，其余31个发布文件逐字节相同。为使发布验收对应完全一致的产物，已重新完成全套浏览器测试。
 
 32页PDF与正文Markdown保持已逐页审查的内容及原始哈希；文内构建数据是标明日期的历史快照，[文档核验](project-document-verification.json) 单列 documentBuildSnapshot 与当前发布构建，避免混用。
+
+
+## 2026-11-12 最终发布结果
+
+发布提交：cbba61b9f2408708d916ca18d54cba4b6dbfd7a3；[GitHub Actions](https://github.com/runner-cpu/River-of-Life/actions/runs/43163925143)已完成并成功部署 Pages。[工作流核验](pages-workflow-verification.json)保留对应提交及各步骤结果。
+
+核验时间：2026-11-12T05:56:19.536Z。首页HTTP 200，入口 ./assets/index-BULCSN90.js；线上离线清单、Service Worker 内容版本及全部32个发布资源与本地构建一致。发布内容SHA256为 f6d695033f650b161bee7cd54d0e059ddcaa66cd02b02f589fa434dbb38d3718。完整方法和结果见[线上核验](publication-verification.json)。这项检查证明发布资源一致；交互与断网操作由上述完整生产浏览器回归覆盖。
+
+详细Markdown/PDF保留其注明日期的历史验证快照；当前发布结果以本节与对应JSON为准。后续仅补充文档和证据的提交不改变此部署代码及产物。

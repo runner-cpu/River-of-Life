@@ -147,7 +147,7 @@
     }
   ],
   "internalLinkCount": 48,
-  "linkCheckScope": "PDF annotations and bookmark destinations inspected; existing online baseline preflight supplied by controller, no new remote URL checks claimed.",
+  "linkCheckScope": "PDF annotations and bookmark destinations inspected; existing online baseline preflight supplied by controller, no new remote URL checks claimed. Final release verification separately confirmed the live site and every release resource; original PDF external URI inventory remains unchanged.",
   "figures": {
     "screenshots": 10,
     "architectureDiagrams": 1
@@ -155,10 +155,14 @@
   "experimentEvidence": "evidence/project-document-examples.json",
   "liveSiteCheck": {
     "date": "2026-11-12",
-    "performedBy": "controller preflight",
+    "checkedAt": "2026-11-12T05:56:19.536Z",
     "httpStatus": 200,
-    "entryScript": "./assets/index-B7xP_END.js",
-    "scope": "Existing published baseline; enhancement deployment not verified at document check time."
+    "entryScript": "./assets/index-BULCSN90.js",
+    "deploymentCommit": "cbba61b9f2408708d916ca18d54cba4b6dbfd7a3",
+    "releaseContentSha256": "f6d695033f650b161bee7cd54d0e059ddcaa66cd02b02f589fa434dbb38d3718",
+    "verifiedAssetCount": 32,
+    "evidence": "evidence/publication-verification.json",
+    "scope": "Final enhancement publication verified separately from the unchanged historical Markdown/PDF snapshot."
   },
   "visualReview": {
     "pagesReviewed": [
@@ -259,13 +263,23 @@
     "productionIdentity": "Fresh full regression of canonical main build. LF index.html; all other 31 release files match the reviewed worktree build.",
     "releaseContentSha256": "f6d695033f650b161bee7cd54d0e059ddcaa66cd02b02f589fa434dbb38d3718",
     "documentIdentity": "Reviewed 32-page PDF and complete Markdown unchanged; verified hashes and mirror identity. Historical documentBuildSnapshot retained separately.",
-    "deploymentVerified": false
+    "deploymentVerified": true,
+    "deploymentCommit": "cbba61b9f2408708d916ca18d54cba4b6dbfd7a3",
+    "publicationEvidence": "evidence/publication-verification.json",
+    "workflowEvidence": "evidence/pages-workflow-verification.json"
   },
   "documentBuildSnapshot": {
     "sourceBaselineCommit": "acd3757",
     "releaseContentSha256": "9f74b9f8062f60ebcaa4d235872c924da9577c057be2381d225e4b5f6b009fc8",
     "indexSha256": "78c74b553dae30ef9a0a879dfd05daf15faaf654336452e01aa03418a452cb0e",
-    "scope": "Historical CRLF worktree build described in the unchanged Markdown/PDF. Canonical main uses LF in index.html; all other 31 release files are identical. This snapshot is not the deployed artifact identity."
+    "scope": "Historical CRLF worktree build described in the unchanged Markdown/PDF. Canonical main uses LF in index.html; all other 31 release files are identical. This snapshot is not the deployed artifact identity.",
+    "liveSiteCheckAtDocumentReview": {
+      "date": "2026-11-12",
+      "performedBy": "controller preflight",
+      "httpStatus": 200,
+      "entryScript": "./assets/index-B7xP_END.js",
+      "scope": "Existing published baseline; enhancement deployment not verified at document check time."
+    }
   },
   "previousFinalRegression": {
     "status": "passed",

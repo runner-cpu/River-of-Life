@@ -1,43 +1,43 @@
 {
-  "packagePath": "output/competition/life-museum-2026-11-12T05-31-07-408Z",
+  "packagePath": "output/competition/life-museum-2026-11-12T05-56-43-856Z",
   "browser": "Automated headless Chromium on local Windows host",
-  "reviewerAnchors": 10,
-  "localReferences": 34,
+  "reviewerAnchors": 21,
+  "localReferences": 69,
   "decodedImages": 11,
   "servedReleaseFiles": 32,
-  "manifestHashes": 71,
+  "manifestHashes": 73,
   "pdfSha256": "0ae6a423f51f134174bb6255c92e9a565b26a204ecb8102c5392158fc22978d7",
   "nodeServer": "node serve.mjs 4182; index and all release resources HTTP 200 and byte-identical",
   "status": "passed",
-  "releaseContentSha256": "9f74b9f8062f60ebcaa4d235872c924da9577c057be2381d225e4b5f6b009fc8",
-  "packageManifestSha256": "c087331177fe96a0675ae0bb6a7de8f7f3b4bfda522fcb26b469cb3a6ebc01fd",
-  "packageChecksSha256": "cbb3fcbe27189ca1a846fcff85577a55205771ed330fa4dab998e7b81ffae377",
-  "productionComparison": {
-    "command": "npx vite build --outDir tmp/final-fix-dist",
-    "files": 32,
-    "result": "All 32 release path/file byte pairs identical to existing controller-tested dist; controller build/browser evidence preserved."
+  "releaseContentSha256": "f6d695033f650b161bee7cd54d0e059ddcaa66cd02b02f589fa434dbb38d3718",
+  "packageManifestSha256": "1928ed9bfac46d597cffeb624ae20b8a46047dd62af62e4309da4a8632250fcb",
+  "packageChecksSha256": "57b4ed02ad31bb62286dc22832c0c8d08b0f2c84a36f7edcdeb80b6d476b7206",
+  "archive": {
+    "path": "output/competition/life-museum-2026-11-12T05-56-43-856Z.zip",
+    "bytes": 11154964,
+    "sha256": "7d1cee08a7b3df5c02d03fcb02ec6fc142a2b63ffb4f2a5d5d4005930fb1bac6",
+    "verifiedEntries": 74,
+    "manifestHashes": 73,
+    "method": "Read every ZIP entry, compare with final package bytes and verify every package-manifest SHA-256; no extraction required."
   },
   "unitTests": {
     "command": "npm test",
     "files": 21,
     "passed": 135
   },
-  "typeCheck": {
-    "command": "npx tsc --noEmit",
-    "result": "passed"
-  },
   "controllerRegression": {
-    "commit": "349e898",
-    "builtAt": "2026-11-12T05:07:45.412Z",
-    "browserStart": "2026-11-12T05:08:40.291Z",
+    "commit": "e9ea8d74295e269c4cc083b49a2ae6eef4bdb7d6",
+    "builtAt": "2026-11-12T05:41:20.435Z",
+    "browserStart": "2026-11-12T05:44:02.509Z",
     "passed": 69,
     "unexpected": 0,
     "flaky": 0,
     "skipped": 0,
     "evidence": "evidence/e2e-results.json"
   },
-  "scope": "Local package generation, file integrity and automated Chromium on Windows only. No physical device, external URL, classroom or deployment validation.",
-  "checkedAt": "2026-11-12T05:34:09.948994+00:00",
+  "publicationEvidence": "evidence/publication-verification.json",
+  "scope": "Final canonical package generation, every material link and file hash, actual local node server and automated Chromium on Windows. Live publication checked separately in publication-verification.json. No physical device, classroom or scientific validation.",
+  "checkedAt": "2026-11-12T05:58:11.380Z",
   "historicalChecks": [
     {
       "checkedAt": "2026-10-30T10:58:30.487Z",
@@ -253,6 +253,48 @@
         "sha256": "524c7fefa7679acda79d1d693196b694755870eba8f9ac77ca5d781dc3cc9d4c",
         "path": "D:\\Programming\\Objects\\life\\output\\competition\\life-museum-education-2026-10-30.zip"
       }
+    },
+    {
+      "packagePath": "output/competition/life-museum-2026-11-12T05-31-07-408Z",
+      "browser": "Automated headless Chromium on local Windows host",
+      "reviewerAnchors": 10,
+      "localReferences": 34,
+      "decodedImages": 11,
+      "servedReleaseFiles": 32,
+      "manifestHashes": 71,
+      "pdfSha256": "0ae6a423f51f134174bb6255c92e9a565b26a204ecb8102c5392158fc22978d7",
+      "nodeServer": "node serve.mjs 4182; index and all release resources HTTP 200 and byte-identical",
+      "status": "passed",
+      "releaseContentSha256": "9f74b9f8062f60ebcaa4d235872c924da9577c057be2381d225e4b5f6b009fc8",
+      "packageManifestSha256": "c087331177fe96a0675ae0bb6a7de8f7f3b4bfda522fcb26b469cb3a6ebc01fd",
+      "packageChecksSha256": "cbb3fcbe27189ca1a846fcff85577a55205771ed330fa4dab998e7b81ffae377",
+      "productionComparison": {
+        "command": "npx vite build --outDir tmp/final-fix-dist",
+        "files": 32,
+        "result": "All 32 release path/file byte pairs identical to existing controller-tested dist; controller build/browser evidence preserved."
+      },
+      "unitTests": {
+        "command": "npm test",
+        "files": 21,
+        "passed": 135
+      },
+      "typeCheck": {
+        "command": "npx tsc --noEmit",
+        "result": "passed"
+      },
+      "controllerRegression": {
+        "commit": "349e898",
+        "builtAt": "2026-11-12T05:07:45.412Z",
+        "browserStart": "2026-11-12T05:08:40.291Z",
+        "passed": 69,
+        "unexpected": 0,
+        "flaky": 0,
+        "skipped": 0,
+        "evidence": "evidence/e2e-results.json"
+      },
+      "scope": "Local package generation, file integrity and automated Chromium on Windows only. No physical device, external URL, classroom or deployment validation.",
+      "checkedAt": "2026-11-12T05:34:09.948994+00:00",
+      "workspace": "C:/Users/runner/.codex/worktrees/interaction-enhancement/life"
     }
   ]
 }
