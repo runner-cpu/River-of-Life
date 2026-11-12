@@ -126,10 +126,19 @@ submission-readiness保留14项四段说明（已有证据、尚缺什么、最�
 
 ## 最终整分支回归与统一终审修复（2026-11-12）
 
-控制器在349e898之后实际完成build、20文件132/132单元、完整69/69生产Chromium及verify:build。构建时间2026-11-12T05:07:45.412Z；浏览器开始05:08:40.291Z、历时147752.512ms，unexpected/flaky/skipped均0。build-verification.json、e2e-results.json和model-validation.json保留这次真实最新完整证据；Task1–7的分段记录是各任务当时的范围，Task7末尾“由控制器执行”的待办现已完成。
+控制器在349e898之后实际完成build、20文件132/132单元、完整69/69生产Chromium及verify:build。构建时间2026-11-12T05:07:45.412Z；浏览器开始05:08:40.291Z、历时147752.512ms，unexpected/flaky/skipped均0。当时的build-verification.json、e2e-results.json和model-validation.json记录了该次完整证据；现由下述主目录最终验收更新；Task1–7的分段记录是各任务当时的范围，Task7末尾“由控制器执行”的待办现已完成。
 
 统一修复仅涉及展示包、入口文稿、测试标题和关系视图源码排版。新增无依赖的源路径→包路径映射，递归收集Markdown本地引用和SVG依赖，逐份按输出目录重写链接；评审HTML包含转义后的可点击链接、表格链接及代码文本。实际包校验本地Markdown/HTML/SVG目标存在且非空，包含全部10张截图和架构SVG、当前交互证据及历史验收；核对32页PDF SHA256和全部package-manifest文件哈希。README与启动说明使用已验证页数。材料保留未经真机、科学审校和课堂试测等现实缺口。
 
 终审修复实际执行：npx tsc --noEmit通过；npm test为21文件135/135（新增3项打包回归，含跨层链接/循环引用/SVG依赖、缺失/越界拒绝和安全HTML渲染）；npx vite build --outDir tmp/final-fix-dist通过。隔离构建的32个发布文件与上述完整浏览器回归所用dist逐字节相同，发布内容SHA256仍9f74b9f8062f60ebcaa4d235872c924da9577c057be2381d225e4b5f6b009fc8，因此沿用新鲜完整69项结果，不重复全套浏览器。PDF及正文Markdown字节均未改变，没有重做authoring marker或PDF生成。误跟踪的Task7协调报告留在本地忽略目录，公开证据中本节及Task7节保留有用审查内容。
 
 最终展示包通过npm run package:competition实际生成，核验结果保存在包内verification/package-checks.json及package-manifest.json；终审报告记录实际路径、浏览器打开材料及独立启动检查结果。未推送、未部署；线上增强哈希仍由发布后的核验记录确认。
+
+
+## 合并后的最终发布验收（2026-11-12）
+
+在原主目录 main 的 e9ea8d7 上重新执行 npm test（21文件135/135）、npm run build、完整 npm run test:e2e（69/69，0失败/不稳定/跳过）和 npm run verify:build，全部通过。构建于 2026-11-12T05:41:20.435Z，浏览器开始 2026-11-12T05:44:02.509Z，历时 147082.79100000003ms。当前 [构建证据](build-verification.json)、[浏览器结果](e2e-results.json) 和 [模型校验](model-validation.json) 对应该次结果。
+
+当前发布内容SHA256为 f6d695033f650b161bee7cd54d0e059ddcaa66cd02b02f589fa434dbb38d3718；index SHA256为 155b1289b63869d00575b71b257a12bbee1b156d8f7c3788709c824036a2fb97。JS/CSS gzip 557442字节、app 437555字节、非模型 643943字节；13模型 11989972字节。与工作树历史构建相比仅首页12处CRLF转为LF，其余31个发布文件逐字节相同。为使发布验收对应完全一致的产物，已重新完成全套浏览器测试。
+
+32页PDF与正文Markdown保持已逐页审查的内容及原始哈希；文内构建数据是标明日期的历史快照，[文档核验](project-document-verification.json) 单列 documentBuildSnapshot 与当前发布构建，避免混用。

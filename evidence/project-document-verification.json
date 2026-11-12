@@ -11,9 +11,9 @@
   "pdfSha256": "0ae6a423f51f134174bb6255c92e9a565b26a204ecb8102c5392158fc22978d7",
   "pdfBytes": 1929922,
   "mirrorIdentical": true,
-  "releaseContentSha256": "9f74b9f8062f60ebcaa4d235872c924da9577c057be2381d225e4b5f6b009fc8",
+  "releaseContentSha256": "f6d695033f650b161bee7cd54d0e059ddcaa66cd02b02f589fa434dbb38d3718",
   "softwareRegressionDate": "2026-11-12",
-  "softwareRegressionScope": "Task 6 at acd3757: build, 132/132 unit, 69/69 e2e, verify:build. Task 7: build and 132/132 unit rerun. Controller after 349e898: fresh build, 132/132 unit (20 files), complete 69/69 production Chromium, verify:build; 0 unexpected/flaky/skipped. Final review: tsc, 135/135 unit (21 files), isolated Vite build; all 32 release files byte-identical to the controller-tested dist. PDF and source unchanged.",
+  "softwareRegressionScope": "Task 6 at acd3757: build, 132/132 unit, 69/69 e2e, verify:build. Task 7: build and 132/132 unit rerun. Controller after 349e898: fresh build, 132/132 unit (20 files), complete 69/69 production Chromium, verify:build; 0 unexpected/flaky/skipped. Final review: tsc, 135/135 unit (21 files), isolated Vite build; all 32 release files byte-identical to the controller-tested dist. PDF and source unchanged. After fast-forward to e9ea8d7 in original main checkout: npm test 135/135 across 21 files, npm run build, full production Chromium 69/69 and verify:build passed. Canonical LF index changes the release hash; PDF/source bytes remain unchanged and historical document snapshot is explicitly preserved.",
   "allSourceTextExtracted": true,
   "contentCheckMethod": "Normalize extracted body and Markdown to Chinese characters and ASCII alphanumerics; every prose line, table cell and figure caption is contained after removing Markdown formatting/targets and repeated PDF headers/footers.",
   "unmatchedSourceSegments": [],
@@ -241,6 +241,33 @@
   },
   "format": "Embedded Chinese font; clickable contents, 24 section bookmarks; website/repository/workflow links; editable Markdown companion.",
   "finalRegression": {
+    "status": "passed",
+    "reviewedCommit": "e9ea8d74295e269c4cc083b49a2ae6eef4bdb7d6",
+    "controllerBuildTime": "2026-11-12T05:41:20.435Z",
+    "controllerBrowserStart": "2026-11-12T05:44:02.509Z",
+    "controllerBrowserDurationMs": 147082.79100000003,
+    "controllerBrowser": {
+      "passed": 69,
+      "unexpected": 0,
+      "flaky": 0,
+      "skipped": 0
+    },
+    "finalReviewUnit": {
+      "files": 21,
+      "passed": 135
+    },
+    "productionIdentity": "Fresh full regression of canonical main build. LF index.html; all other 31 release files match the reviewed worktree build.",
+    "releaseContentSha256": "f6d695033f650b161bee7cd54d0e059ddcaa66cd02b02f589fa434dbb38d3718",
+    "documentIdentity": "Reviewed 32-page PDF and complete Markdown unchanged; verified hashes and mirror identity. Historical documentBuildSnapshot retained separately.",
+    "deploymentVerified": false
+  },
+  "documentBuildSnapshot": {
+    "sourceBaselineCommit": "acd3757",
+    "releaseContentSha256": "9f74b9f8062f60ebcaa4d235872c924da9577c057be2381d225e4b5f6b009fc8",
+    "indexSha256": "78c74b553dae30ef9a0a879dfd05daf15faaf654336452e01aa03418a452cb0e",
+    "scope": "Historical CRLF worktree build described in the unchanged Markdown/PDF. Canonical main uses LF in index.html; all other 31 release files are identical. This snapshot is not the deployed artifact identity."
+  },
+  "previousFinalRegression": {
     "status": "passed",
     "reviewedCommit": "349e898",
     "controllerBuildTime": "2026-11-12T05:07:45.412Z",
