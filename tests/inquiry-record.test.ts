@@ -40,3 +40,13 @@ describe('independent inquiry record', () => {
     invalid.forEach(r => expect(() => validateInquiryRecord(r)).toThrow());
   });
 });
+
+it('rejects impossible calendar dates and accepts emitted canonical UTC timestamps', () => {
+  const r = inquiryRecord(complete());
+  for (const exportedAt of ['2026-02-30T12:00:00.000Z', '2026-13-01T00:00:00.000Z', '2026-11-12T25:00:00.000Z', '2026-11-12', '2026-11-12T12:00:00Z']) {
+    expect(() => validateInquiryRecord({ ...r, exportedAt })).toThrow('时间');
+  }
+  expect(validateInquiryRecord({ ...r, exportedAt: '2024-02-29T12:00:00.000Z' }).exportedAt).toContain('02-29');
+  expect(() => validateInquiryRecord({ ...r, version: 0 })).toThrow('版本');
+  expect(() => validateInquiryRecord({ ...r, classifications: [null, null] })).toThrow('卡片');
+});

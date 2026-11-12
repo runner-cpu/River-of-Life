@@ -14,6 +14,15 @@ export interface InquiryRecord {
   explanation: string;
 }
 
+// UTF-8 can require up to four bytes per character; cap bytes before File.text().
+export const MAX_INQUIRY_FILE_BYTES = 400_000;
+
+function validTimestamp(value: unknown): value is string {
+  if (typeof value !== 'string' || !/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/.test(value)) return false;
+  const time = Date.parse(value);
+  return Number.isFinite(time) && new Date(time).toISOString() === value;
+}
+
 /** Independent activity protocol: never pass this data to the Progress importer. */
 export function validateInquiryRecord(value: unknown, inquiryId?: string): InquiryRecord {
   if (!value || typeof value !== 'object') throw new Error('探究记录必须为对象。');
@@ -22,7 +31,7 @@ export function validateInquiryRecord(value: unknown, inquiryId?: string): Inqui
   const activity = inquiries.find(a => a.id === r.inquiryId);
   if (!activity || (inquiryId && r.inquiryId !== inquiryId)) throw new Error('探究主题不一致。');
   if (r.phase !== 'complete' || !['model', 'text'].includes(r.observation)) throw new Error('探究记录尚未完成或查看方式无效。');
-  if (typeof r.exportedAt !== 'string' || !/^\d{4}-\d\d-\d\dT/.test(r.exportedAt) || !Number.isFinite(Date.parse(r.exportedAt))) throw new Error('导出时间无效。');
+  if (!validTimestamp(r.exportedAt)) throw new Error('导出时间无效，请使用有效的UTC ISO时间。');
   for (const key of ['initial', 'evidence', 'transfer'] as const) {
     const answer = r.answers?.[key];
     if (key === 'evidence' && answer === null) continue;
