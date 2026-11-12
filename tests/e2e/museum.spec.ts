@@ -408,6 +408,15 @@ test('production service worker caches the gallery and loads a cached model afte
   await page.locator('#comparison-prediction').selectOption('higher');
   await page.locator('#run-comparison').click();
   await expect(page.locator('.comparison-chart polyline')).toHaveCount(2);
+  await expect(page.locator('[data-population="treatment"] [data-pool="current"] circle')).toHaveCount(100);
+  await page.locator('#population-generation').focus();
+  await page.keyboard.press('Home');
+  await expect(page.locator('#population-generation')).toHaveValue('0');
+  await expect(page.locator('.population-summary').first()).toContainText('没有上一代');
+  await page.keyboard.press('ArrowRight');
+  await expect(page.locator('#population-chart-marker')).toHaveAttribute('data-generation', '1');
+  const offlineCount = await page.locator('[data-population="treatment"] [data-pool="current"] circle[data-value="1"]').count();
+  await expect(page.locator('.comparison-table tr[aria-current="true"] td').nth(1)).toHaveText(String(offlineCount));
   await expect(page.locator('.comparison-record')).toContainText('20261025');
   await context.setOffline(false);
 });
