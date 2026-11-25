@@ -29,7 +29,7 @@ Source baseline: `273e731`. The supplied Claude run ended with 0/10 usable repor
 
 **Interfaces:** retain all public GameStore actions and their existing return shapes. Add an optional `canWrite: () => boolean` guard, used by the application's persistent store, checked before every mutation; isolated preview stores do not use this guard. A small browser access object exposes `writable`, `reason`, `acquire()` and `release()`; acquire resolves promptly even when another window owns the lock. UI holds a single origin-scoped exclusive Web Lock named `life-museum-progress-writer` for its active lifetime.
 
-- [ ] Add failing boundary tests: two access objects share one lock; only one is writable; release permits a new attempt. Missing/failed locks resolve read-only, never pretend to coordinate. Test each GameStore mutation with a denied guard, including settings/import/reset/badges, asserting exact state and storage invariance.
+- [x] Add failing boundary tests: two access objects share one lock; only one is writable; release permits a new attempt. Missing/failed locks resolve read-only, never pretend to coordinate. Test each GameStore mutation with a denied guard, including settings/import/reset/badges, asserting exact state and storage invariance.
 
 ```ts
 const before = store.export();
@@ -39,8 +39,8 @@ expect(store.export()).toBe(before);
 expect(storage.setItem).not.toHaveBeenCalled();
 ```
 
-- [ ] Acquire ownership before persistent store initialization. Keep second windows as explicit read-only snapshots with a visible explanation and retry/reload action; exports and navigation remain usable. Releasing on page exit must revoke mutation permission first. Restored pages must reacquire/reload before writing. Do not merge points or use a localStorage read-then-write as an atomic lock. Unsupported browsers may read/export, with an explanation of why saving is unavailable.
-- [ ] Validate dangerous timestamp boundaries before replacing live state. Reject extended-year extreme dates or normalize them without overflow; preserve ordinary historical dates, including legacy formatting. Allocate a valid revision before committing imports; finite far-future input must never strand later actions. Test maximum JS date, maximum-minus-one, malformed timestamp and a far-future date; rejected imports leave exports and storage unchanged and a later valid action succeeds.
+- [x] Acquire ownership before persistent store initialization. Keep second windows as explicit read-only snapshots with a visible explanation and retry/reload action; exports and navigation remain usable. Releasing on page exit must revoke mutation permission first. Restored pages must reacquire/reload before writing. Do not merge points or use a localStorage read-then-write as an atomic lock. Unsupported browsers may read/export, with an explanation of why saving is unavailable.
+- [x] Validate dangerous timestamp boundaries before replacing live state. Reject extended-year extreme dates or normalize them without overflow; preserve ordinary historical dates, including legacy formatting. Allocate a valid revision before committing imports; finite far-future input must never strand later actions. Test maximum JS date, maximum-minus-one, malformed timestamp and a far-future date; rejected imports leave exports and storage unchanged and a later valid action succeeds.
 
 ```ts
 const before = store.export();
@@ -49,11 +49,11 @@ expect(store.export()).toBe(before);
 expect(() => store.observe(species[0].id)).not.toThrow();
 ```
 
-- [ ] Isolate settings file import with a request generation and dialog lifecycle check. Increment generation before every selection, including empty/oversized files; after `await file.text()` check current request and active/connected dialog, then commit. Catch read failures without losing a good save. Size cap stays 400000 bytes / parsed save 250000 chars. Show reading/result status; clear file input to allow same-file retry. Closing/reset cancels pending work.
-- [ ] Clarify reset wording: it replaces current progress while retaining corrupt-record recovery archives; do not silently erase recovery history.
+- [x] Isolate settings file import with a request generation and dialog lifecycle check. Increment generation before every selection, including empty/oversized files; after `await file.text()` check current request and active/connected dialog, then commit. Catch read failures without losing a good save. Size cap stays 400000 bytes / parsed save 250000 chars. Show reading/result status; clear file input to allow same-file retry. Closing/reset cancels pending work.
+- [x] Clarify reset wording: it replaces current progress while retaining corrupt-record recovery archives; do not silently erase recovery history.
 - Implementation review clarification: use one bounded revision ordering for replica selection and allocation within supported four-digit timestamps. Normal nearby dates retain chronological order and startup preserves the original string; the half-range ambiguity (roughly 5000 years) must be explicit and deterministic. This avoids a separate dangerous-year priority that can select an older replica after a successful write crosses the cutoff. No new Progress fields, keys or data version. Archive original extreme clocks through the existing recovery path; startup itself does not write.
-- [ ] Unit tests cover reverse-order reads, read rejection, close/dispose and denied writer. Add browser tests with two same-context pages, read-only no-op, close first/reload second ownership, and delayed import crossing close/reset. Run targeted unit tests now; root runs browser suite against fresh build.
-- [ ] Commit scoped files and provide report with actual commands/results.
+- [x] Unit tests cover reverse-order reads, read rejection, close/dispose and denied writer. Add browser tests with two same-context pages, read-only no-op, close first/reload second ownership, and delayed import crossing close/reset. Run targeted unit tests now; root runs browser suite against fresh build.
+- [x] Commit scoped files and provide report with actual commands/results.
 
 ### Task 2: 离线更新生命周期与下载状态
 
@@ -61,9 +61,9 @@ expect(() => store.observe(species[0].id)).not.toThrow();
 
 **Interfaces:** keep `CACHE_ALL` request/reply and progress messages compatible; retain `prepareOffline` callers, with current cacheTimeout parameter interpreted as inactivity timeout and a bounded absolute maximum added with a safe default.
 
-- [ ] Load actual worker source in a small fake CacheStorage/network harness. Demonstrate A→B losing A chunks/models before change, plus HTTP 200 followed by quota rejection.
-- [ ] Remove forced `skipWaiting`; use normal waiting until old clients close. Keep unrelated origin/path caches intact. Identify previous full-offline preparation (existing caches must be detected using their cached manifest and presence of all listed resources; new versions may store an explicit completion marker). If A was fully prepared, B install must fetch all B resources afresh and finish before old cache retirement. Never copy same-URL model bytes blindly. If B fails, A stays usable; partial/new visitors keep shell-only installation. Recheck complete previous caches at activation: test B installs first, then A completes offline preparation, then all pages close and network disappears. The next navigation must use a fully prepared B or a coherent complete A fallback; do not delete the last complete A while B lacks its resources. Persist fallback selection across worker restarts and provide a bounded path to preparing B when online again.
-- [ ] Include the worker template in cache revision identity so a worker-only change cannot reuse A's cache name. Introduce `scripts/build-identity.ts` with explicit cache revision and complete-site digest helpers; complete-site identity includes final `sw.js` and `offline-manifest.json`. Task 5 reuses these helpers. Update build verification to distinguish its full release digest and `serviceWorkerRevision`; do not assume the latter is a prefix of a digest that excludes the worker.
+- [x] Load actual worker source in a small fake CacheStorage/network harness. Demonstrate A→B losing A chunks/models before change, plus HTTP 200 followed by quota rejection.
+- [x] Remove forced `skipWaiting`; use normal waiting until old clients close. Keep unrelated origin/path caches intact. Identify previous full-offline preparation (existing caches must be detected using their cached manifest and presence of all listed resources; new versions may store an explicit completion marker). If A was fully prepared, B install must fetch all B resources afresh and finish before old cache retirement. Never copy same-URL model bytes blindly. If B fails, A stays usable; partial/new visitors keep shell-only installation. Recheck complete previous caches at activation: test B installs first, then A completes offline preparation, then all pages close and network disappears. The next navigation must use a fully prepared B or a coherent complete A fallback; do not delete the last complete A while B lacks its resources. Persist fallback selection across worker restarts and provide a bounded path to preparing B when online again.
+- [x] Include the worker template in cache revision identity so a worker-only change cannot reuse A's cache name. Introduce `scripts/build-identity.ts` with explicit cache revision and complete-site digest helpers; complete-site identity includes final `sw.js` and `offline-manifest.json`. Task 5 reuses these helpers. Update build verification to distinguish its full release digest and `serviceWorkerRevision`; do not assume the latter is a prefix of a digest that excludes the worker.
 
 ```js
 expect(await oldCache.match(oldLazyChunk)).toBeTruthy();
@@ -71,10 +71,10 @@ expect(await newCache.match(updatedModelUrl)).toHaveBody('model B');
 expect(await caches.has(unrelatedCache)).toBe(true);
 ```
 
-- [ ] Catch opportunistic cache.put failures only in fetch path and return successful network responses. Keep explicit full-preparation failures visible; failed network fetches must still fail.
-- [ ] Offline download timeout resets only on validated forward progress, includes an absolute maximum (10 minutes), and clears all timers/ports/listeners. Duplicate or decreasing progress cannot keep a stalled worker alive. Extend the per-resource inactivity allowance if needed for a large GLB; no claim that a browser hang completed successfully.
-- [ ] Tests cover complete vs partial A, B changed/add/remove URLs and bytes, failed B installation preserving A, unrelated cache, quota fallback, increasing progress beyond 45s, stalled/duplicate progress and cleanup. Browser integration serves two small controlled versions through a disposable localhost server using actual SW code; old page remains usable while B waits, B activates after A closes, fresh B model works offline.
-- [ ] Run targeted units, commit and report. Root owns full build/browser run.
+- [x] Catch opportunistic cache.put failures only in fetch path and return successful network responses. Keep explicit full-preparation failures visible; failed network fetches must still fail.
+- [x] Offline download timeout resets only on validated forward progress, includes an absolute maximum (10 minutes), and clears all timers/ports/listeners. Duplicate or decreasing progress cannot keep a stalled worker alive. Extend the per-resource inactivity allowance if needed for a large GLB; no claim that a browser hang completed successfully.
+- [x] Tests cover complete vs partial A, B changed/add/remove URLs and bytes, failed B installation preserving A, unrelated cache, quota fallback, increasing progress beyond 45s, stalled/duplicate progress and cleanup. Browser integration serves two small controlled versions through a disposable localhost server using actual SW code; old page remains usable while B waits, B activates after A closes, fresh B model works offline.
+- [x] Run targeted units, commit and report. Root owns full build/browser run.
 
 ### Task 3: 视图与图形资源生命周期
 
