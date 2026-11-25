@@ -1,9 +1,20 @@
 import { test, expect, type Page } from '@playwright/test';
+import { GameStore } from '../../src/core/store';
+import { species } from '../../src/content/species';
+import { questions } from '../../src/content/questions';
 
 test.use({ serviceWorkers: 'block' });
 const saveKey = 'life-museum-save-v1';
 const snapshot = (page: Page) => page.evaluate(() => (window as unknown as { __lifeDiagnostics: () => { progress: unknown } }).__lifeDiagnostics().progress);
 const saved = (page: Page) => page.evaluate(key => localStorage.getItem(key), saveKey);
+const databaseSaved = (page: Page) => page.evaluate(() => new Promise<unknown>((resolve, reject) => {
+  const request = indexedDB.open('life-museum', 1);
+  request.onerror = () => reject(request.error);
+  request.onsuccess = () => {
+    const db = request.result, read = db.transaction('progress').objectStore('progress').get('current');
+    read.onsuccess = () => { db.close(); resolve(read.result); }; read.onerror = () => { db.close(); reject(read.error); };
+  };
+}));
 async function observe(page: Page, id = 'cyanobacteria') {
   await page.locator(`[data-codex-id="${id}"]`).click(); await page.locator('dialog .close-modal').click();
 }
@@ -87,4 +98,43 @@ test('page exit revokes permission immediately and a restored page reloads befor
   ]);
   await expect(page.locator('#codex-grid')).toBeVisible(); await expect(page.locator('#progress-access')).toHaveCount(0);
   await observe(page, 'stromatolites'); expect(JSON.parse((await saved(page))!).observed).toEqual(['cyanobacteria', 'stromatolites']);
+});
+
+test('readers browse unlocked chapters and grade temporary quizzes without changing their snapshot or either replica', async ({ page, context }) => {
+  const seed = new GameStore(species, questions, { persist: false });
+  for (const s of species.filter(s => s.chapter === 1).slice(0, 3)) { seed.observe(s.id); seed.read(s.id); }
+  for (const q of questions.filter(q => q.chapter === 1).slice(0, 3)) seed.answer(q.id, q.correct);
+  seed.complete(1); seed.unlock(2); seed.setChapter(1);
+  await page.addInitScript(raw => localStorage.setItem('life-museum-save-v1', raw), seed.export());
+  await page.goto('/'); await page.locator('#settings').click(); await page.locator('#projection').check(); await page.locator('dialog .close-modal').click();
+  const reader = await context.newPage(); await reader.goto('/'); await expect(reader.locator('#progress-access')).toBeVisible();
+  const before = await snapshot(reader), local = await saved(reader), database = await databaseSaved(reader);
+  await reader.locator('[data-chapter="2"]').click(); await expect(reader.locator('[data-chapter="2"]')).toHaveClass(/active/);
+  await expect(reader.locator(`[data-open-species="${species.find(s => s.chapter === 2)!.id}"]`)).toBeVisible();
+  await reader.locator('[data-mode="quiz"]').click();
+  const deck = questions.filter(q => q.chapter === 2);
+  for (const q of deck) {
+    await expect(reader.locator('.question-card h2')).toHaveText(q.prompt); await reader.locator(`[data-answer="${q.correct}"]`).click();
+    await expect(reader.locator('#quiz-feedback-heading')).toContainText('发现正确答案');
+    await expect(reader.locator('#quiz-feedback-heading')).toContainText('只读练习');
+    await expect(reader.locator('#quiz-feedback-heading')).not.toContainText('本题已获奖励'); await reader.locator('#next-question').click();
+  }
+  await expect(reader.locator('.quiz-complete')).toContainText(`答对 ${deck.length} / ${deck.length} 题`);
+  await reader.locator('[data-mode="journey"]').click(); await reader.locator('[data-chapter="1"]').click(); await expect(reader.locator('[data-chapter="1"]')).toHaveClass(/active/);
+  expect(await snapshot(reader)).toEqual(before); expect(await saved(reader)).toBe(local); expect(await databaseSaved(reader)).toEqual(database);
+  await reader.locator('#settings').click(); const waiting = reader.waitForEvent('download'); await reader.locator('#export-save').click();
+  const download = await waiting, stream = await download.createReadStream(); let exported = ''; for await (const chunk of stream!) exported += chunk.toString();
+  expect(JSON.parse(exported)).toEqual(before);
+});
+
+test('a bubbling file-picker cancellation keeps settings open, cancels the pending read, and permits the same-file retry', async ({ page }) => {
+  await page.goto('/#codex'); await observe(page); const raw = (await saved(page))!, before = await snapshot(page);
+  await page.locator('#settings').click(); await startDelayedImport(page, raw);
+  await page.locator('#import-save').dispatchEvent('cancel', { bubbles: true, cancelable: true });
+  await expect(page.locator('dialog[open] #import-save')).toHaveCount(1); await expect(page.locator('#import-status')).toContainText('未选择');
+  await finishRead(page, raw); expect(await snapshot(page)).toEqual(before); expect(await saved(page)).toBe(raw);
+  await page.evaluate(() => { File.prototype.text = Blob.prototype.text; });
+  await page.locator('#import-save').setInputFiles({ name: 'save.json', mimeType: 'application/json', buffer: Buffer.from(raw) });
+  await expect(page.locator('dialog')).toHaveCount(0); await expect(page.locator('#toasts')).toContainText('探索记录已导入');
+  await page.locator('#settings').click(); await page.locator('dialog').dispatchEvent('cancel', { bubbles: true, cancelable: true }); await expect(page.locator('dialog')).toHaveCount(0);
 });

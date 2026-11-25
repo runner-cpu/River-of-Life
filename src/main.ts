@@ -41,6 +41,7 @@ const nav: { id: Mode; label: string; en: string; icon: string }[] = [
   { id: 'lab', label: '演化实验室', en: 'Laboratory', icon: 'FlaskConical' },
 ];
 let mode: Mode = 'journey', scene: LifeScene | undefined, cleanup: (() => void) | undefined;
+let browsingChapter: number | undefined;
 let codexFilter = 'all', codexSearch = '', codexChapter = 0, paused = false;
 let demoTimer: ReturnType<typeof setInterval> | undefined, demoClose: (() => void) | undefined, demoActive = false;
 let epochEvent: EpochEvent | undefined;
@@ -69,8 +70,8 @@ function shell() {
   new MutationObserver(()=>scene?.pause(paused || !!document.querySelector('dialog[open]'))).observe(document.body,{childList:true});
   store.onNotice(toast); store.subscribe(updateProgress); updateProgress();
 }
-function currentChapter() { return chapters.find(c => c.id === store.state.chapter)!; }
-function currentSpecies() { return species.filter(s => s.chapter === store.state.chapter); }
+function currentChapter() { return chapters.find(c => c.id === (browsingChapter ?? store.state.chapter))!; }
+function currentSpecies() { return species.filter(s => s.chapter === currentChapter().id); }
 function openSpecies(s: Species, demo = false) {
   if (demo || demoActive) { demoClose?.(); const previewStore = new GameStore(species, questions, { persist: false }); previewStore.state.unlockedChapters = chapters.map(c => c.id); previewStore.state.chapter = s.chapter; const card = showSpecimen(s, previewStore, () => {}); demoClose = card.close; if (demoActive) addDemoTakeover(card.dialog); return card; }
   specimenClose?.(); const card = showSpecimen(s, store, () => navigate('lab')); specimenClose = card.close;
@@ -99,7 +100,7 @@ function navigate(next: Mode, replaceHash = false) {
   if (mode === 'relationships') mountRelationships(main, s => { const specimen = showSpecimen(s, store, () => {}, { readOnly: true }); specimenClose = specimen.close; });
   if (mode === 'codex') renderCodex(main);
   if (mode === 'dig') cleanup = mountDig(main, currentChapter(), currentSpecies()[0], store, () => openSpecies(currentSpecies()[0]));
-  if (mode === 'quiz') cleanup = mountQuiz(main, currentChapter(), species, questions, store, s => openSpecies(s));
+  if (mode === 'quiz') cleanup = mountQuiz(main, currentChapter(), species, questions, store, s => openSpecies(s), { canWrite: canWriteProgress });
   if (mode === 'lab') cleanup = mountLab(main, store);
   updateProgress(); window.scrollTo({ top: 0, behavior: 'instant' }); main.focus({preventScroll:true});
 }
@@ -147,7 +148,7 @@ function renderTasks() {
 }
 function visitChapter(id: number) {
   const chapter = chapters.find(c => c.id === id)!;
-  if (store.state.unlockedChapters.includes(id)) { store.setChapter(id); navigate('journey'); return; }
+  if (store.state.unlockedChapters.includes(id)) { if (canWriteProgress()) { store.setChapter(id); browsingChapter = undefined; } else browsingChapter = id; navigate('journey'); return; }
   const { dialog, close } = modal(`${chapter.name} · 尚待探索`, `<span class="eyebrow">CHAPTER ${String(id).padStart(2, '0')}</span><h3 class="chapter-preview-title">${escape(chapter.title)}</h3><p>${escape(chapter.description)}</p><div class="chapter-preview-art">${specimenArt(species.find(s => s.chapter === id)!)}</div><p class="muted">先完成上一纪元的探索，再用 ${chapter.cost} 演化点开启。解锁后可以随时返回已到访的章节。</p><button class="btn primary" id="unlock-chapter">${icon('KeyRound', 17)} 开启纪元 · ${chapter.cost} 演化点</button>`);
   dialog.querySelector('#unlock-chapter')!.addEventListener('click', () => { const error = store.unlock(id, chapter.cost); if (error) toast(error); else { close(); navigate('journey'); toast(`欢迎来到${chapter.name}`); } });
 }
@@ -217,7 +218,10 @@ function showSettings() {
     imported: () => { close(); navigate(mode); toast('探索记录已导入，欢迎回来。'); },
   });
   dialog.addEventListener('close', () => importer.dispose(), { once: true });
-  dialog.addEventListener('cancel', () => importer.dispose(), { once: true });
+  dialog.addEventListener('cancel', event => { if (event.target === dialog) importer.dispose(); });
+  dialog.querySelector<HTMLInputElement>('#import-save')!.addEventListener('cancel', event => {
+    event.stopPropagation(); const input = event.currentTarget as HTMLInputElement; input.value = ''; void importer.select(undefined);
+  });
   dialog.querySelector<HTMLInputElement>('#import-save')!.addEventListener('change', e => {
     const input = e.target as HTMLInputElement, file = input.files?.[0];
     input.value = ''; void importer.select(file);
@@ -314,6 +318,6 @@ async function init() {
   connectionLabel(); window.addEventListener('offline', connectionLabel); window.addEventListener('online', connectionLabel);
   if (import.meta.env.PROD && 'serviceWorker' in navigator) void registerOfflineWorker();
   // Read-only diagnostics for reproducible performance evidence.
-  Object.defineProperty(window, '__lifeDiagnostics', { value: () => ({ scene: scene?.stats, epochEvent: epochEvent?.stats, progress: structuredClone(store.state), species: species.length, questions: questions.length, mode, chapter: store.state.chapter }), configurable: true });
+  Object.defineProperty(window, '__lifeDiagnostics', { value: () => ({ scene: scene?.stats, epochEvent: epochEvent?.stats, progress: structuredClone(store.state), species: species.length, questions: questions.length, mode, chapter: currentChapter().id }), configurable: true });
 }
 void init();

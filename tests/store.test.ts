@@ -193,10 +193,10 @@ describe('safe save handling', () => {
     expect(() => store.read(species[0].id)).not.toThrow(); expect(store.state.read).toContain(species[0].id);
   });
 
-  it('allocates a local revision before replacing imported state, even for a finite far-future clock', () => {
+  it.each(['9999-01-01T00:00:00.000Z', '9999-12-31T23:59:59.998Z', '9999-12-31T23:59:59.999Z'])('allocates a local revision before replacing imported state with finite future clock %s', updatedAt => {
     vi.useFakeTimers(); vi.setSystemTime(new Date('2026-11-25T00:00:00Z'));
     const store = create(); store.observe(species[0].id); const before = Date.parse(store.state.updatedAt);
-    store.import(JSON.stringify({ ...store.state, updatedAt: '9999-01-01T00:00:00.000Z' }));
+    store.import(JSON.stringify({ ...store.state, updatedAt }));
     expect(Date.parse(store.state.updatedAt)).toBe(before + 1);
     expect(() => store.read(species[0].id)).not.toThrow(); expect(Date.parse(store.state.updatedAt)).toBe(before + 2);
   });
@@ -215,6 +215,47 @@ describe('safe save handling', () => {
     expect(storage.setItem).not.toHaveBeenCalled(); expect(database.put).not.toHaveBeenCalled();
     expect(() => store.read(species[0].id)).not.toThrow(); expect(store.state.points).toBe(8);
     expect(storage.setItem.mock.calls.some(([key, raw]) => key.startsWith(`${saveKey}-recovery-`) && raw === unsafe)).toBe(true);
+  });
+
+  it.each(['local', 'database'] as const)('prefers a normal replica over a near-terminal %s clock before later writes and reload', async unsafeSource => {
+    const original = create(); original.observe(species[0].id); const valid = JSON.parse(original.export());
+    const unsafe = { ...valid, updatedAt: '9999-12-31T23:59:59.998Z' };
+    storage.setItem(saveKey, JSON.stringify(unsafeSource === 'local' ? unsafe : valid));
+    const database = databaseStorage(unsafeSource === 'database' ? unsafe : valid); storage.setItem.mockClear();
+    const store = create(); await store.init(); expect(store.state.updatedAt).toBe(valid.updatedAt);
+    expect(storage.setItem).not.toHaveBeenCalled(); expect(database.put).not.toHaveBeenCalled();
+    store.read(species[0].id); store.observe(species[1].id); store.read(species[1].id);
+    const next = create(); await next.init(); expect(next.state.observed).toEqual([species[0].id, species[1].id]); expect(next.state.read).toEqual([species[0].id, species[1].id]);
+    expect(() => next.observe(species[2].id)).not.toThrow();
+  });
+
+  it('recovers the newer of two dangerous clocks without startup writes and keeps both original archives', async () => {
+    vi.useFakeTimers(); vi.setSystemTime(new Date('2026-11-25T00:00:00Z'));
+    const original = create(); original.observe(species[0].id);
+    const older = { ...JSON.parse(original.export()), updatedAt: '9999-12-31T23:59:59.997Z' };
+    original.read(species[0].id);
+    const newer = { ...JSON.parse(original.export()), updatedAt: '9999-12-31T23:59:59.998Z' };
+    storage.setItem(saveKey, JSON.stringify(older)); const database = databaseStorage(newer); storage.setItem.mockClear();
+    const store = create(); await store.init();
+    expect(store.state.points).toBe(8); expect(store.state.read).toEqual([species[0].id]); expect(store.state.updatedAt).toBe('2026-11-25T00:00:00.000Z');
+    expect(storage.setItem).not.toHaveBeenCalled(); expect(database.put).not.toHaveBeenCalled();
+    expect(storage.getItem(saveKey)).toBe(JSON.stringify(older)); expect(database.records.get('current')).toEqual(newer);
+    store.observe(species[1].id); store.read(species[1].id); await Promise.resolve();
+    expect(storage.setItem.mock.calls.some(([key, raw]) => key.startsWith(`${saveKey}-recovery-`) && raw === JSON.stringify(older))).toBe(true);
+    expect([...database.records.entries()].some(([key, value]) => key.startsWith('recovery-') && JSON.stringify(value) === JSON.stringify(newer))).toBe(true);
+    const next = create(); await next.init(); expect(next.state.points).toBe(store.state.points); expect(next.state.read).toEqual(store.state.read);
+    expect(() => next.observe(species[2].id)).not.toThrow();
+  });
+
+  it('does not return to a stale dangerous local clock after recovered database writes succeed alone', async () => {
+    const original = create(); original.observe(species[0].id);
+    const unsafe = { ...JSON.parse(original.export()), updatedAt: '9999-12-31T23:59:59.998Z' };
+    storage.setItem(saveKey, JSON.stringify(unsafe)); const database = databaseStorage(unsafe);
+    const store = create(); await store.init(); storage.setItem.mockImplementation(() => { throw new Error('quota'); });
+    store.read(species[0].id); store.observe(species[1].id);
+    expect(storage.getItem(saveKey)).toBe(JSON.stringify(unsafe)); expect((database.records.get('current') as { points: number }).points).toBe(13);
+    const next = create(); await next.init(); expect(next.state.points).toBe(13); expect(next.state.read).toEqual([species[0].id]); expect(next.state.observed).toEqual([species[0].id, species[1].id]);
+    expect(() => next.read(species[1].id)).not.toThrow(); expect(next.state.points).toBe(16);
   });
 
   it('allocates each action revision before any ledger changes and never saturates at a boundary', () => {

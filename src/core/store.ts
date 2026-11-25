@@ -8,6 +8,10 @@ const UNLOCK_COST = 150;
 // boundary unreachable. Imports receive a local revision, not the file's clock.
 const MIN_TIMESTAMP = -62167219200000;
 const MAX_TIMESTAMP = 253402300799999;
+// Recover clocks in the final supported year before using a snapshot for writes.
+// Healthy replicas outrank these clocks; if all copies have one, recover their
+// newest ledger with a fresh local clock and archive the original copies.
+const RECOVER_CLOCK_FROM = Date.parse('9999-01-01T00:00:00.000Z');
 function revisionAfter(timestamp: string): string {
   const previous = Date.parse(timestamp);
   const next = Math.max(Date.now(), previous + 1);
@@ -102,9 +106,6 @@ export function validateProgress(input: unknown, species: Species[], questions: 
   // Keep the saved revision time: startup uses it to reconcile both storage copies.
   const timestamp = typeof p.updatedAt === 'string' ? Date.parse(p.updatedAt) : NaN;
   if (!Number.isFinite(timestamp) || timestamp < MIN_TIMESTAMP || timestamp > MAX_TIMESTAMP) throw new Error('记录中的时间戳无效或超出安全范围。');
-  // A startup snapshot must have room for its next revision. Reject it as a
-  // corrupt candidate before it can replace another recoverable storage copy.
-  revisionAfter(p.updatedAt);
   result.updatedAt = p.updatedAt;
   return result;
 }
@@ -132,8 +133,15 @@ export class GameStore {
   async init() {
     if (this.options.persist === false) return;
     const candidates: Progress[] = [];
+    const clockRecovery: Progress[] = [];
     const validate = (value: unknown, source: string) => {
-      try { candidates.push(validateProgress(value, this.species, this.questions)); return true; }
+      try {
+        const progress = validateProgress(value, this.species, this.questions);
+        if (Date.parse(progress.updatedAt) >= RECOVER_CLOCK_FROM) {
+          clockRecovery.push(progress); this.notify(`${source}记录的时间过远，已保留原记录；将优先使用正常副本，或恢复进度并重建本地保存时间。`); return false;
+        }
+        candidates.push(progress); return true;
+      }
       catch { this.notify(`${source}记录无效，已保留原记录；将尝试恢复另一份有效记录。`); return false; }
     };
     try {
@@ -149,6 +157,10 @@ export class GameStore {
       if (database !== undefined && !validate(database, '数据库')) this.invalidDatabase = database;
     } catch { this.db?.close?.();this.db=undefined;this.notify('数据库暂不可用，已使用本地记录继续探索。建议导出一份备份。'); }
     if (candidates.length) this.state = candidates.reduce((latest, candidate) => Date.parse(candidate.updatedAt) > Date.parse(latest.updatedAt) ? candidate : latest);
+    else if (clockRecovery.length) {
+      this.state = clockRecovery.reduce((latest, candidate) => Date.parse(candidate.updatedAt) > Date.parse(latest.updatedAt) ? candidate : latest);
+      this.state.updatedAt = new Date().toISOString();
+    }
   }
   private changed(revision = this.pendingRevision!) {
     // Several learning actions can happen within one clock tick; keep revisions ordered.

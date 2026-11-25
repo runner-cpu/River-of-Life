@@ -4,7 +4,7 @@ import { escape, icon, toast } from '../core/ui';
 import { seeded } from '../core/lab';
 import { specimenArt } from '../scene/creatures';
 
-export function mountQuiz(container: HTMLElement, chapter: Chapter, species: Species[], questions: Question[], store: GameStore, onSpecimen: (s: Species) => void) {
+export function mountQuiz(container: HTMLElement, chapter: Chapter, species: Species[], questions: Question[], store: GameStore, onSpecimen: (s: Species) => void, options: { canWrite?: () => boolean } = {}) {
   let kind = 'quick', index = 0, correct = 0, answered = false;
   let deck: Question[] = []; let sorting: Species[] = []; let sortingDone = false;
   const today = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Shanghai', year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date());
@@ -39,9 +39,11 @@ export function mountQuiz(container: HTMLElement, chapter: Chapter, species: Spe
     host.querySelector('#quiz-card')!.addEventListener('click', () => onSpecimen(s));
     host.querySelectorAll<HTMLButtonElement>('[data-answer]').forEach(button => button.addEventListener('click', () => {
       if (answered) return; answered = true;
-      const selected = Number(button.dataset.answer), result = store.answer(q.id, selected); if (result.correct) correct++;
+      const selected = Number(button.dataset.answer), writable = options.canWrite?.() !== false;
+      const result = writable ? store.answer(q.id, selected) : { correct: selected === q.correct, points: 0 };
+      if (result.correct) correct++;
       host.querySelectorAll<HTMLButtonElement>('[data-answer]').forEach((b, i) => { b.disabled = true; if (i === q.correct) {b.classList.add('correct');b.insertAdjacentHTML('beforeend','<small class="answer-state">本题答案</small>');} else if (i === selected) {b.classList.add('incorrect');b.insertAdjacentHTML('beforeend','<small class="answer-state">你的选择</small>');} });
-      host.querySelector('#answer-feedback')!.innerHTML = `<div class="feedback ${result.correct ? 'is-correct' : 'is-incorrect'}"><strong id="quiz-feedback-heading" tabindex="-1" aria-describedby="quiz-explanation">${icon(result.correct ? 'CircleCheck' : 'BookOpen', 20)}${result.correct ? `发现正确答案${result.points ? ' · +10 演化点' : ' · 本题已获奖励'}` : '换个角度，就能看见答案'}</strong><p id="quiz-explanation">${escape(q.explanation)}</p><small>依据：${escape(s.name)}的知识卡 · ${escape(s.sources[0]?.title || '')}</small></div><button class="btn primary next-question" id="next-question">${index + 1 === deck.length ? '查看本轮发现' : '继续探索'} ${icon('ArrowRight', 17)}</button>`;
+      host.querySelector('#answer-feedback')!.innerHTML = `<div class="feedback ${result.correct ? 'is-correct' : 'is-incorrect'}"><strong id="quiz-feedback-heading" tabindex="-1" aria-describedby="quiz-explanation">${icon(result.correct ? 'CircleCheck' : 'BookOpen', 20)}${result.correct ? `发现正确答案${!writable ? ' · 只读练习，不保存进度或奖励' : result.points ? ' · +10 演化点' : ' · 本题已获奖励'}` : '换个角度，就能看见答案'}</strong><p id="quiz-explanation">${escape(q.explanation)}</p><small>依据：${escape(s.name)}的知识卡 · ${escape(s.sources[0]?.title || '')}</small></div><button class="btn primary next-question" id="next-question">${index + 1 === deck.length ? '查看本轮发现' : '继续探索'} ${icon('ArrowRight', 17)}</button>`;
       container.querySelector('#quiz-correct-count')!.textContent=String(store.state.answered.length);
       host.querySelector<HTMLElement>('#quiz-feedback-heading')!.focus({preventScroll:true});
       host.querySelector('#answer-feedback')!.scrollIntoView({block:'nearest',behavior:'instant'});
