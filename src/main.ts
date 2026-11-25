@@ -238,7 +238,10 @@ function showSettings() {
     const progress = dialog.querySelector<HTMLProgressElement>('#offline-progress')!; progress.hidden=false;progress.removeAttribute('value');
     status.textContent = '正在保存展馆与模型，请保持此页面打开…';
     try {
-      const ready = await prepareOffline(navigator.serviceWorker, workerRegistration || registerOfflineWorker(), 12000, 45000, ({completed,total}) => {progress.max=total;progress.value=completed;status.textContent=`已准备 ${completed} / ${total} 项资源，请保持页面打开…`;});
+      const ready = await prepareOffline(navigator.serviceWorker, workerRegistration || registerOfflineWorker(), undefined, undefined, ({completed, total}) => {
+        progress.max = total; progress.value = completed;
+        status.textContent = `已准备 ${completed} / ${total} 项资源，较大的模型可能需要更多时间。`;
+      });
       status.textContent = ready ? '展馆、知识卡与本地模型已缓存，可断网继续探索。手机系统 AR 与语音可能仍需网络。' : '部分资产未能缓存，请联网后重试。';
     } catch (error) { workerRegistration = undefined; status.textContent = error instanceof Error ? error.message : '当前浏览器无法创建离线缓存，请重试。'; }
     finally { button.disabled = false;button.removeAttribute('aria-busy');progress.hidden=true; }

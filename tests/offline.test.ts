@@ -46,3 +46,32 @@ describe('offline preparation failure recovery', () => {
     first.onmessage!({data:{ok:true}});await operation;expect(done).toHaveBeenCalledWith(true);expect(first.close).toHaveBeenCalledOnce();expect(vi.getTimerCount()).toBe(0);
   });
 });
+
+describe('download deadlines', () => {
+  beforeEach(() => vi.useFakeTimers());
+  afterEach(() => { vi.useRealTimers(); vi.unstubAllGlobals(); });
+  async function start(idle = 45_000, absolute?: number) {
+    const port = {onmessage: null as ((event: {data: unknown}) => void) | null, onmessageerror: null, close: vi.fn()};
+    const other = {close: vi.fn()};
+    vi.stubGlobal('MessageChannel', class {port1 = port; port2 = other;});
+    const progress = vi.fn();
+    const done = prepareOffline({} as ServiceWorkerContainer, Promise.resolve({active:{postMessage: vi.fn()}} as unknown as ServiceWorkerRegistration), 50, idle, progress, absolute).catch((e: Error) => e.message);
+    await vi.advanceTimersByTimeAsync(0);
+    return {done, port, other, progress, send: (completed: number, total = 5) => port.onmessage!({data:{type:'progress', completed, total}})};
+  }
+  it('allows ongoing progress beyond 45 seconds and releases message handlers', async () => {
+    const h = await start(); await vi.advanceTimersByTimeAsync(40_000); h.send(1);
+    await vi.advanceTimersByTimeAsync(30_000); h.send(2); h.port.onmessage!({data:{ok:true}});
+    expect(await h.done).toBe(true); expect(h.port.onmessage).toBeNull(); expect(h.port.onmessageerror).toBeNull(); expect(vi.getTimerCount()).toBe(0);
+  });
+  it('does not extend the deadline for repeated, decreasing or inconsistent progress', async () => {
+    const h = await start(100); h.send(2); await vi.advanceTimersByTimeAsync(95);
+    h.send(2); h.send(1); h.send(3, 20); await vi.advanceTimersByTimeAsync(6);
+    expect(await h.done).toContain('缓存等待超时'); expect(h.progress).toHaveBeenCalledTimes(1); expect(h.other.close).toHaveBeenCalledOnce();
+  });
+  it('enforces a ten-minute maximum even when progress keeps advancing', async () => {
+    const h = await start(240_000); for (let i = 1; i < 4; i++) {await vi.advanceTimersByTimeAsync(180_000); h.send(i);}
+    await vi.advanceTimersByTimeAsync(60_001);
+    expect(await h.done).toContain('总时限'); expect(vi.getTimerCount()).toBe(0);
+  });
+});
