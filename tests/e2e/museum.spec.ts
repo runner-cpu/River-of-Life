@@ -62,7 +62,10 @@ test('complete chapter one through real learning actions and unlock chapter two'
     await closeCard(page);
   }
   await navigate(page, 'quiz');
-  for (const question of questions.filter(entry => entry.chapter === 1).slice(0, 3)) {
+  for (let attempt = 0; attempt < 3; attempt++) {
+    const id = await page.locator('.question-card').getAttribute('data-question-id');
+    const question = questions.find(question => question.id === id)!;
+    expect(question.chapter).toBe(1);
     await expect(page.locator('.question-card h2')).toHaveText(question.prompt);
     await page.locator(`[data-answer="${question.correct}"]`).click();
     await expect(page.locator('#answer-feedback .feedback')).toHaveClass(/is-correct/);

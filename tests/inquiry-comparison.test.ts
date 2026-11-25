@@ -26,7 +26,7 @@ describe('read-only inquiry comparisons', () => {
     peer.explanation = '<img src=x onerror=alert(1)>'; peer.observation = 'model';
     const before = JSON.stringify([current, peer]);
     const result = compareInquiryRecords(current, peer);
-    expect(result.differences).toHaveLength(6);
+    expect(result.differences).toHaveLength(7);
     expect(result.differences.join('')).toContain('证据 1');
     expect(result.differences.join('')).toContain('需要更多信息');
     expect(result.peer.explanation).toBe(peer.explanation);

@@ -112,8 +112,12 @@ test('readers browse unlocked chapters and grade temporary quizzes without chang
   await reader.locator('[data-chapter="2"]').click(); await expect(reader.locator('[data-chapter="2"]')).toHaveClass(/active/);
   await expect(reader.locator(`[data-open-species="${species.find(s => s.chapter === 2)!.id}"]`)).toBeVisible();
   await reader.locator('[data-mode="quiz"]').click();
-  const deck = questions.filter(q => q.chapter === 2);
-  for (const q of deck) {
+  const deck: string[] = [];
+  const expectedCount = new Set(questions.filter(q => q.chapter === 2).map(q => q.speciesId)).size;
+  for (let attempt = 0; attempt < expectedCount; attempt++) {
+    const id = await reader.locator('.question-card').getAttribute('data-question-id');
+    const q = questions.find(q => q.id === id)!;
+    expect(q.chapter).toBe(2); expect(deck).not.toContain(q.speciesId); deck.push(q.speciesId);
     await expect(reader.locator('.question-card h2')).toHaveText(q.prompt); await reader.locator(`[data-answer="${q.correct}"]`).click();
     await expect(reader.locator('#quiz-feedback-heading')).toContainText('发现正确答案');
     await expect(reader.locator('#quiz-feedback-heading')).toContainText('只读练习');

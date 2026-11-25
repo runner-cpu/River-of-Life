@@ -1,6 +1,12 @@
 import { describe, expect, it } from 'vitest';
 import { inquiries } from '../src/content/inquiries';
-import { InquirySession } from '../src/core/inquiry';
+import { InquirySession, classificationReferenceText } from '../src/core/inquiry';
+import { inquiryGraph } from '../src/modes/inquiry-graph';
+import { inquiryReport } from '../src/modes/inquiry';
+import { compareInquiryRecords } from '../src/core/inquiry-comparison';
+import { GameStore } from '../src/core/store';
+import { species } from '../src/content/species';
+import { questions } from '../src/content/questions';
 import { inquiryRecord, parseInquiryRecord, serializeInquiryRecord, validateInquiryRecord } from '../src/core/inquiry-record';
 
 function complete(index = 0) {
@@ -49,4 +55,63 @@ it('rejects impossible calendar dates and accepts emitted canonical UTC timestam
   expect(validateInquiryRecord({ ...r, exportedAt: '2024-02-29T12:00:00.000Z' }).exportedAt).toContain('02-29');
   expect(() => validateInquiryRecord({ ...r, version: 0 })).toThrow('版本');
   expect(() => validateInquiryRecord({ ...r, classifications: [null, null] })).toThrow('卡片');
+});
+
+describe('explicit uncertain claim references in unchanged v1 records', () => {
+  it('registers the stable topic IDs and original uncertainty answer indices', () => {
+    expect(inquiries.map(a => [a.id, a.uncertainClaim.id, a.uncertainClaim.answerIndex])).toEqual([
+      ['feathers-and-evidence', 'feathers-multiple-features-v1', 2],
+      ['sea-and-family', 'sea-classification-evidence-v1', 1],
+      ['fins-and-land', 'fins-feature-combination-v1', 2],
+    ]);
+  });
+  it.each(inquiries)('roundtrips the uncertain and both definite routes for $id without personal progress writes', activity => {
+    const store = new GameStore(species, questions, { persist: false }), before = store.export();
+    for (let answer = 0; answer < activity.initial.options.length; answer++) {
+      const session = new InquirySession(activity);
+      session.answer(answer); session.observe('text'); session.continueFromObservation();
+      activity.cards.forEach(card => session.classify(card.id, 'support'));
+      session.showGraph(); session.continueFromGraph(); session.answer(activity.transfer.correct);
+      const record = parseInquiryRecord(serializeInquiryRecord(session));
+      expect(record.type).toBe('life-inquiry-record'); expect(record.version).toBe(1);
+      expect(record.answers).toEqual({ initial: answer, evidence: null, transfer: activity.transfer.correct });
+      expect(record.classifications.every(card => card.category === 'support')).toBe(true);
+      if (answer === activity.uncertainClaim.answerIndex) {
+        expect(record.classificationReference).toEqual({ kind: 'activity-claim', claimId: activity.uncertainClaim.id });
+        expect(inquiryGraph(session)).toContain(activity.uncertainClaim.proposition);
+        expect(inquiryGraph(session)).toContain(activity.initial.options[answer]);
+        expect(inquiryReport(session, '')).toContain(activity.uncertainClaim.proposition);
+        const legacy = structuredClone(record); delete legacy.classificationReference;
+        expect(parseInquiryRecord(JSON.stringify(legacy))).not.toHaveProperty('classificationReference');
+        expect(classificationReferenceText(activity, answer, legacy.classificationReference)).toBe('旧记录未记载归类参照');
+        expect(compareInquiryRecords(record, legacy).differences.join('')).toContain('旧记录未记载归类参照');
+        expect(compareInquiryRecords(legacy, legacy).differences.join('')).toContain('无法核对所检验的命题');
+      } else {
+        expect(record).not.toHaveProperty('classificationReference');
+        expect(session.classificationProposition).toBe(activity.initial.options[answer]);
+      }
+      expect(store.export()).toBe(before);
+    }
+  });
+  it.each(inquiries)('rejects untrusted, mismatched, and wrong-answer references for $id', activity => {
+    const session = new InquirySession(activity);
+    session.answer(activity.uncertainClaim.answerIndex); session.observe('text'); session.continueFromObservation();
+    activity.cards.forEach(card => session.classify(card.id, 'support'));
+    session.showGraph(); session.continueFromGraph(); session.answer(0);
+    const record = inquiryRecord(session);
+    for (const reference of [null, {}, { kind: 'other', claimId: activity.uncertainClaim.id }, { kind: 'activity-claim', claimId: 'unknown' }, { kind: 'activity-claim', claimId: inquiries.find(a => a.id !== activity.id)!.uncertainClaim.id }]) {
+      expect(() => validateInquiryRecord({ ...record, classificationReference: reference })).toThrow('参照');
+    }
+    expect(() => validateInquiryRecord({ ...record, answers: { ...record.answers, initial: activity.initial.correct } })).toThrow('参照');
+  });
+  it('escapes the same proposition in graph and HTML report', () => {
+    const activity = structuredClone(inquiries[0]); activity.uncertainClaim.proposition = '<script>claim</script>';
+    const session = new InquirySession(activity);
+    session.answer(activity.uncertainClaim.answerIndex); session.observe('text'); session.continueFromObservation();
+    activity.cards.forEach(card => session.classify(card.id, 'support'));
+    session.showGraph(); session.continueFromGraph(); session.answer(0);
+    for (const html of [inquiryGraph(session), inquiryReport(session, '')]) {
+      expect(html).not.toContain('<script>'); expect(html).toContain('&lt;script&gt;claim&lt;/script&gt;');
+    }
+  });
 });

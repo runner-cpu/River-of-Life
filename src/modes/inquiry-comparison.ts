@@ -1,7 +1,7 @@
 import { learningSources } from '../content/learning-sources';
 import { inquiries } from '../content/inquiries';
 import { compareInquiryRecords } from '../core/inquiry-comparison';
-import { categories } from '../core/inquiry';
+import { categories, classificationReferenceText } from '../core/inquiry';
 import { MAX_INQUIRY_FILE_BYTES, parseInquiryRecord, type InquiryRecord } from '../core/inquiry-record';
 import { escape } from '../core/ui';
 
@@ -19,6 +19,7 @@ function recordColumn(record: InquiryRecord, title: string) {
   return `<section class="inquiry-peer-column">
     <h4>${title}</h4>
     <h5>起初的判断</h5><p>${escape(activity.initial.options[record.answers.initial])}</p>
+    <h5>归类参照</h5><p class="inquiry-reference">${escape(classificationReferenceText(activity, record.answers.initial, record.classificationReference))}</p>
     <h5>四区归类</h5>${groups}
     <h5>我的解释</h5><p class="inquiry-peer-explanation">${escape(record.explanation || '本次没有填写文字解释。')}</p>
     <h5>新情境解释</h5><p>${escape(activity.transfer.options[record.answers.transfer])}</p>
@@ -44,12 +45,12 @@ export function mountInquiryComparison(host: HTMLElement, getCurrent: () => Inqu
     if (!memory.peer) return;
     const comparison = compareInquiryRecords(getCurrent(), memory.peer);
     result.innerHTML = `<h3>两方记录</h3>
-      <p>归类均相对于各自的起初判断。以下差异不表示谁正确。</p>
+      <p>归类相对于各自明确记载的参照；旧记录可能没有记载。相同标签不能证明理由相同，以下差异不表示谁正确。</p>
       <div class="inquiry-peer-columns">
         ${recordColumn(comparison.current, '我的当前记录')}${recordColumn(comparison.peer, '同伴记录')}
       </div>
       <section class="inquiry-peer-differences"><h4>具体差异</h4>
-        <ul>${comparison.differences.map(text => `<li>${escape(text)}</li>`).join('') || '<li>判断、归类、解释与查看方式相同。</li>'}</ul>
+        <ul>${comparison.differences.map(text => `<li>${escape(text)}</li>`).join('') || '<li>所记录的判断、参照、归类、解释与查看方式相同；不能据此认定推理过程相同。</li>'}</ul>
       </section>`;
   };
   input.addEventListener('change', async () => {

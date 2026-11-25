@@ -1,6 +1,16 @@
 import type { Inquiry } from '../content/inquiries';
 
 export const categories = { support: '支持我的判断', irrelevant: '与判断无关', oppose: '反对我的判断', 'more-information': '需要更多信息' } as const;
+export type ClassificationReference = { kind: 'activity-claim'; claimId: string };
+
+/** Missing references on historical uncertain records never acquire a new meaning. */
+export function classificationReferenceText(activity: Inquiry, initial: number, reference?: ClassificationReference): string {
+  if (initial !== activity.uncertainClaim.answerIndex) return activity.initial.options[initial];
+  return reference?.kind === 'activity-claim' && reference.claimId === activity.uncertainClaim.id
+    ? activity.uncertainClaim.proposition
+    : '旧记录未记载归类参照';
+}
+
 export type EvidenceCategory = keyof typeof categories;
 export type InquiryPhase = 'initial' | 'observe' | 'evidence' | 'graph' | 'transfer' | 'complete';
 export class InquirySession {
@@ -8,6 +18,13 @@ export class InquirySession {
   readonly answers: Partial<Record<'initial' | 'evidence' | 'transfer', number>> = {};
   readonly classifications: Record<string, EvidenceCategory> = {};
   explanation = '';
+  get classificationReference(): ClassificationReference | undefined {
+    return this.answers.initial === this.activity.uncertainClaim.answerIndex
+      ? { kind: 'activity-claim', claimId: this.activity.uncertainClaim.id } : undefined;
+  }
+  get classificationProposition() {
+    return classificationReferenceText(this.activity, this.answers.initial!, this.classificationReference);
+  }
   classify(cardId: string, category: EvidenceCategory) {
     if (this.phase !== 'evidence' || !this.activity.cards.some(card => card.id === cardId) || (typeof category !== 'string' || !Object.hasOwn(categories, category))) return false;
     this.classifications[cardId] = category;

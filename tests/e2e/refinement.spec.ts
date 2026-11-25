@@ -31,7 +31,7 @@ test('quiz feedback names the selected and correct choices and keeps a keyboard 
   await page.setViewportSize({width:320,height:640});await page.goto('/#quiz');const q=questions.find(q=>q.chapter===1)!;
   await page.locator(`[data-answer="${(q.correct+1)%q.options.length}"]`).click();
   await expect(page.locator('.answers .correct')).toContainText('本题答案');await expect(page.locator('.answers .incorrect')).toContainText('你的选择');
-  await expect(page.locator('#quiz-feedback-heading')).toBeFocused();await page.keyboard.press('Tab');await expect(page.locator('#next-question')).toBeFocused();
+  await expect(page.locator('#quiz-feedback-heading')).toBeFocused();for(let i=0;i<=await page.locator('#answer-feedback a').count();i++) await page.keyboard.press('Tab');await expect(page.locator('#next-question')).toBeFocused();
   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
   await page.locator('#next-question').click();await expect(page.locator('.question-card h2')).toBeFocused();
   await page.locator('[data-kind="match"]').click();await expect(page.locator('.match-list select').first()).toBeVisible();

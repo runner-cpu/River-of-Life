@@ -5,6 +5,7 @@ export type EvidenceCard = { id: string; text: string; sourceRef: string; scope:
 export type InquiryQuestion = { prompt: string; options: string[]; correct: number; explanation: string };
 export type Inquiry = {
   id: string; speciesId: string; title: string; skill: string; objective: string;
+  uncertainClaim: { id: string; answerIndex: number; proposition: string };
   initial: InquiryQuestion; observations: string[]; observeHint: string;
   cards: EvidenceCard[]; evidence: InquiryQuestion; transfer: InquiryQuestion; source: Source;
 };
@@ -13,6 +14,7 @@ const topics = [
   {
     id: 'feathers-and-evidence', speciesId: 'archaeopteryx', title: '有羽毛，就和今天的鸟一样吗？', skill: '比较特征',
     objective: '用多个身体特征解释联系，区分化石证据与复原想象。',
+    uncertainClaim: { id: 'feathers-multiple-features-v1', answerIndex: 2, proposition: '判断始祖鸟与今天鸟类的联系，需要一起比较羽毛、牙齿、尾部与前肢等多个特征。' },
     initial: { prompt: '看到始祖鸟的羽毛，你会怎样判断？', options: ['有羽毛，就与今天的鸟没有区别。', '还要一起比较牙齿、尾部与前肢。', '暂时不确定，想先看看证据。'], correct: 1,
       explanation: '羽毛是重要线索，但不能替代其他结构的比较。' },
     observations: ['始祖鸟化石记录了羽毛，也有牙齿、长骨尾和有爪前肢。', '这些特征的组合帮助研究者讨论鸟类演化，不能只按一个外观特征下结论。'],
@@ -26,6 +28,7 @@ const topics = [
   {
     id: 'sea-and-family', speciesId: 'mosasaurus', title: '住在海里的“龙”，就是恐龙吗？', skill: '区分依据',
     objective: '区分生活环境、外形与亲缘分类的证据。',
+    uncertainClaim: { id: 'sea-classification-evidence-v1', answerIndex: 1, proposition: '判断沧龙的亲缘分类，需要比较解剖特征；相同年代与海生环境不能单独确定分类。' },
     initial: { prompt: '沧龙体型巨大、生活在恐龙时代。它一定是恐龙吗？', options: ['是，生活年代相同就是同一类。', '暂时不确定，需要查看分类证据。', '不是；同一时代和环境不能确定亲缘分类。'], correct: 2,
       explanation: '年代与环境说明何时何地生活，不能单独确定亲缘关系。' },
     observations: ['沧龙是有鳞类海生爬行动物，不属于恐龙。', '研究者比较头骨等解剖特征；具体接近有鳞类中的哪一支，仍有讨论。'],
@@ -39,6 +42,7 @@ const topics = [
   {
     id: 'fins-and-land', speciesId: 'tiktaalik', title: '登陆，是一夜之间长出四条腿吗？', skill: '理解过渡',
     objective: '用特征组合解释演化过渡，避免把复原模型当成完整证据。',
+    uncertainClaim: { id: 'fins-feature-combination-v1', answerIndex: 2, proposition: '提塔利克鱼保留鱼类特征，同时具有与四足动物相似的部分结构，可用特征组合讨论演化过渡。' },
     initial: { prompt: '提塔利克鱼带有一些接近四足动物的结构，这意味着什么？', options: ['鱼在需要上岸时，一代之内长出了四条腿。', '不同特征可在演化过程中逐步形成组合。', '暂时不确定，想先查看资料。'], correct: 1,
       explanation: '过渡化石提供特征变化的线索，不表示个体因需要就立即改变身体。' },
     observations: ['提塔利克鱼保留鳍、鳞片等鱼类特征。', '其颈部、头骨、肋骨及部分附肢结构又与四足动物相似。'],

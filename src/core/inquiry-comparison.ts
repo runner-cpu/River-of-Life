@@ -1,5 +1,5 @@
 import { inquiries } from '../content/inquiries';
-import { categories } from './inquiry';
+import { categories, classificationReferenceText } from './inquiry';
 import { validateInquiryRecord, type InquiryRecord } from './inquiry-record';
 
 export interface InquiryComparison {
@@ -20,6 +20,10 @@ export function compareInquiryRecords(current: InquiryRecord, peer: InquiryRecor
     const answer = (record: InquiryRecord) => record.answers[key] === null ? '未记录' : activity[key].options[record.answers[key]!];
     differences.push(`${label}：我选择“${answer(own)}”；同伴选择“${answer(other)}”。`);
   }
+  const ownReference = classificationReferenceText(activity, own.answers.initial, own.classificationReference);
+  const peerReference = classificationReferenceText(activity, other.answers.initial, other.classificationReference);
+  if (ownReference !== peerReference) differences.push(`归类参照不同：我的参照“${ownReference}”；同伴的参照“${peerReference}”。即使归类标签相同，也不能据此推断理由相同。`);
+  else if (ownReference === '旧记录未记载归类参照') differences.push('双方旧记录未记载归类参照，无法核对所检验的命题；相同归类标签不能证明理由相同。');
   activity.cards.forEach((card, index) => {
     const a = own.classifications.find(c => c.cardId === card.id)!;
     const b = other.classifications.find(c => c.cardId === card.id)!;

@@ -1,6 +1,6 @@
 import { inquiries } from '../content/inquiries';
 import { learningSources } from '../content/learning-sources';
-import { categories, type EvidenceCategory, type InquirySession } from './inquiry';
+import { categories, type ClassificationReference, type EvidenceCategory, type InquirySession } from './inquiry';
 
 export interface InquiryRecord {
   type: 'life-inquiry-record';
@@ -12,6 +12,7 @@ export interface InquiryRecord {
   observation: 'model' | 'text';
   classifications: { cardId: string; category: EvidenceCategory; sourceRef: string; scope: string }[];
   explanation: string;
+  classificationReference?: ClassificationReference;
 }
 
 // UTF-8 can require up to four bytes per character; cap bytes before File.text().
@@ -37,6 +38,10 @@ export function validateInquiryRecord(value: unknown, inquiryId?: string): Inqui
     if (key === 'evidence' && answer === null) continue;
     if (!Number.isInteger(answer) || answer! < 0 || answer! >= activity[key].options.length) throw new Error('回答选项超出范围。');
   }
+  if (Object.hasOwn(r, 'classificationReference')) {
+    const reference = r.classificationReference;
+    if (!reference || reference.kind !== 'activity-claim' || reference.claimId !== activity.uncertainClaim.id || r.answers.initial !== activity.uncertainClaim.answerIndex) throw new Error('归类参照与主题或起初回答不一致。');
+  }
   if (typeof r.explanation !== 'string' || r.explanation.length > 1200) throw new Error('解释长度超出1200字符。');
   if (!Array.isArray(r.classifications) || r.classifications.length !== activity.cards.length) throw new Error('证据归类不完整。');
   const seen = new Set<string>();
@@ -56,6 +61,7 @@ export function inquiryRecord(session: InquirySession, explanation = session.exp
     phase: session.phase, exportedAt: new Date().toISOString(),
     answers: { initial: session.answers.initial, evidence: session.answers.evidence ?? null, transfer: session.answers.transfer },
     observation: session.observation, explanation,
+    ...(session.classificationReference ? { classificationReference: session.classificationReference } : {}),
     classifications: session.activity.cards.map(card => ({ cardId: card.id, category: session.classifications[card.id], sourceRef: card.sourceRef, scope: card.scope })),
   });
 }
