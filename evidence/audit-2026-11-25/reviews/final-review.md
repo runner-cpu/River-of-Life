@@ -1,0 +1,33 @@
+# Whole-branch final review, 2026-11-25
+
+Reviewed `273e731..fc31b68` against the five-task remediation plan, audit report and independent task-review ledger. **Ready to merge with fixes.** One data-loss path spans progress ownership and offline upgrades. Two read-only interaction regressions and a broken materials link also need correction.
+
+## Strengths and specification coverage
+
+The bounded revision allocator and replica selector share an ordering, including the documented half-range tie. The import generation and dialog checks protect asynchronous commits. Within the current app, the store guard covers personal ledger mutations. Preview stores stay isolated. The worker verifies content hashes and uses durable fallback state. Bitmap references survive release of an individual texture wrapper. The educational record remains v1, preserves null evidence, and represents an old missing reference separately from a known proposition. Quiz selection covers distinct species and timeline ages. The release gate checks the final site digest and independently collected test identities. The status documents correctly reserve external model, classroom, scientific and physical-device review.
+
+The coordinator's saved validation for this revision records 254/254 unit tests and 88/88 Chromium tests, with 88 independently discovered identities, both content checks true, and identical before/after SHA-256 `e6c1898b63a151fd7b4f67f3b367613b9b72df4ea5c44e100a06d35fe92117ae`. The full runs belong to the coordinator. I used the prepared diff, targeted source and two in-memory probes. The integration assertion changes have separate independent approval.
+
+## Critical
+
+1. **Legacy fallback pages can overwrite the new writer’s saved progress.** `public/sw.js:113` and `public/sw.js:122` allow the current and fallback HTML to coexist. The exact predecessor constructs its persistent store without taking a writer lock (`273e731:src/main.ts:27`). After B installs on a partial A, A can finish preparing offline. B then activates and serves A. Once B is prepared, a second tab can receive B while the first still runs A. B legitimately acquires the Web Lock and saves, then the open legacy page can overwrite both copies with its older snapshot. Even two independent legacy fallback documents have no ownership coordination. The existing upgrade test intentionally keeps A and B open together (`tests/e2e/offline-upgrade.spec.ts:87`) and uses releases without a progress store. The same-version writer tests block service workers (`tests/e2e/save-lifecycle.spec.ts:6`). A memory-only probe executed the actual baseline and head GameStores with the same storage and observed `["cyanobacteria"]` after B saved and `["stromatolites"]` after stale A saved. This is the original loss of progress across a supported upgrade path.
+
+   Ensure every executable fallback document participates in writer coordination before its application initializes, or supply a coherent fallback that cannot write personal data. Merely withholding the B writer while A is open leaves the legacy A/A case. Preserve offline reads, prepare/retry and writer handover. Cover legacy A/A and A/B tabs sharing actual storage, with successful handover after old pages close and both replicas checked.
+
+## Important
+
+2. **A required competition material can never be collected.** `docs/competition/archaeopteryx-teacher-review.md:22` links to `../../src/content/learning-sources.ts`. The packaging entry point collects the teacher sheet at `scripts/package-competition.ts:25`. Recursive link handling passes its source to `scripts/competition-materials.ts:37`, which has no destination for `src/`. A read-only probe of the actual Markdown and mapping functions returned `No package destination for material: src/content/learning-sources.ts`. Even with a newly reviewed PDF and passing site evidence the package would fail. Use a packagable source reference, a verified upstream permalink, or a narrow mapping for this specific registry. Exercise the real teacher sheet with the materials collector in a temporary target independently of PDF review.
+
+3. **The ambient sound control cannot turn off in a read-only tab.** `src/main.ts:129` computes the next state from the persisted snapshot on every click. With the default sound setting off, the setter is denied but audio starts, the button says on, and the next click starts it again. The oscillator persists across views (`src/core/ui.ts:33`). Use transient playback state for read-only sound (or disable the setting), and check two successive clicks and unchanged progress.
+
+4. **Read-only learning feedback reports awards and changes which the guard discarded.** The specimen card opened from `src/main.ts:77` keeps its personal read control enabled. Its handler changes the label to 已阅读 after a denied read (`src/modes/specimen.ts:109`). Correct timeline, matching and lab exercises similarly report an earned badge after denied `store.badge` calls (`src/modes/quiz.ts:61`, `src/modes/quiz.ts:67`, `src/modes/lab-view.ts:21`). The header notice is behind the open specimen dialog. Keep browsing/navigation and practice available, disable or label personal actions, and derive award messaging from the actual state or write permission. Extend the two-tab case to check both truthful feedback and an unchanged ledger.
+
+## Deferred minor issues
+
+- `public/sw.js:115` writes one cache pin per B navigation while retaining fallback A. Pins can accumulate until the release retires. A quota rejection still serves a coherent A. Defer collection of inactive pins, preserving live pins across worker restarts.
+- `src/core/quiz.ts:22` uses boolean attempted/seen ordering. After every same-species mistake has appeared, stable source order repeatedly chooses the first eligible one. All have already been presented, so a last-shown rotation can follow separately.
+- `scripts/package-competition.ts:22` can leave an incomplete timestamped directory after a later failure. Publication under a temporary name followed by rename is a separate hardening step. Fix the deterministic material failure above before relying on this classification.
+
+## Assessment
+
+The five implementation areas individually satisfy most of the plan. The legacy fallback violates the cross-task single-writer guarantee, and the required teacher sheet currently breaks the package workflow. Correct the four findings in one fix wave and revalidate the changed paths and production evidence. The 13 external models and 35 structural illustrations, scientific and classroom validation, device results and a newly reviewed PDF remain separate deliverables.

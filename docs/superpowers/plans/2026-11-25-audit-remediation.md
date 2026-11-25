@@ -124,8 +124,9 @@ expect(timeline.some(s => s.chapter === currentChapter)).toBe(true);
 - [x] Add regression fixtures: valid A digest with complete passing B browser report is rejected; changing only worker bytes or manifest bytes also rejects the old report; matching A is accepted regardless of incidental file timestamps; missing identity, filtered/sharded/incomplete/flaky/skipped runs remain rejected.
 
 ```ts
-expect(() => verifyBrowserEvidence(reportForB, digestA, requiredSuites)).toThrow();
-expect(() => verifyBrowserEvidence(reportForA, digestA, requiredSuites)).not.toThrow();
+const expectedTests = discoverBrowserTests();
+expect(() => verifyBrowserEvidence(reportForB, digestA, requiredSuites, expectedTests)).toThrow();
+expect(() => verifyBrowserEvidence(reportForA, digestA, requiredSuites, expectedTests)).not.toThrow();
 ```
 
 - [x] Compute the production hash at browser configuration/run setup, record it with test-source identity if useful, and detect output changes during the run. Packaging recomputes current bytes and compares. Preserve document hashes and all existing package checks. Review fix independently discovers the current Playwright project/file/title identities; reports missing a case fail even when their own totals remain consistent.
@@ -133,7 +134,9 @@ expect(() => verifyBrowserEvidence(reportForA, digestA, requiredSuites)).not.toT
 
 ## Completion and evidence
 
-- [ ] Independent task review for requirements and quality; resolve concrete findings and record deferred items.
-- [ ] Root runs species/model validation, TypeScript/build, full units, full browser suite, build verification. Repeat only after a material change or failure.
-- [ ] Produce the ten-dimension report with finding IDs, evidence, peer verdicts, changed files, test results, limitations and follow-up priorities. Add a single-theme teacher review sheet and current dated document/README entry; preserve historic PDF as a dated artifact unless regenerated and inspected.
+Final scoped review disposition: all four original final-review findings addressed in `2296e40`. Two residuals are explicitly recorded in the audit: a lock-aware future fallback can temporarily occupy the writer lock (deferred, recoverable by closing preview/reloading, no save corruption); `GameStore.badge()` now returns an award status instead of void (accepted internal API extension, current callers compatible, no persisted schema change). This documents the return-shape deviation rather than claiming literal compliance. The final fix wave and one scoped re-review are complete.
+
+- [x] Independent task review for requirements and quality; resolve concrete findings and record deferred items.
+- [x] Root runs species/model validation, TypeScript/build, full units, full browser suite, build verification. Repeat only after a material change or failure.
+- [x] Produce the ten-dimension report with finding IDs, evidence, peer verdicts, changed files, test results, limitations and follow-up priorities. Add a single-theme teacher review sheet and current dated document/README entry; preserve historic PDF as a dated artifact unless regenerated and inspected.
 - [ ] Push and update Pages under existing user authorization if network/authentication permits; verify deployed bytes and actual workflow status. Never substitute historic deployment success for current evidence.

@@ -48,7 +48,17 @@
       ],
       "scenario": "Two tabs load before either learns. A observes and reads cyanobacteria; stale B observes stromatolites and overwrites A's records and points. Reload restores only B's snapshot.",
       "recommendation": "Coordinate a single active writer or compare/reconcile the authoritative revision before mutations. A stale tab must reload or explicitly take over before replacing newer data. Preserve the economy validator and do not sum independently stored balances.",
-      "validation": "Add a shared-storage two-live-store regression and a two-page same-context browser check. Interleave observations, reads, settings, and reset; verify no silent removal/resurrection of learning and no repeated awards. Focused harness reproduced the current defect; no browser was run."
+      "validation": "Add a shared-storage two-live-store regression and a two-page same-context browser check. Interleave observations, reads, settings, and reset; verify no silent removal/resurrection of learning and no repeated awards. Focused harness reproduced the current defect; no browser was run.",
+      "resolution": {
+        "status": "fixed",
+        "commits": [
+          "9af600a",
+          "150d407",
+          "2296e40"
+        ],
+        "asOf": "2026-11-25",
+        "evidence": "evidence/audit-2026-11-25/validation.json"
+      }
     },
     {
       "dimension": "correctness/robustness",
@@ -86,7 +96,16 @@
       ],
       "scenario": "Choose A, then B, and let B finish first. A later replaces the accepted B save. A pending read also replaces a reset save after its settings dialog has closed.",
       "recommendation": "Use an import request token, invalidate it on close/reset, and check both currency and dialog connectivity after the read and before commit. Coordinate competing replacement actions while committing.",
-      "validation": "Defer two File.text calls and resolve in reverse order; only the latest active request may write. Close/reset before resolution and assert the resulting save stays byte-for-byte unchanged and stale navigation does not occur. The actual callback was reproduced without a browser."
+      "validation": "Defer two File.text calls and resolve in reverse order; only the latest active request may write. Close/reset before resolution and assert the resulting save stays byte-for-byte unchanged and stale navigation does not occur. The actual callback was reproduced without a browser.",
+      "resolution": {
+        "status": "fixed",
+        "commits": [
+          "9af600a",
+          "150d407"
+        ],
+        "asOf": "2026-11-25",
+        "evidence": "evidence/audit-2026-11-25/validation.json"
+      }
     },
     {
       "dimension": "correctness/robustness",
@@ -129,7 +148,13 @@
       ],
       "scenario": "Prepare the full offline exhibit, visit after a new revision is published, then disconnect. New revision activation removes the prepared models/decoders. Old open clients can also lose a changed-name lazy chunk.",
       "recommendation": "Preserve full-offline opt-in and complete required new resources before retiring a prepared cache. Coordinate activation/reload with existing clients. Keep scope isolation and do not blindly copy changed assets solely by unversioned URL.",
-      "validation": "Add a two-revision cache transition test with prepared A and changed B, then offline model/decoder and changed lazy-chunk requests. Handler-level missing-cache behavior is reproduced; actual browser upgrade confirmation remains for the coordinator."
+      "validation": "Add a two-revision cache transition test with prepared A and changed B, then offline model/decoder and changed lazy-chunk requests. Handler-level missing-cache behavior is reproduced; actual browser upgrade confirmation remains for the coordinator.",
+      "resolution": {
+        "status": "fixed_with_duplicate",
+        "canonicalId": "ENG-REL-01",
+        "asOf": "2026-11-25",
+        "evidence": "evidence/audit-2026-11-25/validation.json"
+      }
     },
     {
       "dimension": "correctness/robustness",
@@ -167,7 +192,17 @@
       ],
       "scenario": "Import an otherwise-valid damaged/edited save with the maximum timestamp. It reports failure after replacing current memory, and subsequent learning mutations continue to throw. A stored such record loads but then cannot save.",
       "recommendation": "Validate or normalize timestamps into an advanceable range and allocate a valid next revision before assigning imported state. Preserve normal legacy timestamp compatibility and startup reconciliation semantics.",
-      "validation": "Test maximum, maximum-minus-one, invalid, and large-future timestamps. Rejected imports must preserve the prior export and perform no writes; later ordinary actions must work. Stored extremes must use recovery/rejection or safe normalization. Current failure was reproduced against real GameStore."
+      "validation": "Test maximum, maximum-minus-one, invalid, and large-future timestamps. Rejected imports must preserve the prior export and perform no writes; later ordinary actions must work. Stored extremes must use recovery/rejection or safe normalization. Current failure was reproduced against real GameStore.",
+      "resolution": {
+        "status": "fixed",
+        "commits": [
+          "9af600a",
+          "150d407",
+          "f4d1d50"
+        ],
+        "asOf": "2026-11-25",
+        "evidence": "evidence/audit-2026-11-25/validation.json"
+      }
     },
     {
       "dimension": "testing",
@@ -191,7 +226,13 @@
       ],
       "scenario": "A fully passing sequential recovery suite misses the demonstrated silent overwrite in REL-COR-001.",
       "recommendation": "Add one deterministic shared-storage regression and one same-context two-page regression, including reset ownership and economy invariants.",
-      "validation": "The new test should fail on this baseline's stale write and pass only when a stale tab cannot silently replace newer learning or resurrect reset progress. No full suite was rerun in this subtask."
+      "validation": "The new test should fail on this baseline's stale write and pass only when a stale tab cannot silently replace newer learning or resurrect reset progress. No full suite was rerun in this subtask.",
+      "resolution": {
+        "status": "regression_added",
+        "note": "Included in related save/import/offline fixes, not counted as another product defect.",
+        "asOf": "2026-11-25",
+        "evidence": "evidence/audit-2026-11-25/validation.json"
+      }
     },
     {
       "dimension": "testing",
@@ -220,7 +261,13 @@
       ],
       "scenario": "REL-COR-002 and REL-COR-004 pass outside the present import tests despite breaking save replacement semantics.",
       "recommendation": "Add controlled deferred File.text lifecycle tests and exact revision-boundary atomic-import tests. Assert the persisted save and navigation behavior, not only toast text.",
-      "validation": "Resolve file reads in reverse order and after close/reset; verify no obsolete commit/navigation. Reject an overflow timestamp with byte-for-byte state preservation and no write. Both current source failures were reproduced read-only."
+      "validation": "Resolve file reads in reverse order and after close/reset; verify no obsolete commit/navigation. Reject an overflow timestamp with byte-for-byte state preservation and no write. Both current source failures were reproduced read-only.",
+      "resolution": {
+        "status": "regression_added",
+        "note": "Included in related save/import/offline fixes, not counted as another product defect.",
+        "asOf": "2026-11-25",
+        "evidence": "evidence/audit-2026-11-25/validation.json"
+      }
     },
     {
       "dimension": "testing",
@@ -249,7 +296,13 @@
       ],
       "scenario": "The suite verifies a freshly prepared cache yet misses REL-COR-003 when a second revision replaces it.",
       "recommendation": "Load the actual worker script into a small in-memory CacheStorage harness and add a two-version production-browser check owned by the coordinator.",
-      "validation": "Prepare A, activate changed B, disconnect, then assert model/decoder availability, correct scoped retirement, and either retained A lazy chunks or a coordinated fully prepared reload. Actual handler-level loss is already reproduced."
+      "validation": "Prepare A, activate changed B, disconnect, then assert model/decoder availability, correct scoped retirement, and either retained A lazy chunks or a coordinated fully prepared reload. Actual handler-level loss is already reproduced.",
+      "resolution": {
+        "status": "regression_added",
+        "note": "Included in related save/import/offline fixes, not counted as another product defect.",
+        "asOf": "2026-11-25",
+        "evidence": "evidence/audit-2026-11-25/validation.json"
+      }
     },
     {
       "dimension": "security/privacy",
@@ -286,7 +339,12 @@
       ],
       "scenario": "A user selects clear/restart on a shared device expecting learning records to be removed, while previous raw recovery copies remain in the origin's storage.",
       "recommendation": "Make retention explicit in restart wording. If actual local-data erasure is required, expose a separate reviewed/confirmed action covering this application's current/recovery records in both stores. Do not silently delete existing recovery history.",
-      "validation": "Seed both stores' recovery entries and test the documented restart retention policy. If an explicit erase action is added, verify it removes only the authorized application data. This is a privacy/control proposal; no exfiltration or exploitable XSS was established."
+      "validation": "Seed both stores' recovery entries and test the documented restart retention policy. If an explicit erase action is added, verify it removes only the authorized application data. This is a privacy/control proposal; no exfiltration or exploitable XSS was established.",
+      "resolution": {
+        "status": "proposal_delivered",
+        "asOf": "2026-11-25",
+        "evidence": "evidence/audit-2026-11-25/validation.json"
+      }
     },
     {
       "dimension": 1,
@@ -301,7 +359,15 @@
       "recommendation": "Name the delegated input handler and remove it in mountLab's returned cleanup, or bind it to a mount-scoped AbortController that cleanup aborts.",
       "validation": "Mount/unmount lab repeatedly on the same container; assert the input listener count returns to baseline after each cleanup and only the active comparison refreshes once per slider input. Root should check repeated navigation in the browser.",
       "kind": "verified-defect",
-      "priority": "bounded-next-fix"
+      "priority": "bounded-next-fix",
+      "resolution": {
+        "status": "fixed",
+        "commits": [
+          "14374c9"
+        ],
+        "asOf": "2026-11-25",
+        "evidence": "evidence/audit-2026-11-25/validation.json"
+      }
     },
     {
       "dimension": 3,
@@ -317,7 +383,15 @@
       "recommendation": "Add final-owner disposal of the shared underlying bitmap/image source, separately from individual texture references. Avoid closing a bitmap while another retained texture still shares it.",
       "validation": "Use two retained texture wrappers sharing one close-spied image bitmap: first release must not close, final release must close exactly once; repeated release stays idempotent. Include a late stale GLTF callback. Measure browser memory separately before claiming a byte saving.",
       "kind": "verified-defect",
-      "priority": "bounded-next-fix"
+      "priority": "bounded-next-fix",
+      "resolution": {
+        "status": "fixed",
+        "commits": [
+          "14374c9"
+        ],
+        "asOf": "2026-11-25",
+        "evidence": "evidence/audit-2026-11-25/validation.json"
+      }
     },
     {
       "dimension": 3,
@@ -333,7 +407,16 @@
       "recommendation": "Use a progress-reset inactivity timeout with a generous explicit absolute maximum, preserving stalled-worker failure handling and accurate progress.",
       "validation": "A fake-channel test must deliver valid increasing progress over more than 45 seconds and still succeed; a stopped-progress test must time out and clean up ports. Root can validate with a throttled production browser run.",
       "kind": "verified-defect",
-      "priority": "after-cache-lifecycle"
+      "priority": "after-cache-lifecycle",
+      "resolution": {
+        "status": "fixed",
+        "commits": [
+          "c3187f8",
+          "a07a93c"
+        ],
+        "asOf": "2026-11-25",
+        "evidence": "evidence/audit-2026-11-25/validation.json"
+      }
     },
     {
       "dimension": 4,
@@ -350,7 +433,13 @@
       "recommendation": "Add a maximum-supported-influences compatibility check, explicitly reduce the asset to strongest four weights and normalize only after reviewing sampled animations, and preserve source/attribution metadata. Secondary attributes contain 199100 logical bytes before rewritten encoding.",
       "validation": "Assert no nonzero unsupported influence sets remain, sample both animations at multiple times for finite stable bounds and acceptable visible deformation, and rerun model/manifest validation after any asset change. Do not claim anatomical improvement from the numeric check alone.",
       "kind": "verified-defect",
-      "priority": "defer-until-visual-review"
+      "priority": "defer-until-visual-review",
+      "resolution": {
+        "status": "deferred_visual_validation",
+        "remaining": "Eight/four influence difference is measured; visible animation impact and acceptable conversion are unverified. Source asset preserved.",
+        "asOf": "2026-11-25",
+        "evidence": "evidence/audit-2026-11-25/validation.json"
+      }
     },
     {
       "dimension": 9,
@@ -366,7 +455,17 @@
       "recommendation": "Use the default waiting lifecycle; preserve the old cache until no old controlled clients remain. If retaining full offline preparation on update, populate the new revision cache from freshly fetched new model/decoder responses and keep A intact on any install failure.",
       "validation": "Two-release production test: open A, install B while A stays open, assert B waiting and old chunk/model works offline; close all A clients, assert B activates with B bytes and only same-scope A cache is removed. Also test failed B model refresh, partial versus complete offline state, and unrelated app caches.",
       "kind": "verified-defect",
-      "priority": "first"
+      "priority": "first",
+      "resolution": {
+        "status": "fixed",
+        "commits": [
+          "c3187f8",
+          "a07a93c",
+          "2296e40"
+        ],
+        "asOf": "2026-11-25",
+        "evidence": "evidence/audit-2026-11-25/validation.json"
+      }
     },
     {
       "dimension": 9,
@@ -381,7 +480,16 @@
       "recommendation": "Catch only the best-effort fetch-path cache write failure and still return the original successful response. Keep explicit CACHE_ALL errors visible to the offline-preparation operation.",
       "validation": "Execute the SW fetch handler with network 200 and a rejecting cache.put; assert the original response is returned. Also check network failures still propagate and CACHE_ALL still returns ok:false on storage failure.",
       "kind": "verified-defect",
-      "priority": "bounded-next-fix"
+      "priority": "bounded-next-fix",
+      "resolution": {
+        "status": "fixed",
+        "commits": [
+          "c3187f8",
+          "a07a93c"
+        ],
+        "asOf": "2026-11-25",
+        "evidence": "evidence/audit-2026-11-25/validation.json"
+      }
     },
     {
       "dimension": 9,
@@ -397,7 +505,16 @@
       "recommendation": "Record the digest of production files actually served by the full browser run in its report metadata and require equality with the packaged release digest.",
       "validation": "A fixture with a fresh passing full-suite report for B and a valid A build digest must be rejected; equal-digest rebuilds should pass independently of incidental filesystem times.",
       "kind": "verified-defect",
-      "priority": "release-gate-hardening"
+      "priority": "release-gate-hardening",
+      "resolution": {
+        "status": "fixed",
+        "commits": [
+          "5a39c0a",
+          "69dbd90"
+        ],
+        "asOf": "2026-11-25",
+        "evidence": "evidence/audit-2026-11-25/validation.json"
+      }
     },
     {
       "dimension": 7,
@@ -424,7 +541,16 @@
       ],
       "scenario": "学习者选不确定后，必须判断材料支持或反对该不确定状态，界面未明确要检验的科学说法。",
       "recommendation": "保留原始选择和存储协议；给不确定分支显示明确待检验说法并使用支持该说法/反对该说法等关系措辞，入口改为检验与修订判断。",
-      "validation": "三个主题的不确定路线贯穿归类、图、HTML/JSON导出指向同一命题；答案索引、分类枚举、积分、个人Progress和课堂只读隔离不变。"
+      "validation": "三个主题的不确定路线贯穿归类、图、HTML/JSON导出指向同一命题；答案索引、分类枚举、积分、个人Progress和课堂只读隔离不变。",
+      "resolution": {
+        "status": "fixed",
+        "commits": [
+          "eabd4f2",
+          "231f6c2"
+        ],
+        "asOf": "2026-11-25",
+        "evidence": "evidence/audit-2026-11-25/validation.json"
+      }
     },
     {
       "dimension": 7,
@@ -451,7 +577,16 @@
       ],
       "scenario": "提塔利克误区题将手指/腕部完整断言反馈为Chicago依据，窄核对范围未出现。不是认定结论错误。",
       "recommendation": "先改成对应档案及字段，并提供来源和核对范围入口；未做人审字段映射时不默认单独引首项机构来源。",
-      "validation": "检查三重点档案及仅有C级来源题，反馈精确到字段且范围可达；保持原ID、正确答案、奖励。"
+      "validation": "检查三重点档案及仅有C级来源题，反馈精确到字段且范围可达；保持原ID、正确答案、奖励。",
+      "resolution": {
+        "status": "fixed",
+        "commits": [
+          "eabd4f2",
+          "231f6c2"
+        ],
+        "asOf": "2026-11-25",
+        "evidence": "evidence/audit-2026-11-25/validation.json"
+      }
     },
     {
       "dimension": 7,
@@ -474,7 +609,17 @@
       ],
       "scenario": "完成同档案第一题后，不比较科学含义也能凭选项是否见过答对后两题。",
       "recommendation": "完整修复须逐字段重审平行干扰项；本轮可仅限定一轮每档案一道、跨轮优先未答字段作为缓解。不得以洗牌宣称关闭长度或重复线索；保留题目ID/正确答案/积分契约。",
-      "validation": "如仅缓解，确认同轮档案不重复、后续轮覆盖原ID、错题可练及奖励不变；完整内容修复后复算线索并人工确认单一正确答案。"
+      "validation": "如仅缓解，确认同轮档案不重复、后续轮覆盖原ID、错题可练及奖励不变；完整内容修复后复算线索并人工确认单一正确答案。",
+      "resolution": {
+        "status": "mitigated",
+        "commits": [
+          "eabd4f2",
+          "231f6c2"
+        ],
+        "remaining": "Distractor and answer-length clues require item-by-item content review. No psychometric validity claim.",
+        "asOf": "2026-11-25",
+        "evidence": "evidence/audit-2026-11-25/validation.json"
+      }
     },
     {
       "dimension": 7,
@@ -492,7 +637,16 @@
       ],
       "scenario": "探索到第八章再练时间排序，仍不会比较任何后续纪元条目。",
       "recommendation": "按已解锁纪元分层挑选并包含当前章代表，保持近似年代说明和无积分契约。",
-      "validation": "第一章可完成；解锁4/8章时至少有对应章条目；年代正确判定及重复徽章不增点。"
+      "validation": "第一章可完成；解锁4/8章时至少有对应章条目；年代正确判定及重复徽章不增点。",
+      "resolution": {
+        "status": "fixed",
+        "commits": [
+          "eabd4f2",
+          "231f6c2"
+        ],
+        "asOf": "2026-11-25",
+        "evidence": "evidence/audit-2026-11-25/validation.json"
+      }
     },
     {
       "dimension": 10,
@@ -519,7 +673,12 @@
       ],
       "scenario": "评审从详细介绍进入，须跨材料才能理解旧状态与当前交付的区别；旧记录本身有标注，不等同伪造。",
       "recommendation": "开头加一小段当前状态/日期/基线及验证入口；旧数据保留为历史快照，更新PDF走现有文档核验流程。本轮新分支未发布不得沿用旧发布成功。",
-      "validation": "从包README/PDF首页/简版三个入口都能读到同一当前与历史边界，计数与构建身份有明确日期。"
+      "validation": "从包README/PDF首页/简版三个入口都能读到同一当前与历史边界，计数与构建身份有明确日期。",
+      "resolution": {
+        "status": "proposal_delivered",
+        "asOf": "2026-11-25",
+        "evidence": "evidence/audit-2026-11-25/validation.json"
+      }
     },
     {
       "dimension": 10,
@@ -541,7 +700,15 @@
       ],
       "scenario": "教师决定是否试用时，需要把三主题、脚本、参考链接和反馈草案重新拼成一份材料。",
       "recommendation": "先给始祖鸟准备一页任务—产物—判断依据—来源范围—推断边界审读单，附学习记录、文字路线；不等待具体赛事，不虚构课标符合或教学效果。",
-      "validation": "各动作/导出字段可与现有活动逐项对应；讲解样例明确标注；真实审读记录只能在实际发生后填写。"
+      "validation": "各动作/导出字段可与现有活动逐项对应；讲解样例明确标注；真实审读记录只能在实际发生后填写。",
+      "resolution": {
+        "status": "proposal_delivered",
+        "asOf": "2026-11-25",
+        "evidence": "evidence/audit-2026-11-25/validation.json",
+        "commits": [
+          "2296e40"
+        ]
+      }
     },
     {
       "dimension": 10,
@@ -569,7 +736,12 @@
       ],
       "scenario": "未来若选择某届某类别，不能仅凭通用AI披露或旧年规则推断可参赛；当前未指定2027规则。",
       "recommendation": "准备通用规则映射表及可访问的2026历史官方入口；真实报名成员待选定目标后确认当届题材/类别/允许AI范围/资格/材料与签署，保留真实贡献和AI披露。",
-      "validation": "每项规则登记年份、类别、官方URL、发布日期、核对日期与适用范围；未知项待定，不外推2027资格或主题。"
+      "validation": "每项规则登记年份、类别、官方URL、发布日期、核对日期与适用范围；未知项待定，不外推2027资格或主题。",
+      "resolution": {
+        "status": "external_validation_pending",
+        "asOf": "2026-11-25",
+        "evidence": "evidence/audit-2026-11-25/validation.json"
+      }
     },
     {
       "dimension": 6,
@@ -580,7 +752,48 @@
       "evidence": "2026-11-25 集成 Chromium 实测通过手机导航、焦点恢复、预测提示及窄屏溢出检查；未测试实体设备或屏幕阅读器",
       "scenario": "赛事展示或课堂用户使用真实触屏/屏幕阅读器",
       "recommendation": "按具体设备和辅助技术记录任务完成率与阻碍；不要把当前 DOM 抽样称为 WCAG 认证",
-      "validation": "现场使用者完成导航、物种阅读、排序、预测、导出，并记录版本/设备/问题"
+      "validation": "现场使用者完成导航、物种阅读、排序、预测、导出，并记录版本/设备/问题",
+      "resolution": {
+        "status": "external_validation_pending",
+        "asOf": "2026-11-25",
+        "evidence": "evidence/audit-2026-11-25/validation.json"
+      }
     }
-  ]
+  ],
+  "remediation": {
+    "uniqueDefects": 14,
+    "fixed": 12,
+    "mitigated": 1,
+    "deferredVisualValidation": 1,
+    "regressionGapsCovered": 3,
+    "proposalsDelivered": 3,
+    "externalValidationsPending": 2,
+    "unitTestsPassed": 255,
+    "browserTestsPassed": 90,
+    "finalBranchReview": "original_findings_addressed_with_adjudicated_residuals",
+    "deployment": "pending",
+    "evidence": "evidence/audit-2026-11-25/validation.json",
+    "note": "Original kind names, baseline evidence and review decisions are preserved; resolution is appended separately.",
+    "finalReviewFindings": 4,
+    "finalReviewNote": "All four original final findings addressed. Coordinator accepts the private badge return extension and defers recoverable writer-lock contention in future lock-aware fallbacks; no claim that all residuals are fixed.",
+    "validatedSourceCommit": "2296e4006fa2a4e41b33dcc448ee9b75392e29f0",
+    "finalReviewFindingsAddressed": 4,
+    "finalFixCommit": "2296e40",
+    "residualFindings": [
+      {
+        "id": "FF-R1",
+        "priority": "Important",
+        "status": "deferred_nonblocking",
+        "issue": "A lock-aware retained release can hold the personal writer lock while its storage is temporary.",
+        "ruling": "No save corruption; current deployed 273e731 has no lock. Close the old preview and reload the current page to restore saving. Require lock-aware cross-version regression when fixing."
+      },
+      {
+        "id": "FF-R2",
+        "priority": "Minor",
+        "status": "accepted_internal_api_extension",
+        "issue": "GameStore.badge now returns award status instead of void, deviating from original return-shape constraint.",
+        "ruling": "Private static app; existing callers compatible; synchronous operation, persisted schemas and reward behavior remain stable. Explicitly documented plan deviation."
+      }
+    ]
+  }
 }

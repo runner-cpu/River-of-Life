@@ -1,0 +1,12 @@
+{
+  "paused": 80,
+  "zoomed": 82,
+  "obscured": 101,
+  "offscreen": 125,
+  "staticIntervalsMs": [
+    500,
+    400,
+    400
+  ],
+  "staticIntervalsProducedZeroNewFrames": true
+}

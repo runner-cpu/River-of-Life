@@ -1,0 +1,23 @@
+{
+  "checkedAt": "2026-11-25T06:26:49.266Z",
+  "sourceCommit": "fc31b68fb55edf9341128c3fcda7ac4a8519da6a",
+  "baseline": "273e731c5e0fc95594acaa100ce585da17316263",
+  "unitTests": 254,
+  "unitTestFiles": 27,
+  "browserTests": 88,
+  "browserDurationMs": 180702.13499999998,
+  "browserProject": "chromium",
+  "independentlyDiscoveredTests": 88,
+  "browserInventoryMatches": true,
+  "browserEvidenceGatePassed": true,
+  "releaseContentSha256": "e6c1898b63a151fd7b4f67f3b367613b9b72df4ea5c44e100a06d35fe92117ae",
+  "releaseContentSha256AfterRun": "e6c1898b63a151fd7b4f67f3b367613b9b72df4ea5c44e100a06d35fe92117ae",
+  "releaseContentUnchanged": true,
+  "releaseRunUnfiltered": true,
+  "serviceWorkerRevision": "4e5214397877",
+  "screenshots": [
+    "uncertain-reference-1440.png",
+    "uncertain-reference-320.png"
+  ],
+  "scope": "Local Windows production build; software Chromium uses SwiftShader. Not physical-device performance, screen-reader, scientific or classroom efficacy validation. Deployment is recorded separately against CI-built bytes."
+}

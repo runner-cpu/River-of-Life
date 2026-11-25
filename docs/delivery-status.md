@@ -4,6 +4,8 @@
 
 本轮新增[十维复核与改进记录](audits/2026-11-25-improvement-report.md)和[始祖鸟教师审读单](competition/archaeopteryx-teacher-review.md)。下文注明11月12日的测试与发布数据是历史记录，本轮执行结果以复核报告末节为准。详细介绍Markdown已补充版本边界，PDF仍为11月12日历史文稿；未重新生成展示准备包。
 
+11月25日完整本地验收为 **255/255单元（27文件）、90/90生产Chromium**，内容/模型校验、TypeScript、构建与构建身份核验通过，详见[本轮验收摘要](../evidence/audit-2026-11-25/validation.json)。跨窗口写入隔离、异步导入失效、离线升级、资源清理、探究参照、来源范围与练习覆盖均已纳入回归；线上发布结论另记在复核报告中。
+
 网站已上线：[https://runner-cpu.github.io/River-of-Life/](https://runner-cpu.github.io/River-of-Life/)。源码与文档见[GitHub仓库](https://github.com/runner-cpu/River-of-Life)。推送main后自动测试并发布，状态见[发布工作流](https://github.com/runner-cpu/River-of-Life/actions/workflows/pages.yml)。
 
 ## 已实现
@@ -37,7 +39,7 @@
 
 **科学审校与来源。** 已有证据：三重点活动登记B级机构来源及窄范围，11月12日来源复核有记录。尚缺什么：其余主要C级；机构单页不背书整卡，热点非精确解剖标定。最小行动：请专业人员先审一主题的具体字段、推断和结构点。完成凭据：审校人真实身份/范围/日期、逐条意见、修订与未解决项。
 
-**软件验证与离线。** 已有证据：最终实现 e9ea8d7 已通过135项单元测试（21文件）、69项完整生产Chromium、build与verify:build；新增交互的准备缓存、断网刷新与操作均有自动回归，发布产物已核对线上哈希。尚缺什么：物理设备、跨浏览器、读屏审计未完成。最小行动：扩一个真实环境并记录设备与方法。完成凭据：当前[最终验收](../evidence/acceptance.md)及[发布核验](../evidence/publication-verification.json)，后续另附真机记录；外部来源/语音/AR不承诺离线。
+**软件验证与离线。** 已有证据：11月12日实现e9ea8d7的135项单元、69项完整生产Chromium及构建结果保存在[历史验收](../evidence/acceptance.md)与[历史发布核验](../evidence/publication-verification.json)。11月25日新增多窗口、导入竞态、离线升级与教学反馈回归，具体版本、终审补修及最终发布状态见[十维复核记录](audits/2026-11-25-improvement-report.md)。尚缺什么：物理设备、跨浏览器、读屏审计未完成。最小行动：扩一个真实环境并记录设备与方法。完成凭据：注明构建身份的软件证据及后续真机记录；外部来源/语音/AR不承诺离线。
 
 **介绍与教学/答辩材料。** 已有证据：本目录与详细Markdown/PDF已有文稿及真实界面截图。尚缺什么：仍需按目标模板、篇幅和受众修订。最小行动：确定一个目标赛事后套用模板核查。完成凭据：最终版本、逐项规则映射及作者确认。
 
@@ -95,7 +97,7 @@
 
 ## 新版实现、验证与发布范围
 
-2026-11-12发布更新：本轮七项增强已随 cbba61b 推送至 main，GitHub Actions 构建与 Pages 部署成功；线上首页、离线清单、Service Worker 版本及全部32个发布资源已与本地主目录构建核对一致。详见[发布核验](../evidence/publication-verification.json)与[工作流记录](../evidence/pages-workflow-verification.json)。完整介绍正文与PDF中的测试数据保留其注明日期的历史快照；最新验收为135项单元测试、69项生产浏览器测试通过。
+2026-11-12发布更新：该轮七项增强已随 cbba61b 推送至 main，GitHub Actions 构建与 Pages 部署成功；线上首页、离线清单、Service Worker 版本及全部32个发布资源已与本地主目录构建核对一致。详见[历史发布核验](../evidence/publication-verification.json)与[历史工作流记录](../evidence/pages-workflow-verification.json)。完整介绍正文与PDF中的测试数据保留其注明日期的历史快照；当日最终验收为135项单元测试、69项生产浏览器测试通过。
 
 “纪元与档案关系”从现有章节与48档案派生年代范围，使用明确标注的压缩时间轴与等价分组列表；不是完整系统发生树，也不表示同地同时共存。小屏默认列表，可展开纪元并打开只读展台。此展台仍能旋转、缩放、查看来源、尺寸和结构标注，但不调用观察、阅读、收藏、比较记账或奖励，关闭后焦点回到原节点。完整内存Progress、updatedAt、localStorage与IndexedDB前后不变的检查已纳入回归。
 

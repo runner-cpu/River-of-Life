@@ -1,0 +1,102 @@
+{
+  "measuredAt": "2026-11-25T06:24:10.376Z",
+  "kind": "headless structural counts, not physical device FPS",
+  "scenes": [
+    {
+      "theme": "oxygen",
+      "webgl": true,
+      "elapsed": 0.15109999999403953,
+      "triangles": 6032,
+      "drawCalls": 15,
+      "pixelRatio": 1,
+      "chapter": 1,
+      "purpose": "classroom",
+      "status": "playing",
+      "reducedMotion": true
+    },
+    {
+      "theme": "radiation",
+      "webgl": true,
+      "elapsed": 0.20079999998211862,
+      "triangles": 5664,
+      "drawCalls": 59,
+      "pixelRatio": 1,
+      "chapter": 2,
+      "purpose": "classroom",
+      "status": "playing",
+      "reducedMotion": true
+    },
+    {
+      "theme": "anoxia",
+      "webgl": true,
+      "elapsed": 0.19719999998807908,
+      "triangles": 2888,
+      "drawCalls": 21,
+      "pixelRatio": 1,
+      "chapter": 3,
+      "purpose": "classroom",
+      "status": "playing",
+      "reducedMotion": true
+    },
+    {
+      "theme": "volcanism",
+      "webgl": true,
+      "elapsed": 0.20769999998807906,
+      "triangles": 1904,
+      "drawCalls": 12,
+      "pixelRatio": 1,
+      "chapter": 4,
+      "purpose": "classroom",
+      "status": "playing",
+      "reducedMotion": true
+    },
+    {
+      "theme": "rift",
+      "webgl": true,
+      "elapsed": 0.2025,
+      "triangles": 1236,
+      "drawCalls": 56,
+      "pixelRatio": 1,
+      "chapter": 5,
+      "purpose": "classroom",
+      "status": "playing",
+      "reducedMotion": true
+    },
+    {
+      "theme": "impact",
+      "webgl": true,
+      "elapsed": 0.165,
+      "triangles": 2068,
+      "drawCalls": 31,
+      "pixelRatio": 1,
+      "chapter": 6,
+      "purpose": "classroom",
+      "status": "playing",
+      "reducedMotion": true
+    },
+    {
+      "theme": "grasslands",
+      "webgl": true,
+      "elapsed": 0.20069999998807905,
+      "triangles": 2142,
+      "drawCalls": 23,
+      "pixelRatio": 1,
+      "chapter": 7,
+      "purpose": "classroom",
+      "status": "playing",
+      "reducedMotion": true
+    },
+    {
+      "theme": "glaciation",
+      "webgl": true,
+      "elapsed": 0.15189999997615813,
+      "triangles": 1268,
+      "drawCalls": 17,
+      "pixelRatio": 1,
+      "chapter": 8,
+      "purpose": "classroom",
+      "status": "playing",
+      "reducedMotion": true
+    }
+  ]
+}
