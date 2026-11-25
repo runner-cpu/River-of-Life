@@ -48,7 +48,7 @@ test('desktop dragging uses the same categories without inventing a legacy evide
   await page.locator('.inquiry-question button[type="submit"]').click();
   await page.locator('#inquiry-text').click(); await page.locator('#inquiry-continue').click();
   await page.locator('[data-card]').first().dragTo(page.locator('[data-drop-category="irrelevant"]'));
-  await expect(page.locator('[data-card] .card-status').first()).toHaveText('与判断无关');
+  await expect(page.locator('[data-card] .card-status').first()).toHaveText('与归类参照无关');
   await page.locator('[data-card]').nth(1).dragTo(page.locator('[data-drop-category="support"]'));
   await expect(page.locator('#inquiry-show-graph')).toBeEnabled();
 });

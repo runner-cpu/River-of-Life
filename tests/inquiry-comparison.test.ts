@@ -38,3 +38,26 @@ describe('read-only inquiry comparisons', () => {
     expect(() => compareInquiryRecords({ ...current, phase: 'graph' } as never, current)).toThrow();
   });
 });
+
+
+it.each(['mine', 'peer', 'both'] as const)('describes %s missing provenance without concluding references differ', side => {
+  const known = record();
+  known.answers.initial = inquiries[0].uncertainClaim.answerIndex;
+  known.classificationReference = { kind: 'activity-claim', claimId: inquiries[0].uncertainClaim.id };
+  const legacy = structuredClone(known); delete legacy.classificationReference;
+  const current = side === 'mine' || side === 'both' ? legacy : known;
+  const peer = side === 'peer' || side === 'both' ? legacy : known;
+  const text = compareInquiryRecords(current, peer).differences.join('');
+  expect(text).toContain(side === 'both' ? '双方旧记录未记载归类参照' : side === 'mine' ? '我的旧记录未记载归类参照' : '同伴旧记录未记载归类参照');
+  expect(text).toContain('无法确定双方归类参照是否一致');
+  expect(text).toContain('相同归类标签不能证明理由相同');
+  expect(text).not.toContain('归类参照不同');
+});
+
+it('compares only known reference identities and preserves the equal-label reasoning caveat', () => {
+  const current = record(), peer = structuredClone(current);
+  peer.answers.initial = 1;
+  expect(compareInquiryRecords(current, peer).differences.join('')).toContain('归类参照不同');
+  expect(compareInquiryRecords(current, peer).differences.join('')).toContain('即使归类标签相同，也不能据此推断理由相同');
+  expect(compareInquiryRecords(current, current).differences).toEqual([]);
+});

@@ -23,10 +23,15 @@ for (const activity of inquiries) {
     await page.locator('input[value="' + activity.uncertainClaim.answerIndex + '"]').check();
     await page.locator('.inquiry-question button[type="submit"]').click();
     await page.locator('#inquiry-text').click(); await page.locator('#inquiry-continue').click();
+    await expect(page.getByRole('button', { name: '支持归类参照', exact: true })).toHaveCount(activity.cards.length);
+    await expect(page.getByRole('button', { name: '反对归类参照', exact: true })).toHaveCount(activity.cards.length);
+    await expect(page.getByRole('button', { name: '支持我的判断', exact: true })).toHaveCount(0);
     await expect(page.locator('.inquiry-reference')).toHaveText('归类参照：' + activity.uncertainClaim.proposition);
     await expect(page.locator('#inquiry-step')).toContainText(activity.initial.options[activity.uncertainClaim.answerIndex]);
     for (let i = 0; i < activity.cards.length; i++) await page.locator('[data-category="support"]').nth(i).click();
     await page.locator('#inquiry-show-graph').click();
+    await expect(page.locator('.inquiry-graph')).toContainText('支持归类参照');
+    await expect(page.locator('.inquiry-graph')).not.toContainText('支持我的判断');
     await expect(page.locator('.inquiry-graph .inquiry-reference')).toContainText(activity.uncertainClaim.proposition);
     expect(await page.locator('.modal-body').evaluate(el => el.scrollWidth <= el.clientWidth + 1)).toBe(true);
     if (activity.id !== 'fins-and-land') await page.screenshot({ path: testInfo.outputPath(`uncertain-reference-${width}.png`) });
@@ -39,12 +44,15 @@ for (const activity of inquiries) {
     expect(record.answers.initial).toBe(activity.uncertainClaim.answerIndex); expect(record.answers.evidence).toBeNull(); expect(record.version).toBe(1);
     const htmlDownload = page.waitForEvent('download'); await page.locator('#inquiry-export').click();
     const html = readFileSync((await (await htmlDownload).path())!, 'utf8');
-    expect(html).toContain(activity.uncertainClaim.proposition); expect(html).toContain(activity.initial.options[record.answers.initial]);
+    expect(html).toContain('支持归类参照'); expect(html).not.toContain('支持我的判断'); expect(html).toContain(activity.uncertainClaim.proposition); expect(html).toContain(activity.initial.options[record.answers.initial]);
     const legacy = { ...record }; delete legacy.classificationReference;
     await page.locator('#inquiry-peer-file').setInputFiles({ name: 'legacy.json', mimeType: 'application/json', buffer: Buffer.from(JSON.stringify(legacy)) });
     await expect(page.locator('#inquiry-peer-status')).toContainText('已导入');
     await expect(page.locator('.inquiry-peer-column').nth(1)).toContainText('旧记录未记载归类参照');
-    await expect(page.locator('.inquiry-peer-differences')).toContainText('归类参照不同');
+    await expect(page.locator('.inquiry-peer-column').nth(1)).toContainText('支持归类参照');
+    await expect(page.locator('.inquiry-peer-differences')).toContainText('同伴旧记录未记载归类参照');
+    await expect(page.locator('.inquiry-peer-differences')).toContainText('无法确定双方归类参照是否一致');
+    await expect(page.locator('.inquiry-peer-differences')).not.toContainText('归类参照不同');
     const accepted = await page.locator('#inquiry-peer-result').textContent();
     await page.locator('#inquiry-peer-file').setInputFiles({ name: 'invalid.json', mimeType: 'application/json', buffer: Buffer.from(JSON.stringify({ ...record, classificationReference: { kind: 'activity-claim', claimId: 'unknown' } })) });
     await expect(page.locator('#inquiry-peer-status')).toContainText('参照');
@@ -104,5 +112,24 @@ for (const chapter of [1, 8]) {
     expect(after.points).toBe(baseline.points); expect(after.totalEarned).toBe(baseline.totalEarned); expect(after.badges).toContain('深时观察者');
     await page.locator('#check-order').click();
     expect((await progress(page)).memory).toEqual(after);
+  });
+}
+
+
+for (const [field, label] of [['fact', '一个有趣的发现'], ['misconception', '换一个角度认识它']] as const) {
+  test(`quiz ${field} feedback and explanation point to the opened card heading`, async ({ page }) => {
+    const fixture = new GameStore(species, questions, { persist: false });
+    questions.filter(q => q.chapter === 1 && q.field !== field).forEach(q => fixture.answer(q.id, q.correct));
+    await page.addInitScript(raw => localStorage.setItem('life-museum-save-v1', raw), fixture.export());
+    await page.goto('/#quiz');
+    const id = await page.locator('.question-card').getAttribute('data-question-id');
+    const question = questions.find(q => q.id === id)!;
+    expect(question.field).toBe(field);
+    await page.locator(`[data-answer="${question.correct}"]`).click();
+    await expect(page.locator('#quiz-explanation')).toContainText(`展品卡“${label}”`);
+    await expect(page.locator('#answer-feedback')).toContainText(`知识卡：${species.find(s => s.id === question.speciesId)!.name} · ${label}`);
+    await page.locator('#quiz-card').click();
+    await expect(page.getByRole('heading', { name: label, exact: true })).toBeVisible();
+    await expect(page.locator(field === 'fact' ? '.fact-block:not(.misconception) p' : '.misconception p')).toHaveText(question.options[question.correct]);
   });
 }

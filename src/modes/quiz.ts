@@ -1,3 +1,4 @@
+import { specimenFieldLabels } from '../content/specimen-fields';
 import type { Chapter, Species, Question } from '../core/types';
 import type { GameStore } from '../core/store';
 import { escape, icon, toast } from '../core/ui';
@@ -5,8 +6,7 @@ import { quizRound, timelineRound } from '../core/quiz';
 import { specimenArt } from '../scene/creatures';
 
 export function quizFeedbackSources(question: Question, specimen: Species) {
-  const fields = { definition: '生命档案', fact: '值得留意', misconception: '纠正误解', diet: '营养方式', habitat: '生活环境', period: '地质年代' };
-  return `<p>知识卡：${escape(specimen.name)} · ${escape(fields[question.field])}</p><ul>${specimen.sources.map(source => `<li><a href="${escape(source.url)}" target="_blank" rel="noopener noreferrer">[${escape(source.level)}] ${escape(source.title)}</a><small>核对范围：${escape(source.scope || '物种资料入口；尚未逐字段记载核对范围，请对照原文核实本题字段。')}</small></li>`).join('')}</ul><small>各来源仅按所列范围提供查证入口；链接本身不表示覆盖知识卡的全部字段。</small>`;
+  return `<p>知识卡：${escape(specimen.name)} · ${escape(specimenFieldLabels[question.field])}</p><ul>${specimen.sources.map(source => `<li><a href="${escape(source.url)}" target="_blank" rel="noopener noreferrer">[${escape(source.level)}] ${escape(source.title)}</a><small>核对范围：${escape(source.scope || '物种资料入口；尚未逐字段记载核对范围，请对照原文核实本题字段。')}</small></li>`).join('')}</ul><small>各来源仅按所列范围提供查证入口；链接本身不表示覆盖知识卡的全部字段。</small>`;
 }
 
 export function mountQuiz(container: HTMLElement, chapter: Chapter, species: Species[], questions: Question[], store: GameStore, onSpecimen: (s: Species) => void, options: { canWrite?: () => boolean } = {}) {

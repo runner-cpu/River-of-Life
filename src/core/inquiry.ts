@@ -1,6 +1,6 @@
 import type { Inquiry } from '../content/inquiries';
 
-export const categories = { support: '支持我的判断', irrelevant: '与判断无关', oppose: '反对我的判断', 'more-information': '需要更多信息' } as const;
+export const categories = { support: '支持归类参照', irrelevant: '与归类参照无关', oppose: '反对归类参照', 'more-information': '需要更多信息' } as const;
 export type ClassificationReference = { kind: 'activity-claim'; claimId: string };
 
 /** Missing references on historical uncertain records never acquire a new meaning. */

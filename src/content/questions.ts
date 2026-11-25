@@ -1,3 +1,4 @@
+import { specimenFieldLabels } from './specimen-fields';
 import type { Question } from '../core/types';
 import { species } from './species';
 
@@ -74,7 +75,7 @@ export const questions: Question[] = species.flatMap((entry, entryIndex) => fiel
       : `“${entry.name}”——${prompts[field]}`,
     options,
     correct,
-    explanation: `展品卡${field === 'definition' ? '“生命档案”' : field === 'fact' ? '“值得留意”' : '“纠正误解”'}写道：${entry[field]}`,
+    explanation: `展品卡“${specimenFieldLabels[field]}”写道：${entry[field]}`,
     field,
   };
 }));

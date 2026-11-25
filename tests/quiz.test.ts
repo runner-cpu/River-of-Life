@@ -32,11 +32,21 @@ describe('quiz coverage without changing answer identity', () => {
     expect(second[0].id).not.toBe(first[0].id);
     expect(quizRound(questions, { ...options, kind: 'mistakes' })).toEqual([]);
   });
+  it.each([['definition', '生命档案'], ['fact', '一个有趣的发现'], ['misconception', '换一个角度认识它']] as const)('uses the visible card field heading for %s without changing answer identities', (field, label) => {
+    questions.filter(q => q.field === field).forEach(q => {
+      const entryIndex = species.findIndex(s => s.id === q.speciesId), specimen = species[entryIndex];
+      expect(q.id).toBe(`${specimen.id}-${field}`);
+      expect(q.correct).toBe((entryIndex + ['definition', 'fact', 'misconception'].indexOf(field)) % 4);
+      expect(q.options[q.correct]).toBe(specimen[field]);
+      expect(q.explanation).toBe(`展品卡“${label}”写道：${specimen[field]}`);
+      expect(quizFeedbackSources(q, specimen)).toContain(`知识卡：${specimen.name} · ${label}`);
+    });
+  });
   it('links every declared source scope, names the exact card field, and escapes rendered text', () => {
     const q = questions.find(q => q.speciesId === 'archaeopteryx' && q.field === 'fact')!;
     const s = species.find(s => s.id === q.speciesId)!;
     const html = quizFeedbackSources(q, s);
-    expect(html).toContain('值得留意'); expect(html).toContain(s.name);
+    expect(html).toContain('一个有趣的发现'); expect(html).toContain(s.name);
     s.sources.forEach(source => { expect(html).toContain(source.url.replaceAll('&', '&amp;')); if (source.scope) expect(html).toContain(source.scope); });
     expect(html).toContain('尚未逐字段记载核对范围');
     const hostile = { ...s, name: '<script>x</script>', sources: [{ ...s.sources[0], title: '<img src=x>', scope: '<b>scope</b>', url: 'https://example.org/?x="&y=1' }] };

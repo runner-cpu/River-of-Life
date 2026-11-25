@@ -1,3 +1,4 @@
+import { specimenFieldLabels } from '../content/specimen-fields';
 import { mountSpecimenAnnotations } from './specimen-annotations';
 import type { Species } from '../core/types';
 import type { GameStore } from '../core/store';
@@ -22,10 +23,10 @@ export function showSpecimen(s: Species, store: GameStore, onLab: () => void, op
       <div id="specimen-annotations"></div><div id="model-load-notice" role="status" hidden></div><div id="size-comparison" hidden></div>
       <div class="provenance" id="model-credit">模型用于解释身体结构；颜色、姿态与运动为艺术示意，不是化石扫描。</div></div>
       <div class="specimen-copy"><span class="eyebrow">${escape(s.latin)}</span><div class="specimen-meta"><span>${escape(s.period)}</span><span>${s.rarity === 'star' ? '明星物种' : s.rarity === 'rare' ? '珍稀发现' : '生命档案'}</span></div>
-      <p class="definition">${escape(s.definition)}</p>
-      <dl class="facts"><div><dt>生活年代</dt><dd>约 ${s.startMya}–${s.endMya} 百万年前</dd></div><div><dt>体型</dt><dd>${escape(s.sizeLabel)}</dd></div><div><dt>食性 / 营养</dt><dd>${escape(s.diet)}</dd></div><div><dt>栖息地</dt><dd>${escape(s.habitat)}</dd></div></dl>
-      <div class="fact-block"><h3>${icon('Sparkles', 16)} 一个有趣的发现</h3><p>${escape(s.fact)}</p></div>
-      <div class="fact-block misconception"><h3>${icon('Focus', 16)} 换一个角度认识它</h3><p>${escape(s.misconception)}</p></div>
+      <h3>${specimenFieldLabels.definition}</h3><p class="definition">${escape(s.definition)}</p>
+      <dl class="facts"><div><dt>${specimenFieldLabels.period}</dt><dd>约 ${s.startMya}–${s.endMya} 百万年前</dd></div><div><dt>体型</dt><dd>${escape(s.sizeLabel)}</dd></div><div><dt>${specimenFieldLabels.diet}</dt><dd>${escape(s.diet)}</dd></div><div><dt>${specimenFieldLabels.habitat}</dt><dd>${escape(s.habitat)}</dd></div></dl>
+      <div class="fact-block"><h3>${icon('Sparkles', 16)} ${specimenFieldLabels.fact}</h3><p>${escape(s.fact)}</p></div>
+      <div class="fact-block misconception"><h3>${icon('Focus', 16)} ${specimenFieldLabels.misconception}</h3><p>${escape(s.misconception)}</p></div>
       <p class="extinction"><strong>它的后来</strong> ${escape(s.extinction)}</p>
       ${readOnly ? '<p class="muted">只读浏览 · 不记录个人学习进度</p>' : ''}<div class="learning-actions"><button class="btn primary" id="mark-read" ${!accessible || readOnly ? 'disabled' : ''}>${icon('Check', 17)} ${store.state.read.includes(s.id) ? '已阅读' : '我已阅读 · +3 演化点'}</button><button class="btn" id="collect-species" ${!accessible || readOnly ? 'disabled' : ''}>${icon('BookmarkPlus', 17)} ${store.state.collected.includes(s.id) ? '已加入图鉴' : !store.state.collected.length ? '免费收藏' : `收藏 · ${s.cost} 演化点`}</button></div>
       ${!accessible ? '<p class="muted">这张卡片可以提前阅读；开启所属纪元后可记录学习进度。</p>' : ''}

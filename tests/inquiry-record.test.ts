@@ -78,13 +78,21 @@ describe('explicit uncertain claim references in unchanged v1 records', () => {
       expect(record.classifications.every(card => card.category === 'support')).toBe(true);
       if (answer === activity.uncertainClaim.answerIndex) {
         expect(record.classificationReference).toEqual({ kind: 'activity-claim', claimId: activity.uncertainClaim.id });
+        for (const html of [inquiryGraph(session), inquiryReport(session, '')]) {
+          expect(html).toContain('支持归类参照');
+          expect(html).not.toContain('支持我的判断'); expect(html).not.toContain('反对我的判断');
+        }
+        expect(inquiryGraph(session)).toContain('反对归类参照');
         expect(inquiryGraph(session)).toContain(activity.uncertainClaim.proposition);
         expect(inquiryGraph(session)).toContain(activity.initial.options[answer]);
         expect(inquiryReport(session, '')).toContain(activity.uncertainClaim.proposition);
         const legacy = structuredClone(record); delete legacy.classificationReference;
         expect(parseInquiryRecord(JSON.stringify(legacy))).not.toHaveProperty('classificationReference');
         expect(classificationReferenceText(activity, answer, legacy.classificationReference)).toBe('旧记录未记载归类参照');
-        expect(compareInquiryRecords(record, legacy).differences.join('')).toContain('旧记录未记载归类参照');
+        const comparison = compareInquiryRecords(record, legacy).differences.join('');
+        expect(comparison).toContain('同伴旧记录未记载归类参照');
+        expect(comparison).toContain('无法确定双方归类参照是否一致');
+        expect(comparison).not.toContain('归类参照不同');
         expect(compareInquiryRecords(legacy, legacy).differences.join('')).toContain('无法核对所检验的命题');
       } else {
         expect(record).not.toHaveProperty('classificationReference');

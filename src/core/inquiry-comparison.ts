@@ -22,8 +22,15 @@ export function compareInquiryRecords(current: InquiryRecord, peer: InquiryRecor
   }
   const ownReference = classificationReferenceText(activity, own.answers.initial, own.classificationReference);
   const peerReference = classificationReferenceText(activity, other.answers.initial, other.classificationReference);
-  if (ownReference !== peerReference) differences.push(`归类参照不同：我的参照“${ownReference}”；同伴的参照“${peerReference}”。即使归类标签相同，也不能据此推断理由相同。`);
-  else if (ownReference === '旧记录未记载归类参照') differences.push('双方旧记录未记载归类参照，无法核对所检验的命题；相同归类标签不能证明理由相同。');
+  const ownMissing = own.answers.initial === activity.uncertainClaim.answerIndex && !own.classificationReference;
+  const peerMissing = other.answers.initial === activity.uncertainClaim.answerIndex && !other.classificationReference;
+  if (ownMissing || peerMissing) {
+    const side = ownMissing && peerMissing ? '双方旧记录' : ownMissing ? '我的旧记录' : '同伴旧记录';
+    differences.push(`${side}未记载归类参照，无法确定双方归类参照是否一致，也无法核对所检验的命题；相同归类标签不能证明理由相同。`);
+  } else {
+    const referenceId = (record: InquiryRecord) => record.classificationReference?.claimId ?? `initial-answer:${record.answers.initial}`;
+    if (referenceId(own) !== referenceId(other)) differences.push(`归类参照不同：我的参照“${ownReference}”；同伴的参照“${peerReference}”。即使归类标签相同，也不能据此推断理由相同。`);
+  }
   activity.cards.forEach((card, index) => {
     const a = own.classifications.find(c => c.cardId === card.id)!;
     const b = other.classifications.find(c => c.cardId === card.id)!;
