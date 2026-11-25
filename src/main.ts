@@ -12,6 +12,8 @@ import { chapters } from './content/chapters';
 import { questions } from './content/questions';
 import type { Chapter, Mode, Species } from './core/types';
 import { GameStore } from './core/store';
+import { createProgressAccess } from './core/progress-access';
+import { createProgressImport } from './core/progress-import';
 import { $, ambient, download, escape, icon, modal, toast } from './core/ui';
 import { LifeScene } from './scene/life-scene';
 import { specimenArt } from './scene/creatures';
@@ -24,7 +26,12 @@ import { showEpochEvent, type EpochEvent, type EpochPurpose } from './modes/epoc
 import { openClassroomExhibit } from './modes/classroom';
 
 const species = allSpecies.filter(s => s.status === 'published' && s.sources.length > 0 && s.sources.every(source => source.url.startsWith('https://') && source.level !== 'D'));
-const store = new GameStore(species, questions);
+const progressAccess = createProgressAccess();
+let progressReady = false, pageDeparted = false;
+const canWriteProgress = () => progressReady && progressAccess.writable;
+const store = new GameStore(species, questions, { canWrite: canWriteProgress });
+window.addEventListener('pagehide', () => { pageDeparted = true; progressReady = false; progressAccess.release(); });
+window.addEventListener('pageshow', event => { if (event.persisted) { progressReady = false; location.reload(); } });
 const nav: { id: Mode; label: string; en: string; icon: string }[] = [
   { id: 'journey', label: '演化之旅', en: 'Journey', icon: 'Orbit' },
   { id: 'relationships', label: '纪元关系', en: 'Relationships', icon: 'Orbit' },
@@ -53,6 +60,12 @@ function shell() {
   $('#search').addEventListener('click', () => { navigate('codex'); $('#codex-search').focus(); });
   $('#points-info').addEventListener('click', () => modal('学习，让旅程向前', `<p class="definition">演化点只来自实际学习。没有挂机收益，也不用反复点击。</p><div class="economy-list">${[['首次观察生物', '+5'], ['首次读完知识卡', '+3'], ['每题首次答对', '+10'], ['完成化石挖掘', '+20'], ['完成章节学习任务', '+50'], ['见证纪元事件', '+100']].map(([label, value]) => `<div><span>${label}</span><strong>${value}</strong></div>`).join('')}</div><p class="muted">第一件藏品免费收藏。后续可用演化点收藏，纪元开启需 150 点。体型对比与阅读始终免费。</p>`));
   closeNavigation=setupMobileNavigation();
+  if (!canWriteProgress()) {
+    const banner = document.createElement('section'); banner.id = 'progress-access'; banner.className = 'progress-access'; banner.setAttribute('aria-label', '探索记录保存状态');
+    const message = document.createElement('p'); message.textContent = `只读浏览：${progressAccess.reason}`;
+    const retry = document.createElement('button'); retry.className = 'btn'; retry.textContent = '重新加载并重试保存'; retry.addEventListener('click', () => location.reload());
+    banner.append(message, retry); $('.app-body').insertBefore(banner, $('#main-content'));
+  }
   new MutationObserver(()=>scene?.pause(paused || !!document.querySelector('dialog[open]'))).observe(document.body,{childList:true});
   store.onNotice(toast); store.subscribe(updateProgress); updateProgress();
 }
@@ -187,14 +200,32 @@ function showTree() {
 }
 function showSettings() {
   const p = store.state.settings;
-  const { dialog, close } = modal('让探索，适合你的节奏', `<div class="settings-list"><label><span><strong>减少动态效果</strong><small>暂停生物摆动和自动镜头过渡</small></span><input type="checkbox" id="reduced-motion" ${p.reducedMotion ? 'checked' : ''}></label><label><span><strong>投影与大字模式</strong><small>增大字号，提高教室投影可读性</small></span><input type="checkbox" id="projection" ${p.projection ? 'checked' : ''}></label><label><span><strong>画面质量</strong><small>低画质可降低移动设备负担</small></span><select id="quality"><option value="auto">自动</option><option value="high">高</option><option value="low">省电</option></select></label></div><h3>让发现留在身边</h3><p class="muted">进度保存在当前浏览器。更换设备前，请导出探索记录。</p><div class="settings-actions"><button class="btn" id="export-save">${icon('Download', 17)} 导出记录</button><button class="btn" id="import-save-trigger">${icon('Upload', 17)} 导入记录</button><input type="file" id="import-save" accept=".json,application/json" hidden><button class="btn" id="cache-offline">${icon('CloudDownload', 17)} 准备离线展馆</button></div><progress id="offline-progress" class="offline-progress" aria-label="离线资源准备进度" hidden></progress><p id="offline-status" class="muted" role="status"></p><details class="reset-details"><summary>重新开始探索</summary><p>这会清除本浏览器的学习记录，请先导出备份。</p><button class="btn danger" id="reset-save">清空记录并重新开始</button></details>`);
+  const { dialog, close } = modal('让探索，适合你的节奏', `<div class="settings-list"><label><span><strong>减少动态效果</strong><small>暂停生物摆动和自动镜头过渡</small></span><input type="checkbox" id="reduced-motion" ${p.reducedMotion ? 'checked' : ''}></label><label><span><strong>投影与大字模式</strong><small>增大字号，提高教室投影可读性</small></span><input type="checkbox" id="projection" ${p.projection ? 'checked' : ''}></label><label><span><strong>画面质量</strong><small>低画质可降低移动设备负担</small></span><select id="quality"><option value="auto">自动</option><option value="high">高</option><option value="low">省电</option></select></label></div><h3>让发现留在身边</h3><p class="muted">进度保存在当前浏览器。更换设备前，请导出探索记录。</p><div class="settings-actions"><button class="btn" id="export-save">${icon('Download', 17)} 导出记录</button><button class="btn" id="import-save-trigger">${icon('Upload', 17)} 导入记录</button><input type="file" id="import-save" accept=".json,application/json" hidden><button class="btn" id="cache-offline">${icon('CloudDownload', 17)} 准备离线展馆</button></div><progress id="offline-progress" class="offline-progress" aria-label="离线资源准备进度" hidden></progress><p id="offline-status" class="muted" role="status"></p><details class="reset-details"><summary>重新开始探索</summary><p>这会替换当前探索进度；损坏记录的恢复存档仍会保留。请先导出备份。</p><button class="btn danger" id="reset-save">替换进度并重新开始</button></details>`);
   (dialog.querySelector('#quality') as HTMLSelectElement).value = p.quality;
   dialog.querySelector('#reduced-motion')!.addEventListener('change', e => { store.settings({ reducedMotion: (e.target as HTMLInputElement).checked }); scene?.reducedMotion(store.state.settings.reducedMotion); });
   dialog.querySelector('#projection')!.addEventListener('change', e => store.settings({ projection: (e.target as HTMLInputElement).checked }));
   dialog.querySelector('#quality')!.addEventListener('change', e => { store.settings({ quality: (e.target as HTMLSelectElement).value as 'auto' }); scene?.setQuality(store.state.settings.quality); });
   dialog.querySelector('#export-save')!.addEventListener('click', () => download('生命长河-探索记录.json', store.export(), 'application/json'));
   dialog.querySelector('#import-save-trigger')!.addEventListener('click',()=>dialog.querySelector<HTMLInputElement>('#import-save')!.click());
-  dialog.querySelector('#import-save')!.addEventListener('change', async e => { const file = (e.target as HTMLInputElement).files?.[0]; if (!file) return; try { if(file.size>250000)throw new Error('记录文件过大，请选择导出的 JSON 记录。'); store.import(await file.text()); close(); navigate(mode); toast('探索记录已导入，欢迎回来。'); } catch (error) { toast((error as Error).message); } });
+  const importStatus = document.createElement('p'); importStatus.id = 'import-status'; importStatus.className = 'muted'; importStatus.setAttribute('role', 'status');
+  dialog.querySelector('.settings-actions')!.after(importStatus);
+  const importer = createProgressImport({
+    active: () => dialog.isConnected && dialog.open,
+    canWrite: canWriteProgress,
+    commit: raw => store.import(raw),
+    status: message => { importStatus.textContent = message; },
+    imported: () => { close(); navigate(mode); toast('探索记录已导入，欢迎回来。'); },
+  });
+  dialog.addEventListener('close', () => importer.dispose(), { once: true });
+  dialog.addEventListener('cancel', () => importer.dispose(), { once: true });
+  dialog.querySelector<HTMLInputElement>('#import-save')!.addEventListener('change', e => {
+    const input = e.target as HTMLInputElement, file = input.files?.[0];
+    input.value = ''; void importer.select(file);
+  });
+  if (!canWriteProgress()) {
+    dialog.querySelectorAll<HTMLInputElement | HTMLSelectElement | HTMLButtonElement>('#reduced-motion, #projection, #quality, #import-save-trigger, #reset-save').forEach(control => { control.disabled = true; });
+    importStatus.textContent = progressAccess.reason;
+  }
   dialog.querySelector('#cache-offline')!.addEventListener('click', async e => {
     const button = e.currentTarget as HTMLButtonElement, status = dialog.querySelector('#offline-status')!;
     if (import.meta.env.DEV) { status.textContent = '开发预览不缓存代码。运行 npm run build 和 npm run preview 后可准备离线展馆。'; return; }
@@ -209,10 +240,11 @@ function showSettings() {
     finally { button.disabled = false;button.removeAttribute('aria-busy');progress.hidden=true; }
   });
   dialog.querySelector('#reset-save')!.addEventListener('click', () => {
-    const review=modal('确认重新开始探索',`<div class="save-review"><p>当前已有 ${store.state.observed.length} 个观察记录、${store.state.collected.length} 件藏品和 ${store.state.completedChapters.length} 个已完成纪元。重新开始会清除这些进度。</p><p>你可以先导出记录，之后通过导入恢复。</p><div class="save-review-actions"><button class="btn" id="backup-before-reset">先导出记录</button><button class="btn" id="cancel-reset">保留当前进度</button><button class="btn danger" id="confirm-reset">确认重新开始</button></div></div>`);
+    importer.cancel(); importStatus.textContent = '待处理的导入已取消。';
+    const review=modal('确认重新开始探索',`<div class="save-review"><p>当前已有 ${store.state.observed.length} 个观察记录、${store.state.collected.length} 件藏品和 ${store.state.completedChapters.length} 个已完成纪元。重新开始会替换这些进度，损坏记录的恢复存档仍会保留。</p><p>你可以先导出记录，之后通过导入恢复。</p><div class="save-review-actions"><button class="btn" id="backup-before-reset">先导出记录</button><button class="btn" id="cancel-reset">保留当前进度</button><button class="btn danger" id="confirm-reset">确认重新开始</button></div></div>`);
     review.dialog.querySelector('#backup-before-reset')!.addEventListener('click',()=>download('生命长河-重新开始前的记录.json',store.export(),'application/json'));
     review.dialog.querySelector('#cancel-reset')!.addEventListener('click',review.close);
-    review.dialog.querySelector('#confirm-reset')!.addEventListener('click',()=>{store.reset();review.close();close();navigate('journey');toast('新的一页，等待你的发现。');});
+    review.dialog.querySelector('#confirm-reset')!.addEventListener('click',()=>{importer.cancel();if(!canWriteProgress()){toast('当前为只读快照，请重新加载以重试保存权限。');return;}store.reset();review.close();close();navigate('journey');toast('新的一页，等待你的发现。');});
     review.dialog.querySelector<HTMLButtonElement>('#cancel-reset')!.focus();
   });
 }
@@ -271,11 +303,14 @@ function startDemo() {
 }
 
 async function init() {
+  await progressAccess.acquire();
   await store.init();
+  if (pageDeparted) return;
+  progressReady = true;
   // Demo stores are isolated from persistence; only the main store initializes its backing storage.
   shell(); const hash = location.hash.slice(1) as Mode; navigate(nav.some(n => n.id === hash) ? hash : 'journey', true);
   window.addEventListener('hashchange', () => { const target = location.hash.slice(1) as Mode; if (nav.some(n => n.id === target) && target !== mode) navigate(target, true); });
-  const connectionLabel = () => { $('#offline-label').textContent = navigator.onLine ? '本地记录 · 无需注册' : '当前离线 · 可用功能取决于缓存'; };
+  const connectionLabel = () => { $('#offline-label').textContent = !canWriteProgress() ? '只读快照 · 可导出备份' : navigator.onLine ? '本地记录 · 无需注册' : '当前离线 · 可用功能取决于缓存'; };
   connectionLabel(); window.addEventListener('offline', connectionLabel); window.addEventListener('online', connectionLabel);
   if (import.meta.env.PROD && 'serviceWorker' in navigator) void registerOfflineWorker();
   // Read-only diagnostics for reproducible performance evidence.

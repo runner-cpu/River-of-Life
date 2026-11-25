@@ -343,6 +343,9 @@ p { text-wrap: pretty; }
   .codex-card-bottom > span:first-child { display: none; }
   .inquiry-steps li { font-size: 10px; }
 }
+.progress-access { margin: 16px 28px 0; padding: 16px; border: 1px solid #b6c4a8; border-radius: 12px; background: #f3f5e9; display: flex; align-items: center; flex-wrap: wrap; gap: 12px; }
+.progress-access p { flex: 1 1 240px; margin: 0; line-height: 1.7; }
+.progress-access .btn { white-space: normal; }
 .projection .facts dd, .projection .fact-block p, .projection .inquiry-dialog .modal-body p { font-size: 17px; }
 @media print {
   body:has(dialog[open]) { overflow: visible; }

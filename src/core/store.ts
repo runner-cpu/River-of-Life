@@ -4,6 +4,16 @@ import { openProgressDatabase, readCurrentProgress } from './persistence';
 
 const SAVE_KEY = 'life-museum-save-v1';
 const UNLOCK_COST = 150;
+// Four-digit years retain historical/legacy formatting and leave the JS date
+// boundary unreachable. Imports receive a local revision, not the file's clock.
+const MIN_TIMESTAMP = -62167219200000;
+const MAX_TIMESTAMP = 253402300799999;
+function revisionAfter(timestamp: string): string {
+  const previous = Date.parse(timestamp);
+  const next = Math.max(Date.now(), previous + 1);
+  if (!Number.isSafeInteger(next) || next <= previous || next > MAX_TIMESTAMP) throw new Error('记录时间已超出可继续保存的安全范围，请导出备份后重新开始。');
+  return new Date(next).toISOString();
+}
 const publishable = (s: Species) => s.status === 'published' && s.sources.length > 0;
 const chapterTasks = (p: Progress, chapter: number, species: Species[], questions: Question[]) => {
   const ids = species.filter(s => s.chapter === chapter && publishable(s)).map(s => s.id);
@@ -90,7 +100,12 @@ export function validateProgress(input: unknown, species: Species[], questions: 
   const maximumSpent = collectionCost + (result.unlockedChapters.length - 1) * UNLOCK_COST;
   if (!possibleDiscounts.has(maximumSpent - spent)) throw new Error('演化点余额与藏品、章节花费不一致。');
   // Keep the saved revision time: startup uses it to reconcile both storage copies.
-  result.updatedAt = typeof p.updatedAt === 'string' && Number.isFinite(Date.parse(p.updatedAt)) ? p.updatedAt : new Date(0).toISOString();
+  const timestamp = typeof p.updatedAt === 'string' ? Date.parse(p.updatedAt) : NaN;
+  if (!Number.isFinite(timestamp) || timestamp < MIN_TIMESTAMP || timestamp > MAX_TIMESTAMP) throw new Error('记录中的时间戳无效或超出安全范围。');
+  // A startup snapshot must have room for its next revision. Reject it as a
+  // corrupt candidate before it can replace another recoverable storage copy.
+  revisionAfter(p.updatedAt);
+  result.updatedAt = p.updatedAt;
   return result;
 }
 
@@ -102,7 +117,15 @@ export class GameStore {
   private pendingNotices: string[] = [];
   private invalidLocal?: string;
   private invalidDatabase?: unknown;
-  constructor(readonly species: Species[], readonly questions: Question[], private readonly options: { persist?: boolean } = {}) {}
+  private pendingRevision?: string;
+  constructor(readonly species: Species[], readonly questions: Question[], private readonly options: { persist?: boolean; canWrite?: () => boolean } = {}) {}
+  private canWrite() {
+    if (this.options.persist !== false && this.options.canWrite?.() === false) return false;
+    // All public actions call this before touching the ledger, including actions
+    // that later return early. Allocation failure cannot leave a partial award.
+    this.pendingRevision = revisionAfter(this.state.updatedAt);
+    return true;
+  }
   onNotice(fn: (message: string) => void) { this.notice = fn; this.pendingNotices.splice(0).forEach(fn); }
   private notify(message: string) { if (this.notice) this.notice(message); else if (!this.pendingNotices.includes(message)) this.pendingNotices.push(message); }
   subscribe(fn: () => void) { this.listeners.add(fn); return () => this.listeners.delete(fn); }
@@ -127,9 +150,9 @@ export class GameStore {
     } catch { this.db?.close?.();this.db=undefined;this.notify('数据库暂不可用，已使用本地记录继续探索。建议导出一份备份。'); }
     if (candidates.length) this.state = candidates.reduce((latest, candidate) => Date.parse(candidate.updatedAt) > Date.parse(latest.updatedAt) ? candidate : latest);
   }
-  private changed() {
+  private changed(revision = this.pendingRevision!) {
     // Several learning actions can happen within one clock tick; keep revisions ordered.
-    this.state.updatedAt = new Date(Math.max(Date.now(), Date.parse(this.state.updatedAt) + 1)).toISOString();
+    this.state.updatedAt = revision;
     if (this.options.persist !== false) {
     try {
       if (this.invalidLocal !== undefined) { localStorage.setItem(`${SAVE_KEY}-recovery-${Date.now()}`, this.invalidLocal); this.invalidLocal = undefined; }
@@ -159,6 +182,7 @@ export class GameStore {
   }
   private accessible(id: string) { return this.species.find(s => s.id === id && publishable(s) && this.state.unlockedChapters.includes(s.chapter)); }
   observe(id: string) {
+    if (!this.canWrite()) return 0;
     if (!this.accessible(id)) return 0;
     const points = this.award(`observe:${id}`, 5);
     if (!this.state.observed.includes(id)) this.state.observed.push(id);
@@ -167,12 +191,14 @@ export class GameStore {
     this.checkTasks(); this.changed(); return points;
   }
   read(id: string) {
+    if (!this.canWrite()) return 0;
     if (!this.accessible(id) || !this.state.observed.includes(id)) return 0;
     const points = this.award(`read:${id}`, 3);
     if (!this.state.read.includes(id)) this.state.read.push(id);
     this.checkTasks(); this.changed(); return points;
   }
   collect(id: string): string {
+    if (!this.canWrite()) return '当前为只读快照，请重新加载以重试保存权限。';
     const s = this.accessible(id);
     if (!s) return '请先开启这个物种所属的纪元。';
     if (this.state.collected.includes(id)) return '这位老朋友已经在图鉴里了。';
@@ -183,12 +209,14 @@ export class GameStore {
     this.state.points -= s.cost; this.state.collected.push(id); this.changed(); return '已加入你的生命图鉴';
   }
   compare(id: string) {
+    if (!this.canWrite()) return;
     if (!this.accessible(id) || !this.state.observed.includes(id)) return;
     if (!this.state.compared.includes(id)) this.state.compared.push(id);
     this.award(`compare:${id}`, 0);
     this.checkTasks(); this.changed();
   }
   answer(id: string, option: number) {
+    if (!this.canWrite()) return { correct: false, points: 0 };
     const q = this.questions.find(q => q.id === id);
     if (!q || !this.state.unlockedChapters.includes(q.chapter) || !this.accessible(q.speciesId) || !Number.isInteger(option) || option < 0 || option >= q.options.length) return { correct: false, points: 0 };
     const correct = q.correct === option;
@@ -198,6 +226,7 @@ export class GameStore {
     this.checkTasks(); this.changed(); return { correct, points };
   }
   excavate(chapter: number) {
+    if (!this.canWrite()) return 0;
     if (!this.state.unlockedChapters.includes(chapter) || this.state.excavated.includes(chapter)) return 0;
     this.state.excavated.push(chapter); const points = this.award(`dig:${chapter}`, 20);
     const specimen = this.species.find(s => s.chapter === chapter && publishable(s));
@@ -214,11 +243,13 @@ export class GameStore {
   }
   canComplete(chapter: number) { return this.state.unlockedChapters.includes(chapter) && this.taskProgress(chapter).slice(0, 3).every(t => t.current >= t.target); }
   complete(chapter: number) {
+    if (!this.canWrite()) return false;
     if (!this.state.unlockedChapters.includes(chapter) || !this.canComplete(chapter)) return false;
     if (!this.state.completedChapters.includes(chapter)) this.state.completedChapters.push(chapter);
     this.award(`complete:${chapter}`, 100); this.changed(); return true;
   }
   unlock(chapter: number, _cost = UNLOCK_COST) {
+    if (!this.canWrite()) return '当前为只读快照，请重新加载以重试保存权限。';
     if (!Number.isInteger(chapter) || chapter < 2 || chapter > 8) return '章节数据无效。';
     const cost = UNLOCK_COST;
     if (this.state.unlockedChapters.includes(chapter)) { this.setChapter(chapter); return ''; }
@@ -226,14 +257,22 @@ export class GameStore {
     if (this.state.points < cost) return `开启需要 ${cost} 演化点。完成挖掘、体型对比或未答过的题目继续积累。`;
     this.state.points -= cost; this.state.unlockedChapters.push(chapter); this.state.chapter = chapter; this.changed(); return '';
   }
-  setChapter(chapter: number) { if (this.state.unlockedChapters.includes(chapter)) { this.state.chapter = chapter; this.changed(); } }
-  badge(name: string) { if (!this.state.badges.includes(name)) { this.state.badges.push(name); this.changed(); } }
+  setChapter(chapter: number) { if (this.canWrite() && this.state.unlockedChapters.includes(chapter)) { this.state.chapter = chapter; this.changed(); } }
+  badge(name: string) { if (this.canWrite() && !this.state.badges.includes(name)) { this.state.badges.push(name); this.changed(); } }
   inquiryBadge(id: InquiryBadgeId) {
-    if (this.options.persist === false || !isInquiryBadge(id) || this.state.badges.includes(id)) return false;
+    if (!this.canWrite() || this.options.persist === false || !isInquiryBadge(id) || this.state.badges.includes(id)) return false;
     this.state.badges.push(id); this.changed(); return true;
   }
-  settings(settings: Partial<Progress['settings']>) { Object.assign(this.state.settings, settings); this.changed(); }
+  settings(settings: Partial<Progress['settings']>) { if (!this.canWrite()) return; Object.assign(this.state.settings, settings); this.changed(); }
   export() { return JSON.stringify(this.state, null, 2); }
-  import(raw: string) { if (raw.length > 250000) throw new Error('记录文件过大。'); this.state = validateProgress(JSON.parse(raw), this.species, this.questions); this.checkTasks(); this.changed(); }
-  reset() { this.state = freshProgress(); this.changed(); }
+  import(raw: string) {
+    if (!this.canWrite()) return;
+    if (raw.length > 250000) throw new Error('记录文件过大。');
+    const imported = validateProgress(JSON.parse(raw), this.species, this.questions);
+    // Allocate before replacing state. A file with a future clock cannot poison
+    // subsequent writes or advance the local revision arbitrarily.
+    const revision = this.pendingRevision!;
+    this.state = imported; this.changed(revision);
+  }
+  reset() { if (!this.canWrite()) return; const revision = this.pendingRevision!; this.state = freshProgress(); this.changed(revision); }
 }

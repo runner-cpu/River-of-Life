@@ -162,6 +162,85 @@ describe('museum progression and economy', () => {
 });
 
 describe('safe save handling', () => {
+  it('guards every persistent mutation before changing state, notices or either storage copy', async () => {
+    let writable = true;
+    const database = databaseStorage(), store = new GameStore(species, questions, { canWrite: () => writable });
+    await store.init(); learn(store, 1); store.complete(1); store.unlock(2);
+    const notice = vi.fn(), listener = vi.fn(); store.onNotice(notice); store.subscribe(listener);
+    writable = false;
+    const actions = [
+      () => store.observe(species[4].id), () => store.read(species[0].id), () => store.collect(species[1].id),
+      () => store.compare(species[0].id), () => store.answer(questions[0].id, questions[0].correct),
+      () => store.excavate(1), () => store.complete(1), () => store.unlock(2), () => store.setChapter(1),
+      () => store.badge('new-badge'), () => store.inquiryBadge('inquiry-reproduction'),
+      () => store.settings({ projection: true }), () => store.import('{'), () => store.reset(),
+    ];
+    const before = store.export(), records = structuredClone([...database.records]);
+    storage.setItem.mockClear(); database.put.mockClear();
+    for (const action of actions) {
+      expect(action).not.toThrow(); expect(store.export()).toBe(before);
+      expect(storage.setItem).not.toHaveBeenCalled(); expect(database.put).not.toHaveBeenCalled();
+      expect([...database.records]).toEqual(records); expect(notice).not.toHaveBeenCalled(); expect(listener).not.toHaveBeenCalled();
+    }
+  });
+
+  it.each(['+275760-09-13T00:00:00.000Z', '+275760-09-12T23:59:59.999Z', 'not-a-timestamp'])('rejects dangerous import timestamps atomically (%s)', async updatedAt => {
+    const database = databaseStorage(), store = create(); await store.init(); store.observe(species[0].id);
+    const before = store.export(), payload = { ...JSON.parse(before), updatedAt };
+    storage.setItem.mockClear(); database.put.mockClear();
+    expect(() => store.import(JSON.stringify(payload))).toThrow(); expect(store.export()).toBe(before);
+    expect(storage.setItem).not.toHaveBeenCalled(); expect(database.put).not.toHaveBeenCalled();
+    expect(() => store.read(species[0].id)).not.toThrow(); expect(store.state.read).toContain(species[0].id);
+  });
+
+  it('allocates a local revision before replacing imported state, even for a finite far-future clock', () => {
+    vi.useFakeTimers(); vi.setSystemTime(new Date('2026-11-25T00:00:00Z'));
+    const store = create(); store.observe(species[0].id); const before = Date.parse(store.state.updatedAt);
+    store.import(JSON.stringify({ ...store.state, updatedAt: '9999-01-01T00:00:00.000Z' }));
+    expect(Date.parse(store.state.updatedAt)).toBe(before + 1);
+    expect(() => store.read(species[0].id)).not.toThrow(); expect(Date.parse(store.state.updatedAt)).toBe(before + 2);
+  });
+
+  it('preserves ordinary historical timestamp formatting when loading a snapshot', async () => {
+    const timestamp = 'October 30, 1996 12:00:00 GMT';
+    storage.setItem(saveKey, JSON.stringify({ ...create().state, updatedAt: timestamp })); storage.setItem.mockClear();
+    const store = create(); await store.init(); expect(store.state.updatedAt).toBe(timestamp); expect(storage.setItem).not.toHaveBeenCalled();
+  });
+
+  it('recovers another replica instead of loading a timestamp with no remaining revision', async () => {
+    const valid = create(); valid.observe(species[0].id); const database = databaseStorage(JSON.parse(valid.export()));
+    const unsafe = JSON.stringify({ ...valid.state, updatedAt: '9999-12-31T23:59:59.999Z' });
+    storage.setItem(saveKey, unsafe); storage.setItem.mockClear();
+    const store = create(); await store.init(); expect(store.state.updatedAt).toBe(valid.state.updatedAt);
+    expect(storage.setItem).not.toHaveBeenCalled(); expect(database.put).not.toHaveBeenCalled();
+    expect(() => store.read(species[0].id)).not.toThrow(); expect(store.state.points).toBe(8);
+    expect(storage.setItem.mock.calls.some(([key, raw]) => key.startsWith(`${saveKey}-recovery-`) && raw === unsafe)).toBe(true);
+  });
+
+  it('allocates each action revision before any ledger changes and never saturates at a boundary', () => {
+    const store = create(); store.state.updatedAt = '9999-12-31T23:59:59.999Z';
+    const before = store.export(); storage.setItem.mockClear();
+    for (const action of [() => store.observe(species[0].id), () => store.settings({ projection: true }), () => store.import(create().export()), () => store.reset()]) {
+      expect(action).toThrow('安全范围'); expect(store.export()).toBe(before); expect(storage.setItem).not.toHaveBeenCalled();
+    }
+  });
+
+  it('keeps preview stores isolated and usable even if a persistent guard is denied', () => {
+    const preview = new GameStore(species, questions, { persist: false, canWrite: () => false }); storage.setItem.mockClear();
+    expect(preview.observe(species[0].id)).toBe(5); expect(preview.state.observed).toContain(species[0].id); expect(storage.setItem).not.toHaveBeenCalled();
+  });
+
+  it('replaces progress on reset while retaining old and newly recovered corrupt records', async () => {
+    const invalid = '{broken', archiveKey = `${saveKey}-recovery-existing`;
+    storage.setItem(archiveKey, 'old archive'); storage.setItem(saveKey, invalid);
+    const database = databaseStorage({ corrupt: true }); database.records.set('recovery-existing', { archived: true });
+    const store = create(); await store.init(); store.reset();
+    expect(store.state.observed).toEqual([]); expect(storage.getItem(archiveKey)).toBe('old archive');
+    expect(storage.setItem.mock.calls.some(([key, raw]) => key.startsWith(`${saveKey}-recovery-`) && raw === invalid)).toBe(true);
+    expect(database.records.get('recovery-existing')).toEqual({ archived: true });
+    expect([...database.records.values()]).toContainEqual({ corrupt: true });
+  });
+
   it('restores newer IndexedDB learning after localStorage stops accepting writes across sessions', async () => {
     vi.useFakeTimers(); vi.setSystemTime(new Date('2026-10-30T00:00:00Z'));
     const database = databaseStorage(), first = create(); await first.init(); first.observe(species[0].id);
