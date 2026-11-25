@@ -1,8 +1,10 @@
 # 科普教育参赛准备
 
-定位：优先科普教育／智慧教育，按需拓展至数字展陈、游戏交互和挑战杯／大创。更新时间：2026-11-12。本目录是准备材料，不是已经提交的报名文件。
+定位：优先科普教育／智慧教育，按需拓展至数字展陈、游戏交互和挑战杯／大创。更新时间：2026-11-25。本目录是准备材料，不是已经提交的报名文件。
 
 在线体验：[https://runner-cpu.github.io/River-of-Life/](https://runner-cpu.github.io/River-of-Life/)；源码仓库：[runner-cpu/River-of-Life](https://github.com/runner-cpu/River-of-Life)；[详细项目介绍PDF](../project-introduction.pdf)。网站可直接在浏览器访问，无需安装或注册。
+
+本轮新增[十维复核与改进记录](../audits/2026-11-25-improvement-report.md)和[始祖鸟教师审读单](archaeopteryx-teacher-review.md)。PDF保留11月12日历史版本，未包含11月25日修复。教师审读单尚待真实审读者填写，其中示范解释不是学生研究数据。
 
 ## 建议主张
 
@@ -24,7 +26,7 @@
 - `submission-readiness.md`：正式提交前的缺口与责任项。
 - [交互增强证据](../../evidence/interaction-enhancement.md)：本地交互增强及验证记录；旧轮次见competition-refinement.md。
 
-在生产构建、完整浏览器测试和 `npm run verify:build` 均完成后，运行 `npm run package:competition`，即可生成带时间戳的 `output/competition/` 展示包：可运行站点、上述文稿、署名与 AI 披露、启动说明。它不生成已签署声明，不提交报名，不冒充正式视频成片。
+在生产构建、完整浏览器测试和 `npm run verify:build` 均完成后，还需更新、检查项目介绍PDF并记录对应文稿和PDF哈希，才可运行 `npm run package:competition` 生成带时间戳的 `output/competition/` 展示包。文稿变更而PDF未更新时，打包检查会拒绝，不能复用历史文稿证明。包中包括可运行站点、上述文稿、署名与AI披露、启动说明；不生成已签署声明、不提交报名、不冒充正式视频成片。
 
 ## 赛事适配修正
 
