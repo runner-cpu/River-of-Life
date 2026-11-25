@@ -3,7 +3,8 @@ import { createHash } from 'node:crypto';
 import { gzipSync } from 'node:zlib';
 import { join } from 'node:path';
 
-import { completeSiteDigest, identityHashMethod, offlineAssetHashes, renderServiceWorker, serviceWorkerRevision } from './build-identity';
+import { completeSiteDigest, offlineAssetHashes, renderServiceWorker, serviceWorkerRevision } from './build-identity';
+import { releaseContentHashMethod } from './release-evidence';
 
 const assets = offlineAssetHashes('dist');
 const files = Object.keys(assets);
@@ -22,7 +23,7 @@ const result = {
   appChunkGzipBytes: gzipBytes(files.filter(file => file.startsWith('assets/') && /\.(js|css)$/.test(file))),
   nonModelGzipBytes: gzipBytes(files.filter(file => !file.endsWith('.glb'))),
   gzipMethod: 'Independent files, gzip level 6, mtime 0 (Node zlib).',
-  releaseContentHashMethod: `${identityHashMethod} Covers every delivered site file, including sw.js and offline-manifest.json.`,
+  releaseContentHashMethod,
 };
 writeFileSync('evidence/build-verification.json',JSON.stringify(result,null,2)+'\n');
 console.log(JSON.stringify(result,null,2));

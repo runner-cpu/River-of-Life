@@ -1,8 +1,12 @@
 import { defineConfig, devices } from '@playwright/test';
+import { completeSiteDigest } from './scripts/build-identity';
+import { releaseContentHashMethod } from './scripts/release-evidence';
 
 // This suite launches its own disposable browser and exclusive production server.
 // Run `npm run build` first so service-worker coverage exercises current output.
 export default defineConfig({
+  metadata: { releaseContentSha256: completeSiteDigest('dist'), releaseContentHashMethod },
+  globalSetup: './scripts/release-evidence.ts',
   testDir: './tests/e2e',
   fullyParallel: false,
   forbidOnly: true,

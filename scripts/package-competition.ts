@@ -2,17 +2,16 @@ import { cpSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from 'nod
 import { createHash } from 'node:crypto';
 import { join, relative } from 'node:path';
 import { collectMaterials, renderMarkdown, verifyMaterialLinks } from './competition-materials';
+import { completeSiteDigest } from './build-identity';
+import { verifyBrowserEvidence } from './release-evidence';
 
-const files = (JSON.parse(readFileSync('dist/offline-manifest.json','utf8')) as string[]).sort();
-const hash = createHash('sha256');files.forEach(file => hash.update(file).update(readFileSync(join('dist',file))));
-const revision = hash.digest('hex');
+const revision = completeSiteDigest('dist');
 const verification = JSON.parse(readFileSync('evidence/build-verification.json','utf8'));
 if(verification.releaseContentSha256 !== revision) throw new Error('Run validation and npm run verify:build for the current production output first.');
 const browserReport = JSON.parse(readFileSync('evidence/e2e-results.json','utf8'));
 const tests = browserReport.stats;
 const requiredSuites = readdirSync('tests/e2e').filter(name => name.endsWith('.spec.ts'));
-if(browserReport.config.argv.slice(3).length || browserReport.config.shard || requiredSuites.some(file => !browserReport.suites.some((suite: { file: string }) => suite.file === file))) throw new Error('Run npm run test:e2e without filters before packaging.');
-if(!tests.expected || tests.unexpected || tests.flaky || tests.skipped || Date.parse(tests.startTime) < Date.parse(verification.builtAt)) throw new Error('A fresh complete passing browser run is required before packaging.');
+verifyBrowserEvidence(browserReport, revision, requiredSuites);
 const documentVerification=JSON.parse(readFileSync('evidence/project-document-verification.json','utf8'));
 const fileHash=(file:string)=>createHash('sha256').update(readFileSync(file)).digest('hex');
 if(documentVerification.releaseContentSha256!==revision || documentVerification.pdfSha256!==fileHash('output/pdf/life-museum-project-introduction.pdf') || documentVerification.sourceSha256!==fileHash('docs/project-introduction.md')) throw new Error('Review and verify the project introduction for this build before packaging.');
@@ -20,6 +19,7 @@ if(documentVerification.releaseContentSha256!==revision || documentVerification.
 const stamp = new Date().toISOString().replaceAll(/[:.]/g,'-');
 const target = join('output/competition',`life-museum-${stamp}`);
 mkdirSync(target,{recursive:true});cpSync('dist',join(target,'site'),{recursive:true});
+if (completeSiteDigest(join(target, 'site')) !== revision) throw new Error('Packaged site differs from the tested production output.');
 const materialSeeds = [
   ...readdirSync('docs/competition').map(name => `docs/competition/${name}`),
   'docs/project-introduction.md', 'docs/project-introduction.pdf',
