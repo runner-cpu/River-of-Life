@@ -1,0 +1,586 @@
+{
+  "auditDate": "2026-11-25",
+  "baseline": "273e731",
+  "originalWorkflowUsableDimensions": 0,
+  "recoveredWorkflow": "wf_d4226b83-6c4",
+  "reviewNotes": [
+    "Independent group audits and cross-review; UX live sampling by root only.",
+    "REL-COR-003 and ENG-REL-01 are one defect; REL-TST items are associated regression work.",
+    "D7-03 round selection is mitigation; scientific distractor review remains.",
+    "D10-03 is target-contest dependency; 2027 partial themes have official announcements."
+  ],
+  "findings": [
+    {
+      "dimension": "correctness/robustness",
+      "dimensionNumber": 2,
+      "id": "REL-COR-001",
+      "severity": "P2",
+      "title": "A stale open tab silently replaces newer learning progress",
+      "priority": 1,
+      "kind": "verified_defect",
+      "evidence": [
+        {
+          "path": "src/core/store.ts",
+          "line": 128,
+          "observation": "Replica selection occurs only in init; no later cross-tab synchronization or stale-write check exists."
+        },
+        {
+          "path": "src/core/store.ts",
+          "line": 136,
+          "observation": "Each action replaces the shared localStorage value with its complete in-memory state; line 149 does the same for IndexedDB current."
+        },
+        {
+          "method": "Read-only tsx harness using two initialized real GameStore instances and a shared localStorage fake",
+          "result": {
+            "aObserved": [
+              "cyanobacteria"
+            ],
+            "bObserved": [
+              "stromatolites"
+            ],
+            "reloadedObserved": [
+              "stromatolites"
+            ],
+            "reloadedRead": [],
+            "reloadedPoints": 5
+          }
+        }
+      ],
+      "scenario": "Two tabs load before either learns. A observes and reads cyanobacteria; stale B observes stromatolites and overwrites A's records and points. Reload restores only B's snapshot.",
+      "recommendation": "Coordinate a single active writer or compare/reconcile the authoritative revision before mutations. A stale tab must reload or explicitly take over before replacing newer data. Preserve the economy validator and do not sum independently stored balances.",
+      "validation": "Add a shared-storage two-live-store regression and a two-page same-context browser check. Interleave observations, reads, settings, and reset; verify no silent removal/resurrection of learning and no repeated awards. Focused harness reproduced the current defect; no browser was run."
+    },
+    {
+      "dimension": "correctness/robustness",
+      "dimensionNumber": 2,
+      "id": "REL-COR-002",
+      "severity": "P2",
+      "title": "A delayed settings import commits after a newer import or reset",
+      "priority": 2,
+      "kind": "verified_defect",
+      "evidence": [
+        {
+          "path": "src/main.ts",
+          "line": 197,
+          "observation": "After awaiting file.text(), the handler unconditionally imports and navigates without a request generation or dialog/lifecycle check."
+        },
+        {
+          "path": "src/modes/inquiry-comparison.ts",
+          "line": 63,
+          "observation": "The separate peer importer already rejects obsolete requests and disconnected hosts, providing a local implementation pattern."
+        },
+        {
+          "method": "Actual settings-import callback extracted via TypeScript AST and executed with deferred reads and real GameStore",
+          "result": {
+            "afterNewerRequest": [
+              "stromatolites"
+            ],
+            "afterOlderRequest": [
+              "cyanobacteria"
+            ],
+            "afterCloseAndResetThenResolve": [
+              "cyanobacteria"
+            ]
+          }
+        }
+      ],
+      "scenario": "Choose A, then B, and let B finish first. A later replaces the accepted B save. A pending read also replaces a reset save after its settings dialog has closed.",
+      "recommendation": "Use an import request token, invalidate it on close/reset, and check both currency and dialog connectivity after the read and before commit. Coordinate competing replacement actions while committing.",
+      "validation": "Defer two File.text calls and resolve in reverse order; only the latest active request may write. Close/reset before resolution and assert the resulting save stays byte-for-byte unchanged and stale navigation does not occur. The actual callback was reproduced without a browser."
+    },
+    {
+      "dimension": "correctness/robustness",
+      "dimensionNumber": 2,
+      "id": "REL-COR-003",
+      "severity": "P2",
+      "title": "A worker update discards previously prepared offline models",
+      "priority": 3,
+      "kind": "verified_defect",
+      "evidence": [
+        {
+          "path": "public/sw.js",
+          "line": 18,
+          "observation": "Installation excludes model/decoder resources, then requests skipWaiting at line 20."
+        },
+        {
+          "path": "public/sw.js",
+          "line": 23,
+          "observation": "Activation deletes every prior scoped cache, including the user's fully prepared revision."
+        },
+        {
+          "path": "vite.config.ts",
+          "line": 13,
+          "observation": "Any packaged-file change can change the cache revision."
+        },
+        {
+          "method": "Actual worker script install/activate/fetch handlers in node:vm with seeded old revision and disabled fake network",
+          "result": {
+            "oldCacheRetained": false,
+            "preparedModelRetained": false,
+            "newCacheFiles": [
+              "index.html",
+              "assets/index-new.js",
+              "assets/model-viewer-new.js",
+              "offline-manifest.json"
+            ],
+            "oldClientChangedChunkRequest": "Error: offline network"
+          }
+        }
+      ],
+      "scenario": "Prepare the full offline exhibit, visit after a new revision is published, then disconnect. New revision activation removes the prepared models/decoders. Old open clients can also lose a changed-name lazy chunk.",
+      "recommendation": "Preserve full-offline opt-in and complete required new resources before retiring a prepared cache. Coordinate activation/reload with existing clients. Keep scope isolation and do not blindly copy changed assets solely by unversioned URL.",
+      "validation": "Add a two-revision cache transition test with prepared A and changed B, then offline model/decoder and changed lazy-chunk requests. Handler-level missing-cache behavior is reproduced; actual browser upgrade confirmation remains for the coordinator."
+    },
+    {
+      "dimension": "correctness/robustness",
+      "dimensionNumber": 2,
+      "id": "REL-COR-004",
+      "severity": "P2",
+      "title": "An accepted maximum timestamp breaks atomic import and later actions",
+      "priority": 4,
+      "kind": "verified_defect",
+      "evidence": [
+        {
+          "path": "src/core/store.ts",
+          "line": 93,
+          "observation": "Any finite parsed date is retained, including the maximum representable date."
+        },
+        {
+          "path": "src/core/store.ts",
+          "line": 132,
+          "observation": "Incrementing that saved timestamp by one and calling toISOString throws RangeError."
+        },
+        {
+          "path": "src/core/store.ts",
+          "line": 237,
+          "observation": "Import replaces this.state before the failing revision calculation, violating the expected atomic rejection."
+        },
+        {
+          "method": "Read-only tsx harness using real validator/importer",
+          "result": {
+            "validatorAccepted": "+275760-09-13T00:00:00.000Z",
+            "importError": "RangeError: Invalid time value",
+            "stateReplaced": true,
+            "subsequentObserveError": "RangeError: Invalid time value"
+          }
+        }
+      ],
+      "scenario": "Import an otherwise-valid damaged/edited save with the maximum timestamp. It reports failure after replacing current memory, and subsequent learning mutations continue to throw. A stored such record loads but then cannot save.",
+      "recommendation": "Validate or normalize timestamps into an advanceable range and allocate a valid next revision before assigning imported state. Preserve normal legacy timestamp compatibility and startup reconciliation semantics.",
+      "validation": "Test maximum, maximum-minus-one, invalid, and large-future timestamps. Rejected imports must preserve the prior export and perform no writes; later ordinary actions must work. Stored extremes must use recovery/rejection or safe normalization. Current failure was reproduced against real GameStore."
+    },
+    {
+      "dimension": "testing",
+      "dimensionNumber": 5,
+      "id": "REL-TST-001",
+      "severity": "P2",
+      "title": "Save recovery coverage omits two simultaneous writers",
+      "priority": 5,
+      "kind": "improvement_proposal",
+      "evidence": [
+        {
+          "path": "tests/store.test.ts",
+          "line": 164,
+          "observation": "Safe-save cases cover sequential replica reload/recovery but do not interleave mutations from two initialized live stores."
+        },
+        {
+          "path": "tests/e2e/museum.spec.ts",
+          "line": 87,
+          "observation": "Real IndexedDB fallback coverage uses a single page. Existing e2e files do not create a second same-context page for a stale-writer scenario."
+        }
+      ],
+      "scenario": "A fully passing sequential recovery suite misses the demonstrated silent overwrite in REL-COR-001.",
+      "recommendation": "Add one deterministic shared-storage regression and one same-context two-page regression, including reset ownership and economy invariants.",
+      "validation": "The new test should fail on this baseline's stale write and pass only when a stale tab cannot silently replace newer learning or resurrect reset progress. No full suite was rerun in this subtask."
+    },
+    {
+      "dimension": "testing",
+      "dimensionNumber": 5,
+      "id": "REL-TST-002",
+      "severity": "P2",
+      "title": "Progress import tests omit delayed reads and revision boundaries",
+      "priority": 6,
+      "kind": "improvement_proposal",
+      "evidence": [
+        {
+          "path": "tests/e2e/audit.spec.ts",
+          "line": 63,
+          "observation": "UI test covers reset cancellation and an oversized file, not an in-flight read crossing close/reset/reselection."
+        },
+        {
+          "path": "tests/e2e/inquiry-badges.spec.ts",
+          "line": 57,
+          "observation": "Valid/invalid legacy imports are performed in normal completion order."
+        },
+        {
+          "path": "tests/store.test.ts",
+          "line": 269,
+          "observation": "The atomic inconsistent-import cases do not cover revision allocator overflow."
+        }
+      ],
+      "scenario": "REL-COR-002 and REL-COR-004 pass outside the present import tests despite breaking save replacement semantics.",
+      "recommendation": "Add controlled deferred File.text lifecycle tests and exact revision-boundary atomic-import tests. Assert the persisted save and navigation behavior, not only toast text.",
+      "validation": "Resolve file reads in reverse order and after close/reset; verify no obsolete commit/navigation. Reject an overflow timestamp with byte-for-byte state preservation and no write. Both current source failures were reproduced read-only."
+    },
+    {
+      "dimension": "testing",
+      "dimensionNumber": 5,
+      "id": "REL-TST-003",
+      "severity": "P2",
+      "title": "Offline tests omit cache upgrade and retirement transitions",
+      "priority": 7,
+      "kind": "improvement_proposal",
+      "evidence": [
+        {
+          "path": "tests/offline.test.ts",
+          "line": 8,
+          "observation": "Unit tests cover page-side readiness/message failures, not actual public/sw.js install/activate behavior."
+        },
+        {
+          "path": "tests/e2e/museum.spec.ts",
+          "line": 365,
+          "observation": "Offline browser case prepares and reloads the same revision."
+        },
+        {
+          "path": "tests/e2e/annotations.spec.ts",
+          "line": 172,
+          "observation": "Annotation offline coverage likewise remains within one prepared revision."
+        }
+      ],
+      "scenario": "The suite verifies a freshly prepared cache yet misses REL-COR-003 when a second revision replaces it.",
+      "recommendation": "Load the actual worker script into a small in-memory CacheStorage harness and add a two-version production-browser check owned by the coordinator.",
+      "validation": "Prepare A, activate changed B, disconnect, then assert model/decoder availability, correct scoped retirement, and either retained A lazy chunks or a coordinated fully prepared reload. Actual handler-level loss is already reproduced."
+    },
+    {
+      "dimension": "security/privacy",
+      "dimensionNumber": 8,
+      "id": "REL-SEC-001",
+      "severity": "P3",
+      "title": "Clarify that restarting retains raw recovery copies",
+      "priority": 8,
+      "kind": "improvement_proposal",
+      "evidence": [
+        {
+          "path": "src/main.ts",
+          "line": 190,
+          "observation": "Reset UI says it clears this browser's learning records."
+        },
+        {
+          "path": "src/core/store.ts",
+          "line": 135,
+          "observation": "Invalid raw local records are archived under recovery keys; line 143 does the same in IndexedDB."
+        },
+        {
+          "path": "src/core/store.ts",
+          "line": 238,
+          "observation": "Reset replaces the active snapshot but does not delete or expose recovery records."
+        },
+        {
+          "method": "Real GameStore with invalid original local save, recovery-triggering action, and reset",
+          "result": {
+            "currentObserved": [],
+            "recoveryCopyRemained": true,
+            "rawOriginalPreserved": true
+          }
+        }
+      ],
+      "scenario": "A user selects clear/restart on a shared device expecting learning records to be removed, while previous raw recovery copies remain in the origin's storage.",
+      "recommendation": "Make retention explicit in restart wording. If actual local-data erasure is required, expose a separate reviewed/confirmed action covering this application's current/recovery records in both stores. Do not silently delete existing recovery history.",
+      "validation": "Seed both stores' recovery entries and test the documented restart retention policy. If an explicit erase action is added, verify it removes only the authorized application data. This is a privacy/control proposal; no exfiltration or exploitable XSS was established."
+    },
+    {
+      "dimension": 1,
+      "id": "ENG-ARCH-01",
+      "severity": "P2",
+      "title": "Lab navigation retains every delegated input listener and comparison subtree",
+      "evidence": [
+        "src/modes/lab-view.ts:31–33 adds an anonymous listener to the persistent container; line 42 does not remove it",
+        "src/main.ts:76,84–90 reuses #main-content between modes"
+      ],
+      "scenario": "Visit lab, run a comparison, leave for codex, and repeat. Each drought/predation input on later visits invokes all retained old callbacks and keeps each old detached comparison/state alive.",
+      "recommendation": "Name the delegated input handler and remove it in mountLab's returned cleanup, or bind it to a mount-scoped AbortController that cleanup aborts.",
+      "validation": "Mount/unmount lab repeatedly on the same container; assert the input listener count returns to baseline after each cleanup and only the active comparison refreshes once per slider input. Root should check repeated navigation in the browser.",
+      "kind": "verified-defect",
+      "priority": "bounded-next-fix"
+    },
+    {
+      "dimension": 3,
+      "id": "ENG-PERF-01",
+      "severity": "P2",
+      "title": "Releasing GLTF textures never closes loader-created ImageBitmaps",
+      "evidence": [
+        "src/scene/resource-lifetime.ts:22 and 34–37 retain textures then call only resource.dispose()",
+        "Installed GLTFLoader.js:80–82,2594–2600,3325–3332 selects ImageBitmapLoader and constructs Texture(imageBitmap)",
+        "Installed Texture.js:636 only emits a dispose event; current reconstruction GLBs contain 15 embedded images"
+      ],
+      "scenario": "On a browser with ImageBitmap support, repeatedly enter chapters containing textured external reconstructions, switch chapters, or dispose while loads finish. GPU textures are disposed but image bitmap resources receive no explicit close.",
+      "recommendation": "Add final-owner disposal of the shared underlying bitmap/image source, separately from individual texture references. Avoid closing a bitmap while another retained texture still shares it.",
+      "validation": "Use two retained texture wrappers sharing one close-spied image bitmap: first release must not close, final release must close exactly once; repeated release stays idempotent. Include a late stale GLTF callback. Measure browser memory separately before claiming a byte saving.",
+      "kind": "verified-defect",
+      "priority": "bounded-next-fix"
+    },
+    {
+      "dimension": 3,
+      "id": "ENG-PERF-02",
+      "severity": "P2",
+      "title": "Whole-transfer offline timeout expires during healthy slow downloads",
+      "evidence": [
+        "src/main.ts:206 supplies a fixed 45000ms cache timeout",
+        "src/core/offline.ts:28–37 reports progress but never extends that deadline and line 38 closes its message ports",
+        "Direct current-asset measurement: 13 GLBs, 11989972 raw bytes, 7519346 gzip-level-6 bytes; 60.15 seconds for GLBs alone at an assumed 1 Mb/s"
+      ],
+      "scenario": "Prepare the complete offline gallery for the first time on a steady 1 Mb/s connection with valid periodic progress. The operation reports timeout at 45s even though the worker is still successfully downloading resources.",
+      "recommendation": "Use a progress-reset inactivity timeout with a generous explicit absolute maximum, preserving stalled-worker failure handling and accurate progress.",
+      "validation": "A fake-channel test must deliver valid increasing progress over more than 45 seconds and still succeed; a stopped-progress test must time out and clean up ports. Root can validate with a throttled production browser run.",
+      "kind": "verified-defect",
+      "priority": "after-cache-lifecycle"
+    },
+    {
+      "dimension": 4,
+      "id": "ENG-3D-01",
+      "severity": "P3",
+      "title": "Dimetrodon's eight-influence skin is not compatible with the four-influence renderer",
+      "evidence": [
+        "public/models/dimetrodon.glb mesh 0 primitive 0: JOINTS_1 accessor 365 and WEIGHTS_1 accessor 367",
+        "Direct binary measurement: 505/9955 vertices have nonzero secondary weights, max ignored mass 0.05992674455, mean 0.00036428008 across all vertices",
+        "Installed GLTFLoader.js:2217–2228 maps only JOINTS_0/WEIGHTS_0; skinning_vertex.glsl.js:7–10 uses only four influences",
+        "scripts/validate-models.ts:51–77 does not check this compatibility"
+      ],
+      "scenario": "Load animated Dimetrodon in a chapter scene or model-viewer. Nonzero extra source influences are ignored and the first four are normalized. The mismatch is verified; visible severity has not been measured.",
+      "recommendation": "Add a maximum-supported-influences compatibility check, explicitly reduce the asset to strongest four weights and normalize only after reviewing sampled animations, and preserve source/attribution metadata. Secondary attributes contain 199100 logical bytes before rewritten encoding.",
+      "validation": "Assert no nonzero unsupported influence sets remain, sample both animations at multiple times for finite stable bounds and acceptable visible deformation, and rerun model/manifest validation after any asset change. Do not claim anatomical improvement from the numeric check alone.",
+      "kind": "verified-defect",
+      "priority": "defer-until-visual-review"
+    },
+    {
+      "dimension": 9,
+      "id": "ENG-REL-01",
+      "severity": "P2",
+      "title": "Service-worker activation deletes code still referenced by open older pages",
+      "evidence": [
+        "public/sw.js:20 forces immediate activation; lines 23–24 delete previous cache and claim existing clients",
+        "src/modes/specimen.ts:77 defers the hashed model-viewer import",
+        "Current-source VM reproduction: after activation only life-museum-/life/-new remains; an existing-page request for the previously cached old lazy module returns 404"
+      ],
+      "scenario": "Keep release A open without opening a specimen; deploy B and trigger a worker update from another visit/tab. After B activates, open the first specimen in A. A requests its old hashed lazy chunk after the server and cache have moved to B, so the original model component fails to load.",
+      "recommendation": "Use the default waiting lifecycle; preserve the old cache until no old controlled clients remain. If retaining full offline preparation on update, populate the new revision cache from freshly fetched new model/decoder responses and keep A intact on any install failure.",
+      "validation": "Two-release production test: open A, install B while A stays open, assert B waiting and old chunk/model works offline; close all A clients, assert B activates with B bytes and only same-scope A cache is removed. Also test failed B model refresh, partial versus complete offline state, and unrelated app caches.",
+      "kind": "verified-defect",
+      "priority": "first"
+    },
+    {
+      "dimension": 9,
+      "id": "ENG-REL-02",
+      "severity": "P2",
+      "title": "An opportunistic cache write failure rejects a successful online asset request",
+      "evidence": [
+        "public/sw.js:35 fetches a successful network response, line 36 awaits cache.put before line 37 returns it",
+        "Current-source VM reproduction: fetch returned HTTP 200, cache.put rejected QuotaExceededError, and the service-worker response promise rejected"
+      ],
+      "scenario": "The gallery is online but cache quota or storage availability prevents caching a newly downloaded model or code chunk. The user gets a model/component load failure despite receiving a valid network response.",
+      "recommendation": "Catch only the best-effort fetch-path cache write failure and still return the original successful response. Keep explicit CACHE_ALL errors visible to the offline-preparation operation.",
+      "validation": "Execute the SW fetch handler with network 200 and a rejecting cache.put; assert the original response is returned. Also check network failures still propagate and CACHE_ALL still returns ok:false on storage failure.",
+      "kind": "verified-defect",
+      "priority": "bounded-next-fix"
+    },
+    {
+      "dimension": 9,
+      "id": "ENG-REL-03",
+      "severity": "P2",
+      "title": "Release packaging ties browser verification to file time rather than tested build identity",
+      "evidence": [
+        "scripts/package-competition.ts:9–10 validates build content digest but lines 11–15 check only browser pass/suite data and startTime >= builtAt",
+        "scripts/verify-build.ts:13 derives builtAt from dist/index.html filesystem mtime",
+        "The browser report contains no releaseContentSha256 binding to the output it exercised"
+      ],
+      "scenario": "Keep or restore production build A with an older index timestamp; supply a later complete passing browser report for a different build B; recompute A's build verification. Packaging can accept B's report as evidence for untested A bytes.",
+      "recommendation": "Record the digest of production files actually served by the full browser run in its report metadata and require equality with the packaged release digest.",
+      "validation": "A fixture with a fresh passing full-suite report for B and a valid A build digest must be rejected; equal-digest rebuilds should pass independently of incidental filesystem times.",
+      "kind": "verified-defect",
+      "priority": "release-gate-hardening"
+    },
+    {
+      "dimension": 7,
+      "id": "D7-01",
+      "severity": "P2",
+      "title": "不确定选项被当作证据支持或反对的命题",
+      "kind": "confirmed-defect",
+      "evidence": [
+        {
+          "path": "src/content/inquiries.ts",
+          "line": 16,
+          "detail": "三主题均提供暂时不确定选项（另见29、42）。"
+        },
+        {
+          "path": "src/core/inquiry.ts",
+          "line": 3,
+          "detail": "四类标签始终相对于我的判断。"
+        },
+        {
+          "path": "src/modes/inquiry.ts",
+          "line": 59,
+          "detail": "直接显示所选不确定原句作为归类参照；入口34行另写只找支持证据。"
+        }
+      ],
+      "scenario": "学习者选不确定后，必须判断材料支持或反对该不确定状态，界面未明确要检验的科学说法。",
+      "recommendation": "保留原始选择和存储协议；给不确定分支显示明确待检验说法并使用支持该说法/反对该说法等关系措辞，入口改为检验与修订判断。",
+      "validation": "三个主题的不确定路线贯穿归类、图、HTML/JSON导出指向同一命题；答案索引、分类枚举、积分、个人Progress和课堂只读隔离不变。"
+    },
+    {
+      "dimension": 7,
+      "id": "D7-02",
+      "severity": "P2",
+      "title": "题目反馈默认把第一来源当成所有字段的核对依据",
+      "kind": "confirmed-defect",
+      "evidence": [
+        {
+          "path": "src/modes/quiz.ts",
+          "line": 44,
+          "detail": "无条件输出s.sources[0].title，无Question.field或scope检查。"
+        },
+        {
+          "path": "src/content/species.ts",
+          "line": 75,
+          "detail": "三个学习来源固定置于其他来源前。"
+        },
+        {
+          "path": "src/content/learning-sources.ts",
+          "line": 21,
+          "detail": "Chicago登记只覆盖第2—4正文段的鳍、鳞片、颈部组合，未登记每一道题字段覆盖。"
+        }
+      ],
+      "scenario": "提塔利克误区题将手指/腕部完整断言反馈为Chicago依据，窄核对范围未出现。不是认定结论错误。",
+      "recommendation": "先改成对应档案及字段，并提供来源和核对范围入口；未做人审字段映射时不默认单独引首项机构来源。",
+      "validation": "检查三重点档案及仅有C级来源题，反馈精确到字段且范围可达；保持原ID、正确答案、奖励。"
+    },
+    {
+      "dimension": 7,
+      "id": "D7-03",
+      "severity": "P2",
+      "title": "重复干扰项允许用唯一新选项解出后两题",
+      "kind": "confirmed-defect",
+      "evidence": [
+        {
+          "path": "src/content/questions.ts",
+          "line": 64,
+          "detail": "每个档案3字段题共用同一3个错误选项，仅插入不同正确原文。"
+        },
+        {
+          "path": "src/modes/quiz.ts",
+          "line": 16,
+          "detail": "默认按原生成顺序呈现未答题。"
+        },
+        "只读独立计算48档案144题：全部96道第二/第三题只有正确答案是新选项；首个最长选项策略答对124/144。"
+      ],
+      "scenario": "完成同档案第一题后，不比较科学含义也能凭选项是否见过答对后两题。",
+      "recommendation": "完整修复须逐字段重审平行干扰项；本轮可仅限定一轮每档案一道、跨轮优先未答字段作为缓解。不得以洗牌宣称关闭长度或重复线索；保留题目ID/正确答案/积分契约。",
+      "validation": "如仅缓解，确认同轮档案不重复、后续轮覆盖原ID、错题可练及奖励不变；完整内容修复后复算线索并人工确认单一正确答案。"
+    },
+    {
+      "dimension": 7,
+      "id": "D7-04",
+      "severity": "P3",
+      "title": "时间排序在解锁更多纪元后仍只有前寒武纪五条",
+      "kind": "confirmed-defect",
+      "evidence": [
+        {
+          "path": "src/modes/quiz.ts",
+          "line": 53,
+          "detail": "排序后取最古老5条，后续年轻档案无法入选。"
+        },
+        "只读按公式计算解锁1/2/4/8章：全部为spriggina,dickinsonia,charnia,cyanobacteria,stromatolites。"
+      ],
+      "scenario": "探索到第八章再练时间排序，仍不会比较任何后续纪元条目。",
+      "recommendation": "按已解锁纪元分层挑选并包含当前章代表，保持近似年代说明和无积分契约。",
+      "validation": "第一章可完成；解锁4/8章时至少有对应章条目；年代正确判定及重复徽章不增点。"
+    },
+    {
+      "dimension": 10,
+      "id": "D10-01",
+      "severity": "P3",
+      "title": "评审入口的完整介绍应把当前交付摘要与历史验证快照分开",
+      "kind": "proposal",
+      "evidence": [
+        {
+          "path": "docs/project-introduction.md",
+          "line": 26,
+          "detail": "概览写线上仍为旧基线，22行列132项。 "
+        },
+        {
+          "path": "scripts/package-competition.ts",
+          "line": 35,
+          "detail": "包入口先让评审阅读完整PDF。 "
+        },
+        {
+          "path": "evidence/acceptance.md",
+          "line": 40,
+          "detail": "后续验收已有2026-11-12的cbba61b部署与135项单元历史记录。"
+        }
+      ],
+      "scenario": "评审从详细介绍进入，须跨材料才能理解旧状态与当前交付的区别；旧记录本身有标注，不等同伪造。",
+      "recommendation": "开头加一小段当前状态/日期/基线及验证入口；旧数据保留为历史快照，更新PDF走现有文档核验流程。本轮新分支未发布不得沿用旧发布成功。",
+      "validation": "从包README/PDF首页/简版三个入口都能读到同一当前与历史边界，计数与构建身份有明确日期。"
+    },
+    {
+      "dimension": 10,
+      "id": "D10-02",
+      "severity": "P3",
+      "title": "把教育定位先收敛为一个主题的教师审读交付包",
+      "kind": "proposal",
+      "evidence": [
+        {
+          "path": "docs/competition/teaching-and-evaluation.md",
+          "line": 3,
+          "detail": "目标横跨小学高年级与初中，年龄/时长尚待试测。 "
+        },
+        {
+          "path": "docs/competition/teaching-and-evaluation.md",
+          "line": 18,
+          "detail": "已有反馈草案，但没有单主题集中任务/产物/来源范围/追问审读单。"
+        }
+      ],
+      "scenario": "教师决定是否试用时，需要把三主题、脚本、参考链接和反馈草案重新拼成一份材料。",
+      "recommendation": "先给始祖鸟准备一页任务—产物—判断依据—来源范围—推断边界审读单，附学习记录、文字路线；不等待具体赛事，不虚构课标符合或教学效果。",
+      "validation": "各动作/导出字段可与现有活动逐项对应；讲解样例明确标注；真实审读记录只能在实际发生后填写。"
+    },
+    {
+      "dimension": 10,
+      "id": "D10-03",
+      "severity": "P2",
+      "title": "具体赛事资格与AI工具规则是需真实目标确认的外部依赖",
+      "kind": "external-validation",
+      "evidence": [
+        {
+          "path": "docs/competition/README.md",
+          "line": 35,
+          "detail": "尚未指定具体赛事/届次；历史官方入口/1974本次抓取超时，未断言永久失效。 "
+        },
+        {
+          "path": "AI_USAGE.md",
+          "line": 7,
+          "detail": "披露使用OpenAI Codex辅助开发。 "
+        },
+        {
+          "url": "https://jsjds.blcu.edu.cn/info/1041/2274.htm",
+          "published": "2026-03-01",
+          "checked": "2026-11-25",
+          "detail": "组委会2026通知在相关数媒类别限定古建主题并列AI工具要求，只作历史规则核对。"
+        }
+      ],
+      "scenario": "未来若选择某届某类别，不能仅凭通用AI披露或旧年规则推断可参赛；当前未指定2027规则。",
+      "recommendation": "准备通用规则映射表及可访问的2026历史官方入口；真实报名成员待选定目标后确认当届题材/类别/允许AI范围/资格/材料与签署，保留真实贡献和AI披露。",
+      "validation": "每项规则登记年份、类别、官方URL、发布日期、核对日期与适用范围；未知项待定，不外推2027资格或主题。"
+    },
+    {
+      "dimension": 6,
+      "id": "UX-01",
+      "severity": "P3",
+      "title": "需补真实辅助技术与移动设备试测",
+      "kind": "external-validation",
+      "evidence": "2026-11-25 集成 Chromium 实测通过手机导航、焦点恢复、预测提示及窄屏溢出检查；未测试实体设备或屏幕阅读器",
+      "scenario": "赛事展示或课堂用户使用真实触屏/屏幕阅读器",
+      "recommendation": "按具体设备和辅助技术记录任务完成率与阻碍；不要把当前 DOM 抽样称为 WCAG 认证",
+      "validation": "现场使用者完成导航、物种阅读、排序、预测、导出，并记录版本/设备/问题"
+    }
+  ]
+}

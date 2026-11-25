@@ -56,12 +56,13 @@ expect(() => store.observe(species[0].id)).not.toThrow();
 
 ### Task 2: 离线更新生命周期与下载状态
 
-**Files:** modify `public/sw.js`, `src/core/offline.ts`, settings offline feedback in `src/main.ts`; create `tests/service-worker.test.ts`, `tests/e2e/offline-upgrade.spec.ts`; modify `tests/offline.test.ts`.
+**Files:** modify `public/sw.js`, `src/core/offline.ts`, `vite.config.ts`, `scripts/verify-build.ts`, settings offline feedback in `src/main.ts`; create `scripts/build-identity.ts`, `tests/service-worker.test.ts`, `tests/e2e/offline-upgrade.spec.ts`; modify `tests/offline.test.ts`.
 
 **Interfaces:** keep `CACHE_ALL` request/reply and progress messages compatible; retain `prepareOffline` callers, with current cacheTimeout parameter interpreted as inactivity timeout and a bounded absolute maximum added with a safe default.
 
 - [ ] Load actual worker source in a small fake CacheStorage/network harness. Demonstrate A→B losing A chunks/models before change, plus HTTP 200 followed by quota rejection.
-- [ ] Remove forced `skipWaiting`; use normal waiting until old clients close. Keep unrelated origin/path caches intact. Identify previous full-offline preparation (existing caches must be detected using their cached manifest and presence of all listed resources; new versions may store an explicit completion marker). If A was fully prepared, B install must fetch all B resources afresh and finish before old cache retirement. Never copy same-URL model bytes blindly. If B fails, A stays usable; partial/new visitors keep shell-only installation. Handle user completing A preparation while B waits conservatively and document the transition.
+- [ ] Remove forced `skipWaiting`; use normal waiting until old clients close. Keep unrelated origin/path caches intact. Identify previous full-offline preparation (existing caches must be detected using their cached manifest and presence of all listed resources; new versions may store an explicit completion marker). If A was fully prepared, B install must fetch all B resources afresh and finish before old cache retirement. Never copy same-URL model bytes blindly. If B fails, A stays usable; partial/new visitors keep shell-only installation. Recheck complete previous caches at activation: test B installs first, then A completes offline preparation, then all pages close and network disappears. The next navigation must use a fully prepared B or a coherent complete A fallback; do not delete the last complete A while B lacks its resources. Persist fallback selection across worker restarts and provide a bounded path to preparing B when online again.
+- [ ] Include the worker template in cache revision identity so a worker-only change cannot reuse A's cache name. Introduce `scripts/build-identity.ts` with explicit cache revision and complete-site digest helpers; complete-site identity includes final `sw.js` and `offline-manifest.json`. Task 5 reuses these helpers. Update build verification to distinguish its full release digest and `serviceWorkerRevision`; do not assume the latter is a prefix of a digest that excludes the worker.
 
 ```js
 expect(await oldCache.match(oldLazyChunk)).toBeTruthy();
@@ -98,7 +99,7 @@ expect(close).toHaveBeenCalledTimes(1);
 
 **Files:** modify `src/content/inquiries.ts`, `src/core/inquiry.ts`, inquiry graph/report/comparison renderers as needed, `src/modes/inquiry.ts`, `src/modes/quiz.ts`; add focused tests in existing inquiry/quiz suites and browser suite.
 
-**Interfaces:** add internal explicit reference-claim metadata/helper only; exports retain existing version and required fields. Old imported records lacking metadata remain readable; unknown old "不确定" classifications are not silently reinterpreted in peer comparison.
+**Interfaces:** add internal reference-claim metadata/helper and optional v1 export field `classificationReference?: { kind: 'activity-claim'; claimId: string }`. No new required fields, version bump, answer-index or category change. Register stable semantic IDs `feathers-multiple-features-v1`, `sea-classification-evidence-v1`, `fins-feature-combination-v1` with their respective existing topics and explicit uncertainty indices. New uncertain records include the ID; definite records omit it. Reject explicit unknown/mismatched IDs or wrong-answer pairings. Old uncertain records without the field remain readable and display “旧记录未记载归类参照”; never infer their historical proposition from a new display helper. Comparison must explain missing/different references and must not infer same reasoning from equal category labels.
 
 - [ ] Define for each uncertain option a clear proposition to examine, derived from the existing scientifically scoped question content. Show original uncertainty separately from that proposition. Use the same reference in categorization, graph, HTML export and peer display. Change introductory wording from finding support to checking support/contradiction/insufficient evidence. Keep category enum values and initial answer indices.
 - [ ] Test all three uncertain routes and original definite routes, JSON roundtrip with unchanged schema, HTML escaping, original answer preservation and personal Progress invariance. Where the old protocol cannot distinguish historical uncertain categories, explicitly mark the reference as unspecified rather than asserting new meaning.
@@ -117,9 +118,9 @@ expect(timeline.some(s => s.chapter === currentChapter)).toBe(true);
 
 **Files:** create small shared digest/report validation module under `scripts/`; modify `playwright.config.ts`, `scripts/verify-build.ts`, `scripts/package-competition.ts`; add `tests/release-evidence.test.ts`.
 
-**Interfaces:** shared release hash matches the existing sorted offline-manifest paths plus bytes method. Browser report config metadata records `releaseContentSha256` for its actual production output. Packaging requires full passing run and identical digest, rather than relying on index mtime as identity.
+**Interfaces:** reuse Task 2's `scripts/build-identity.ts`. Complete release hash covers sorted production paths plus bytes including final `sw.js` and `offline-manifest.json`; cache revision separately includes the worker template to avoid circular self-hashing. Browser report config metadata records `releaseContentSha256` for its actual production output. Packaging requires full passing run and identical digest, rather than relying on index mtime as identity. A worker-only or manifest-only change must invalidate an old report.
 
-- [ ] Add regression fixtures: valid A digest with complete passing B browser report is rejected; matching A is accepted regardless of incidental file timestamps; missing identity, filtered/sharded/incomplete/flaky/skipped runs remain rejected.
+- [ ] Add regression fixtures: valid A digest with complete passing B browser report is rejected; changing only worker bytes or manifest bytes also rejects the old report; matching A is accepted regardless of incidental file timestamps; missing identity, filtered/sharded/incomplete/flaky/skipped runs remain rejected.
 
 ```ts
 expect(() => verifyBrowserEvidence(reportForB, digestA, requiredSuites)).toThrow();

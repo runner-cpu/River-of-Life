@@ -1,6 +1,8 @@
 # 实现与验收状态
 
-更新时间：2026-11-12。依据：`design-spec.md` v2.0。本文件区分已实现的软件能力与原方案尚未满足的发布条件，不以页面数量替代全部里程碑验收。
+更新时间：2026-11-25。依据：`design-spec.md` v2.0。本文件区分已实现的软件能力与原方案尚未满足的发布条件，不以页面数量替代全部里程碑验收。
+
+本轮新增[十维复核与改进记录](audits/2026-11-25-improvement-report.md)和[始祖鸟教师审读单](competition/archaeopteryx-teacher-review.md)。下文注明11月12日的测试与发布数据是历史记录，本轮执行结果以复核报告末节为准。详细介绍Markdown已补充版本边界，PDF仍为11月12日历史文稿；未重新生成展示准备包。
 
 网站已上线：[https://runner-cpu.github.io/River-of-Life/](https://runner-cpu.github.io/River-of-Life/)。源码与文档见[GitHub仓库](https://github.com/runner-cpu/River-of-Life)。推送main后自动测试并发布，状态见[发布工作流](https://github.com/runner-cpu/River-of-Life/actions/workflows/pages.yml)。
 
