@@ -3,6 +3,7 @@ import { dirname, join } from 'node:path';
 import type { FullConfig } from '@playwright/test';
 import type { JSONReport, JSONReportSuite, JSONReportTest } from '@playwright/test/reporter';
 import { completeSiteDigest, identityHashMethod } from './build-identity';
+import { browserTestIdentities } from './browser-test-inventory';
 
 export const releaseContentHashMethod = `${identityHashMethod} Covers every delivered site file, including sw.js and offline-manifest.json.`;
 
@@ -51,7 +52,7 @@ export default function captureReleaseEvidence(config: ReleaseRunConfig) {
 }
 
 /** The same fail-closed gate is used by packaging and release regression tests. */
-export function verifyBrowserEvidence(value: unknown, releaseContentSha256: string, requiredSuites: readonly string[]): void {
+export function verifyBrowserEvidence(value: unknown, releaseContentSha256: string, requiredSuites: readonly string[], expectedTestIdentities: readonly string[]): void {
   const report = value as JSONReport & { config: { argv?: string[] } };
   const metadata = report?.config?.metadata;
   if (!/^[a-f0-9]{64}$/.test(releaseContentSha256) || metadata?.releaseContentSha256 !== releaseContentSha256
@@ -78,6 +79,12 @@ export function verifyBrowserEvidence(value: unknown, releaseContentSha256: stri
       || !Array.isArray(test.results) || test.results.length === 0
       || test.results.some(result => result.status !== 'passed' || !Array.isArray(result.errors) || result.errors.length !== 0 || result.error))) {
     throw new Error('A complete passing browser run without failures, flakes or skipped tests is required before packaging.');
+  }
+  const actual = browserTestIdentities(report);
+  const expected = new Set(expectedTestIdentities);
+  if (!expected.size || expected.size !== expectedTestIdentities.length || actual.length !== expected.size
+    || new Set(actual).size !== actual.length || actual.some(identity => !expected.has(identity))) {
+    throw new Error('Browser evidence test inventory differs from the current full test inventory (missing, duplicate or extra tests).');
   }
 }
 

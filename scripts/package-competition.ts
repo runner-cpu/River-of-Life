@@ -4,6 +4,7 @@ import { join, relative } from 'node:path';
 import { collectMaterials, renderMarkdown, verifyMaterialLinks } from './competition-materials';
 import { completeSiteDigest } from './build-identity';
 import { verifyBrowserEvidence } from './release-evidence';
+import { discoverBrowserTests } from './browser-test-inventory';
 
 const revision = completeSiteDigest('dist');
 const verification = JSON.parse(readFileSync('evidence/build-verification.json','utf8'));
@@ -11,7 +12,7 @@ if(verification.releaseContentSha256 !== revision) throw new Error('Run validati
 const browserReport = JSON.parse(readFileSync('evidence/e2e-results.json','utf8'));
 const tests = browserReport.stats;
 const requiredSuites = readdirSync('tests/e2e').filter(name => name.endsWith('.spec.ts'));
-verifyBrowserEvidence(browserReport, revision, requiredSuites);
+verifyBrowserEvidence(browserReport, revision, requiredSuites, discoverBrowserTests());
 const documentVerification=JSON.parse(readFileSync('evidence/project-document-verification.json','utf8'));
 const fileHash=(file:string)=>createHash('sha256').update(readFileSync(file)).digest('hex');
 if(documentVerification.releaseContentSha256!==revision || documentVerification.pdfSha256!==fileHash('output/pdf/life-museum-project-introduction.pdf') || documentVerification.sourceSha256!==fileHash('docs/project-introduction.md')) throw new Error('Review and verify the project introduction for this build before packaging.');

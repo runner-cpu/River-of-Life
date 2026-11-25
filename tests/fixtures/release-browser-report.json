@@ -11,12 +11,16 @@
   },
   "suites": [
     {
+      "title": "annotations.spec.ts",
       "file": "annotations.spec.ts",
       "specs": [
         {
+          "title": "annotations archaeopteryx keyboard and projection",
+          "file": "annotations.spec.ts",
           "ok": true,
           "tests": [
             {
+              "projectName": "chromium",
               "expectedStatus": "passed",
               "status": "expected",
               "results": [
@@ -29,9 +33,12 @@
           ]
         },
         {
+          "title": "annotations mosasaurus keyboard and projection",
+          "file": "annotations.spec.ts",
           "ok": true,
           "tests": [
             {
+              "projectName": "chromium",
               "expectedStatus": "passed",
               "status": "expected",
               "results": [
@@ -44,9 +51,12 @@
           ]
         },
         {
+          "title": "annotations tiktaalik keyboard and projection",
+          "file": "annotations.spec.ts",
           "ok": true,
           "tests": [
             {
+              "projectName": "chromium",
               "expectedStatus": "passed",
               "status": "expected",
               "results": [
@@ -59,9 +69,12 @@
           ]
         },
         {
+          "title": "annotations 390px readable without overflow",
+          "file": "annotations.spec.ts",
           "ok": true,
           "tests": [
             {
+              "projectName": "chromium",
               "expectedStatus": "passed",
               "status": "expected",
               "results": [
@@ -74,9 +87,12 @@
           ]
         },
         {
+          "title": "annotations 320px readable without overflow",
+          "file": "annotations.spec.ts",
           "ok": true,
           "tests": [
             {
+              "projectName": "chromium",
               "expectedStatus": "passed",
               "status": "expected",
               "results": [
@@ -89,9 +105,12 @@
           ]
         },
         {
+          "title": "no annotation data explains disabled switch",
+          "file": "annotations.spec.ts",
           "ok": true,
           "tests": [
             {
+              "projectName": "chromium",
               "expectedStatus": "passed",
               "status": "expected",
               "results": [
@@ -104,9 +123,12 @@
           ]
         },
         {
+          "title": "production prepared cache supports offline annotations and first Escape",
+          "file": "annotations.spec.ts",
           "ok": true,
           "tests": [
             {
+              "projectName": "chromium",
               "expectedStatus": "passed",
               "status": "expected",
               "results": [
@@ -121,12 +143,16 @@
       ],
       "suites": [
         {
+          "title": "fallback",
           "file": "annotations.spec.ts",
           "specs": [
             {
+              "title": "annotations archaeopteryx diagram fallback",
+              "file": "annotations.spec.ts",
               "ok": true,
               "tests": [
                 {
+                  "projectName": "chromium",
                   "expectedStatus": "passed",
                   "status": "expected",
                   "results": [
@@ -139,9 +165,12 @@
               ]
             },
             {
+              "title": "annotations mosasaurus diagram fallback",
+              "file": "annotations.spec.ts",
               "ok": true,
               "tests": [
                 {
+                  "projectName": "chromium",
                   "expectedStatus": "passed",
                   "status": "expected",
                   "results": [
@@ -154,9 +183,12 @@
               ]
             },
             {
+              "title": "annotations tiktaalik diagram fallback",
+              "file": "annotations.spec.ts",
               "ok": true,
               "tests": [
                 {
+                  "projectName": "chromium",
                   "expectedStatus": "passed",
                   "status": "expected",
                   "results": [
@@ -171,12 +203,16 @@
           ]
         },
         {
+          "title": "no 3D",
           "file": "annotations.spec.ts",
           "specs": [
             {
+              "title": "equivalent text remains when WebGL and model load unavailable",
+              "file": "annotations.spec.ts",
               "ok": true,
               "tests": [
                 {
+                  "projectName": "chromium",
                   "expectedStatus": "passed",
                   "status": "expected",
                   "results": [
@@ -193,12 +229,16 @@
       ]
     },
     {
+      "title": "audit.spec.ts",
       "file": "audit.spec.ts",
       "specs": [
         {
+          "title": "mobile navigation hides closed links, traps focus, restores focus and releases the page",
+          "file": "audit.spec.ts",
           "ok": true,
           "tests": [
             {
+              "projectName": "chromium",
               "expectedStatus": "passed",
               "status": "expected",
               "results": [
@@ -211,9 +251,12 @@
           ]
         },
         {
+          "title": "codex filters retain keyboard focus and quiz tabs support arrow navigation",
+          "file": "audit.spec.ts",
           "ok": true,
           "tests": [
             {
+              "projectName": "chromium",
               "expectedStatus": "passed",
               "status": "expected",
               "results": [
@@ -226,9 +269,12 @@
           ]
         },
         {
+          "title": "failed external model uses honest fallback credit and can be retried",
+          "file": "audit.spec.ts",
           "ok": true,
           "tests": [
             {
+              "projectName": "chromium",
               "expectedStatus": "passed",
               "status": "expected",
               "results": [
@@ -241,9 +287,12 @@
           ]
         },
         {
+          "title": "reset requires a second decision and keyboard import rejects oversized files without changes",
+          "file": "audit.spec.ts",
           "ok": true,
           "tests": [
             {
+              "projectName": "chromium",
               "expectedStatus": "passed",
               "status": "expected",
               "results": [
@@ -256,9 +305,12 @@
           ]
         },
         {
+          "title": "paused, obscured and offscreen scenes stop rendering while controls still redraw",
+          "file": "audit.spec.ts",
           "ok": true,
           "tests": [
             {
+              "projectName": "chromium",
               "expectedStatus": "passed",
               "status": "expected",
               "results": [
@@ -271,9 +323,12 @@
           ]
         },
         {
+          "title": "small-screen species labels remain separate and inside the scene",
+          "file": "audit.spec.ts",
           "ok": true,
           "tests": [
             {
+              "projectName": "chromium",
               "expectedStatus": "passed",
               "status": "expected",
               "results": [
@@ -288,12 +343,16 @@
       ]
     },
     {
+      "title": "classroom.spec.ts",
       "file": "classroom.spec.ts",
       "specs": [
         {
+          "title": "classroom focus, labels, pause and specimen reading preserve personal progress",
+          "file": "classroom.spec.ts",
           "ok": true,
           "tests": [
             {
+              "projectName": "chromium",
               "expectedStatus": "passed",
               "status": "expected",
               "results": [
@@ -306,9 +365,12 @@
           ]
         },
         {
+          "title": "mobile classroom provides every resident and keeps exit and teaching actions reachable",
+          "file": "classroom.spec.ts",
           "ok": true,
           "tests": [
             {
+              "projectName": "chromium",
               "expectedStatus": "passed",
               "status": "expected",
               "results": [
@@ -321,9 +383,12 @@
           ]
         },
         {
+          "title": "inspection cycles through six species with matching facts and restores the overview",
+          "file": "classroom.spec.ts",
           "ok": true,
           "tests": [
             {
+              "projectName": "chromium",
               "expectedStatus": "passed",
               "status": "expected",
               "results": [
@@ -338,12 +403,16 @@
       ]
     },
     {
+      "title": "epochs.spec.ts",
       "file": "epochs.spec.ts",
       "specs": [
         {
+          "title": "all eight classroom highlights render distinct accessible scenes without changing progress",
+          "file": "epochs.spec.ts",
           "ok": true,
           "tests": [
             {
+              "projectName": "chromium",
               "expectedStatus": "passed",
               "status": "expected",
               "results": [
@@ -356,9 +425,12 @@
           ]
         },
         {
+          "title": "highlight pause, keyboard focus, resume, summary and Escape clean up the active event",
+          "file": "epochs.spec.ts",
           "ok": true,
           "tests": [
             {
+              "projectName": "chromium",
               "expectedStatus": "passed",
               "status": "expected",
               "results": [
@@ -371,9 +443,12 @@
           ]
         },
         {
+          "title": "mobile reduced-motion highlights fit a short viewport and replay cannot reward twice",
+          "file": "epochs.spec.ts",
           "ok": true,
           "tests": [
             {
+              "projectName": "chromium",
               "expectedStatus": "passed",
               "status": "expected",
               "results": [
@@ -386,9 +461,12 @@
           ]
         },
         {
+          "title": "missing WebGL keeps the full highlight narration and exit control usable",
+          "file": "epochs.spec.ts",
           "ok": true,
           "tests": [
             {
+              "projectName": "chromium",
               "expectedStatus": "passed",
               "status": "expected",
               "results": [
@@ -403,12 +481,16 @@
       ]
     },
     {
+      "title": "inquiry-badges.spec.ts",
       "file": "inquiry-badges.spec.ts",
       "specs": [
         {
+          "title": "personal export awards once after download initiation; failure and classroom stay isolated",
+          "file": "inquiry-badges.spec.ts",
           "ok": true,
           "tests": [
             {
+              "projectName": "chromium",
               "expectedStatus": "passed",
               "status": "expected",
               "results": [
@@ -421,9 +503,12 @@
           ]
         },
         {
+          "title": "changed seed requires actual rerun and explicit nonempty run note; duplicate awards leave economy unchanged",
+          "file": "inquiry-badges.spec.ts",
           "ok": true,
           "tests": [
             {
+              "projectName": "chromium",
               "expectedStatus": "passed",
               "status": "expected",
               "results": [
@@ -436,9 +521,12 @@
           ]
         },
         {
+          "title": "classroom and personal exports without reserved judgment never create a badge",
+          "file": "inquiry-badges.spec.ts",
           "ok": true,
           "tests": [
             {
+              "projectName": "chromium",
               "expectedStatus": "passed",
               "status": "expected",
               "results": [
@@ -451,9 +539,12 @@
           ]
         },
         {
+          "title": "legacy import migrates without awards and invalid import preserves current progress",
+          "file": "inquiry-badges.spec.ts",
           "ok": true,
           "tests": [
             {
+              "projectName": "chromium",
               "expectedStatus": "passed",
               "status": "expected",
               "results": [
@@ -466,9 +557,12 @@
           ]
         },
         {
+          "title": "profile displays both stable badge IDs as neutral readable labels",
+          "file": "inquiry-badges.spec.ts",
           "ok": true,
           "tests": [
             {
+              "projectName": "chromium",
               "expectedStatus": "passed",
               "status": "expected",
               "results": [
@@ -483,12 +577,16 @@
       ]
     },
     {
+      "title": "inquiry-classification.spec.ts",
       "file": "inquiry-classification.spec.ts",
       "specs": [
         {
+          "title": "classification keyboard revision and exports at 1440px reduced motion",
+          "file": "inquiry-classification.spec.ts",
           "ok": true,
           "tests": [
             {
+              "projectName": "chromium",
               "expectedStatus": "passed",
               "status": "expected",
               "results": [
@@ -501,9 +599,12 @@
           ]
         },
         {
+          "title": "classification keyboard revision and exports at 390px reduced motion",
+          "file": "inquiry-classification.spec.ts",
           "ok": true,
           "tests": [
             {
+              "projectName": "chromium",
               "expectedStatus": "passed",
               "status": "expected",
               "results": [
@@ -516,9 +617,12 @@
           ]
         },
         {
+          "title": "classification keyboard revision and exports at 320px reduced motion",
+          "file": "inquiry-classification.spec.ts",
           "ok": true,
           "tests": [
             {
+              "projectName": "chromium",
               "expectedStatus": "passed",
               "status": "expected",
               "results": [
@@ -531,9 +635,12 @@
           ]
         },
         {
+          "title": "desktop dragging uses the same categories without inventing a legacy evidence answer",
+          "file": "inquiry-classification.spec.ts",
           "ok": true,
           "tests": [
             {
+              "projectName": "chromium",
               "expectedStatus": "passed",
               "status": "expected",
               "results": [
@@ -548,12 +655,16 @@
       ]
     },
     {
+      "title": "inquiry-comparison.spec.ts",
       "file": "inquiry-comparison.spec.ts",
       "specs": [
         {
+          "title": "real JSON exchange, keyboard, revisions, safe text and failed imports at 1440px",
+          "file": "inquiry-comparison.spec.ts",
           "ok": true,
           "tests": [
             {
+              "projectName": "chromium",
               "expectedStatus": "passed",
               "status": "expected",
               "results": [
@@ -566,9 +677,12 @@
           ]
         },
         {
+          "title": "real JSON exchange, keyboard, revisions, safe text and failed imports at 390px",
+          "file": "inquiry-comparison.spec.ts",
           "ok": true,
           "tests": [
             {
+              "projectName": "chromium",
               "expectedStatus": "passed",
               "status": "expected",
               "results": [
@@ -581,9 +695,12 @@
           ]
         },
         {
+          "title": "real JSON exchange, keyboard, revisions, safe text and failed imports at 320px",
+          "file": "inquiry-comparison.spec.ts",
           "ok": true,
           "tests": [
             {
+              "projectName": "chromium",
               "expectedStatus": "passed",
               "status": "expected",
               "results": [
@@ -596,9 +713,12 @@
           ]
         },
         {
+          "title": "prepared production cache supports real downloaded peer file after disconnect and reload",
+          "file": "inquiry-comparison.spec.ts",
           "ok": true,
           "tests": [
             {
+              "projectName": "chromium",
               "expectedStatus": "passed",
               "status": "expected",
               "results": [
@@ -613,12 +733,16 @@
       ]
     },
     {
+      "title": "learning.spec.ts",
       "file": "learning.spec.ts",
       "specs": [
         {
+          "title": "evidence inquiry opens a real exhibit, records reasoning and exports without changing the personal save",
+          "file": "learning.spec.ts",
           "ok": true,
           "tests": [
             {
+              "projectName": "chromium",
               "expectedStatus": "passed",
               "status": "expected",
               "results": [
@@ -631,9 +755,12 @@
           ]
         },
         {
+          "title": "all inquiry topics support a complete text route at a phone viewport",
+          "file": "learning.spec.ts",
           "ok": true,
           "tests": [
             {
+              "projectName": "chromium",
               "expectedStatus": "passed",
               "status": "expected",
               "results": [
@@ -646,9 +773,12 @@
           ]
         },
         {
+          "title": "controlled experiment preserves its run conditions, exports all generations and matches identical environments",
+          "file": "learning.spec.ts",
           "ok": true,
           "tests": [
             {
+              "projectName": "chromium",
               "expectedStatus": "passed",
               "status": "expected",
               "results": [
@@ -661,9 +791,12 @@
           ]
         },
         {
+          "title": "phone experiment navigation reaches each section without changing route or simulation",
+          "file": "learning.spec.ts",
           "ok": true,
           "tests": [
             {
+              "projectName": "chromium",
               "expectedStatus": "passed",
               "status": "expected",
               "results": [
@@ -676,9 +809,12 @@
           ]
         },
         {
+          "title": "phone specimen scroll keeps close visible and restores the catalog position and focus",
+          "file": "learning.spec.ts",
           "ok": true,
           "tests": [
             {
+              "projectName": "chromium",
               "expectedStatus": "passed",
               "status": "expected",
               "results": [
@@ -693,12 +829,16 @@
       ]
     },
     {
+      "title": "museum.spec.ts",
       "file": "museum.spec.ts",
       "specs": [
         {
+          "title": "first observation is a free collection; reading and reload preserve the ledger without duplicate rewards",
+          "file": "museum.spec.ts",
           "ok": true,
           "tests": [
             {
+              "projectName": "chromium",
               "expectedStatus": "passed",
               "status": "expected",
               "results": [
@@ -711,9 +851,12 @@
           ]
         },
         {
+          "title": "complete chapter one through real learning actions and unlock chapter two",
+          "file": "museum.spec.ts",
           "ok": true,
           "tests": [
             {
+              "projectName": "chromium",
               "expectedStatus": "passed",
               "status": "expected",
               "results": [
@@ -726,9 +869,12 @@
           ]
         },
         {
+          "title": "IndexedDB preserves newer learning when localStorage writes fail",
+          "file": "museum.spec.ts",
           "ok": true,
           "tests": [
             {
+              "projectName": "chromium",
               "expectedStatus": "passed",
               "status": "expected",
               "results": [
@@ -741,9 +887,12 @@
           ]
         },
         {
+          "title": "excavation accepts pointer strokes and accessible cleaning, rewards once, and survives reload",
+          "file": "museum.spec.ts",
           "ok": true,
           "tests": [
             {
+              "projectName": "chromium",
               "expectedStatus": "passed",
               "status": "expected",
               "results": [
@@ -756,9 +905,12 @@
           ]
         },
         {
+          "title": "demo preview learning, takeover, and full 90-second playback leave the personal save unchanged",
+          "file": "museum.spec.ts",
           "ok": true,
           "tests": [
             {
+              "projectName": "chromium",
               "expectedStatus": "passed",
               "status": "expected",
               "results": [
@@ -771,9 +923,12 @@
           ]
         },
         {
+          "title": "a manually selected demo hotspot in an unlocked chapter remains a preview",
+          "file": "museum.spec.ts",
           "ok": true,
           "tests": [
             {
+              "projectName": "chromium",
               "expectedStatus": "passed",
               "status": "expected",
               "results": [
@@ -786,9 +941,12 @@
           ]
         },
         {
+          "title": "mobile navigation closes the drawer and principal screens have no horizontal overflow",
+          "file": "museum.spec.ts",
           "ok": true,
           "tests": [
             {
+              "projectName": "chromium",
               "expectedStatus": "passed",
               "status": "expected",
               "results": [
@@ -801,9 +959,12 @@
           ]
         },
         {
+          "title": "desktop navigation settings stay reachable at 1280 by 720",
+          "file": "museum.spec.ts",
           "ok": true,
           "tests": [
             {
+              "projectName": "chromium",
               "expectedStatus": "passed",
               "status": "expected",
               "results": [
@@ -816,9 +977,12 @@
           ]
         },
         {
+          "title": "local guide answers supported questions from the card and gives an honest fallback",
+          "file": "museum.spec.ts",
           "ok": true,
           "tests": [
             {
+              "projectName": "chromium",
               "expectedStatus": "passed",
               "status": "expected",
               "results": [
@@ -831,9 +995,12 @@
           ]
         },
         {
+          "title": "all manifest GLB exhibits visibly render in codex model-viewer with attribution",
+          "file": "museum.spec.ts",
           "ok": true,
           "tests": [
             {
+              "projectName": "chromium",
               "expectedStatus": "passed",
               "status": "expected",
               "results": [
@@ -846,9 +1013,12 @@
           ]
         },
         {
+          "title": "production service worker caches the gallery and loads a cached model after offline reload",
+          "file": "museum.spec.ts",
           "ok": true,
           "tests": [
             {
+              "projectName": "chromium",
               "expectedStatus": "passed",
               "status": "expected",
               "results": [
@@ -863,12 +1033,16 @@
       ],
       "suites": [
         {
+          "title": "structural scene verification",
           "file": "museum.spec.ts",
           "specs": [
             {
+              "title": "all eight chapter scenes expose six sourced residents and stay within the structural triangle budget",
+              "file": "museum.spec.ts",
               "ok": true,
               "tests": [
                 {
+                  "projectName": "chromium",
                   "expectedStatus": "passed",
                   "status": "expected",
                   "results": [
@@ -885,12 +1059,16 @@
       ]
     },
     {
+      "title": "population-view.spec.ts",
       "file": "population-view.spec.ts",
       "specs": [
         {
+          "title": "population pools synchronize with keyboard and retain prior inputs at 1440px",
+          "file": "population-view.spec.ts",
           "ok": true,
           "tests": [
             {
+              "projectName": "chromium",
               "expectedStatus": "passed",
               "status": "expected",
               "results": [
@@ -903,9 +1081,12 @@
           ]
         },
         {
+          "title": "population pools synchronize with keyboard and retain prior inputs at 390px",
+          "file": "population-view.spec.ts",
           "ok": true,
           "tests": [
             {
+              "projectName": "chromium",
               "expectedStatus": "passed",
               "status": "expected",
               "results": [
@@ -918,9 +1099,12 @@
           ]
         },
         {
+          "title": "population pools synchronize with keyboard and retain prior inputs at 320px",
+          "file": "population-view.spec.ts",
           "ok": true,
           "tests": [
             {
+              "projectName": "chromium",
               "expectedStatus": "passed",
               "status": "expected",
               "results": [
@@ -935,12 +1119,16 @@
       ]
     },
     {
+      "title": "refinement.spec.ts",
       "file": "refinement.spec.ts",
       "specs": [
         {
+          "title": "browser back and forward preserve navigation, filters and close obsolete dialogs",
+          "file": "refinement.spec.ts",
           "ok": true,
           "tests": [
             {
+              "projectName": "chromium",
               "expectedStatus": "passed",
               "status": "expected",
               "results": [
@@ -953,9 +1141,12 @@
           ]
         },
         {
+          "title": "first catalog observation immediately synchronizes count, card label and keyboard focus",
+          "file": "refinement.spec.ts",
           "ok": true,
           "tests": [
             {
+              "projectName": "chromium",
               "expectedStatus": "passed",
               "status": "expected",
               "results": [
@@ -968,9 +1159,12 @@
           ]
         },
         {
+          "title": "a failed model catalog can recover without a page reload and without false attribution",
+          "file": "refinement.spec.ts",
           "ok": true,
           "tests": [
             {
+              "projectName": "chromium",
               "expectedStatus": "passed",
               "status": "expected",
               "results": [
@@ -983,9 +1177,12 @@
           ]
         },
         {
+          "title": "quiz feedback names the selected and correct choices and keeps a keyboard path forward",
+          "file": "refinement.spec.ts",
           "ok": true,
           "tests": [
             {
+              "projectName": "chromium",
               "expectedStatus": "passed",
               "status": "expected",
               "results": [
@@ -998,9 +1195,12 @@
           ]
         },
         {
+          "title": "opening a guide pauses the experiment and only an explicit action resumes it",
+          "file": "refinement.spec.ts",
           "ok": true,
           "tests": [
             {
+              "projectName": "chromium",
               "expectedStatus": "passed",
               "status": "expected",
               "results": [
@@ -1013,9 +1213,12 @@
           ]
         },
         {
+          "title": "help offers working inquiry and settings routes without modifying personal learning",
+          "file": "refinement.spec.ts",
           "ok": true,
           "tests": [
             {
+              "projectName": "chromium",
               "expectedStatus": "passed",
               "status": "expected",
               "results": [
@@ -1030,12 +1233,16 @@
       ]
     },
     {
+      "title": "relationships.spec.ts",
       "file": "relationships.spec.ts",
       "specs": [
         {
+          "title": "keyboard graph expands archives and read-only exhibit returns to archive with all ledgers unchanged",
+          "file": "relationships.spec.ts",
           "ok": true,
           "tests": [
             {
+              "projectName": "chromium",
               "expectedStatus": "passed",
               "status": "expected",
               "results": [
@@ -1048,9 +1255,12 @@
           ]
         },
         {
+          "title": "list exposes all 48 archives and opens each matching exhibit without persistence",
+          "file": "relationships.spec.ts",
           "ok": true,
           "tests": [
             {
+              "projectName": "chromium",
               "expectedStatus": "passed",
               "status": "expected",
               "results": [
@@ -1063,9 +1273,12 @@
           ]
         },
         {
+          "title": "narrow 390px defaults to usable list with no overflow and reduced motion",
+          "file": "relationships.spec.ts",
           "ok": true,
           "tests": [
             {
+              "projectName": "chromium",
               "expectedStatus": "passed",
               "status": "expected",
               "results": [
@@ -1078,9 +1291,12 @@
           ]
         },
         {
+          "title": "narrow 320px defaults to usable list with no overflow and reduced motion",
+          "file": "relationships.spec.ts",
           "ok": true,
           "tests": [
             {
+              "projectName": "chromium",
               "expectedStatus": "passed",
               "status": "expected",
               "results": [
@@ -1093,9 +1309,12 @@
           ]
         },
         {
+          "title": "prepared production cache supports relationship list and exhibit after offline refresh",
+          "file": "relationships.spec.ts",
           "ok": true,
           "tests": [
             {
+              "projectName": "chromium",
               "expectedStatus": "passed",
               "status": "expected",
               "results": [
@@ -1110,12 +1329,16 @@
       ],
       "suites": [
         {
+          "title": "forced network failure",
           "file": "relationships.spec.ts",
           "specs": [
             {
+              "title": "relationship exhibit recovers its model after fallback without writing learning progress",
+              "file": "relationships.spec.ts",
               "ok": true,
               "tests": [
                 {
+                  "projectName": "chromium",
                   "expectedStatus": "passed",
                   "status": "expected",
                   "results": [
