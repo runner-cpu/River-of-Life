@@ -139,4 +139,4 @@ Final scoped review disposition: all four original final-review findings address
 - [x] Independent task review for requirements and quality; resolve concrete findings and record deferred items.
 - [x] Root runs species/model validation, TypeScript/build, full units, full browser suite, build verification. Repeat only after a material change or failure.
 - [x] Produce the ten-dimension report with finding IDs, evidence, peer verdicts, changed files, test results, limitations and follow-up priorities. Add a single-theme teacher review sheet and current dated document/README entry; preserve historic PDF as a dated artifact unless regenerated and inspected.
-- [ ] Push and update Pages under existing user authorization if network/authentication permits; verify deployed bytes and actual workflow status. Never substitute historic deployment success for current evidence.
+- [x] Push and update Pages under existing user authorization if network/authentication permits; verify deployed bytes and actual workflow status. Never substitute historic deployment success for current evidence.

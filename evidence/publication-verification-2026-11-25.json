@@ -1,0 +1,155 @@
+{
+  "checkedAt": "2026-11-25T07:03:54.262Z",
+  "website": "https://runner-cpu.github.io/River-of-Life/",
+  "deploymentCommit": "b97206e8f7c0d45ce6038d5975340244cbf73106",
+  "workflowUrl": "https://github.com/runner-cpu/River-of-Life/actions/runs/45564047027",
+  "homepageHttpStatus": 200,
+  "entryScript": "./assets/index-W-AzSma7.js",
+  "releaseContentSha256": "c8b429d22586484477b2400d55506c8597413213d57c6ddde45f16db13f68d95",
+  "serviceWorkerRevision": "adb0eb8a09b2",
+  "indexSha256": "f69a99c7704160495b204945ff93a2270ca653206b124f504f8511aeb3ae1030",
+  "verifiedFileCount": 34,
+  "includesWorkerAndManifest": true,
+  "everyLiveFileCoveredByCiDigest": true,
+  "ciBrowserPassed": 90,
+  "files": [
+    {
+      "path": "assets/icons-BhmOmOak.js",
+      "sha256": "61691aec0a1673353609db7b022a9de0698bb6c13c2c239c0ba27c1a595ed642"
+    },
+    {
+      "path": "assets/index-CeZZ9ak8.css",
+      "sha256": "b6e61b74e4b044f34dec74162795fd3e1b015eb3b15b441fea941778bd9323e7"
+    },
+    {
+      "path": "assets/index-W-AzSma7.js",
+      "sha256": "35e21bcf289d76490e84cad85d855006f7d06f51fd7cd40792de243d8699495a"
+    },
+    {
+      "path": "assets/model-viewer-CWNhWRr0.js",
+      "sha256": "4b4d867da475170e9ca3db60657c24db93e25e0b6979b0fa0d22d624f9d99c4e"
+    },
+    {
+      "path": "assets/three-DrJ60IQH.js",
+      "sha256": "75fac89bcc18f59228f4c3b6fbe9a2184575eacd5badb57165fb001561d98645"
+    },
+    {
+      "path": "draco/draco_decoder.js",
+      "sha256": "8625489da79a805f4f2a7d511c3e52d8b4085608a9d2a4d5f4f9de5db0aea04f"
+    },
+    {
+      "path": "draco/draco_decoder.wasm",
+      "sha256": "a680d927bed9cb864ddbd63521868891af2bfbe755092761b4837487618df8ac"
+    },
+    {
+      "path": "draco/draco_wasm_wrapper.js",
+      "sha256": "8bb2952d2ba7d67e1414f8df819410cb0434a666be53f671fff75f68843d76f6"
+    },
+    {
+      "path": "favicon.svg",
+      "sha256": "8c99b65b52f8ced380e3d7ab29352b459fc621e7004c15546dd3522feec2a27c"
+    },
+    {
+      "path": "index.html",
+      "sha256": "f69a99c7704160495b204945ff93a2270ca653206b124f504f8511aeb3ae1030"
+    },
+    {
+      "path": "licenses/CC-BY-4.0.txt",
+      "sha256": "9ba9550ad48438d0836ddab3da480b3b69ffa0aac7b7878b5a0039e7ab429411"
+    },
+    {
+      "path": "licenses/draco-Apache-2.0.txt",
+      "sha256": "d3709b0fb4b8a94bbb1d02b8a2e484f258b0d9c5c5a01f940391f3fe662cd1a4"
+    },
+    {
+      "path": "licenses/lucide-ISC.txt",
+      "sha256": "1e7290b35280a048667bbf0ebabac1c7fd52a75300e8b2946ac165715997f2bc"
+    },
+    {
+      "path": "licenses/model-viewer-Apache-2.0.txt",
+      "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
+    },
+    {
+      "path": "licenses/three-MIT.txt",
+      "sha256": "8b378ebe60e2fe500158cb0ac71cb5e8b7d92953c2abcc63a0eb90499653b5bc"
+    },
+    {
+      "path": "models/ATTRIBUTION.md",
+      "sha256": "cd713a6596b8ae6f0fbfe81d9b2776ea21af442135726c6817eeba5337e17449"
+    },
+    {
+      "path": "models/LICENSE-Quaternius.txt",
+      "sha256": "8328f3ff08a97bd7dfeac1c1c1d661bf3350d954420614622c5d349770eab959"
+    },
+    {
+      "path": "models/LICENSE-Smithsonian.txt",
+      "sha256": "6ca41b776ae1d901b4a95dddac4edd4b1c9df9c711b15d22c23f87af5a0a8348"
+    },
+    {
+      "path": "models/anomalocaris.glb",
+      "sha256": "6289f0f0fa8d6e7203d4f85839dec78b32682fbea3af7b0fa92bb8a64ea05537"
+    },
+    {
+      "path": "models/apatosaurus.glb",
+      "sha256": "5ee493026e91d8f476ee1163b20b24a042f9b254b21c35b425bde005195bba0a"
+    },
+    {
+      "path": "models/archaeopteryx.glb",
+      "sha256": "0332f1c65dd7066e634e8b9a825b107c632d6b9510fd3102e0546b1ed37f9d35"
+    },
+    {
+      "path": "models/dimetrodon.glb",
+      "sha256": "83dd3e22e7296310ef299766747d14ed73aeaaa6a9df68da27d586893cad6f9b"
+    },
+    {
+      "path": "models/hallucigenia.glb",
+      "sha256": "84c761cd3eb485f18006d64164ea78fa417baf8c30f98e4868b70b143b93f339"
+    },
+    {
+      "path": "models/lystrosaurus.glb",
+      "sha256": "67a60f59efb66447342d2a83fd559a61b2d07ad7d2e145a2c1f867204fe65abd"
+    },
+    {
+      "path": "models/mammoth.glb",
+      "sha256": "74937b6470d9cc33e2ad0238125b3b69db2e83e55d3074081de0dcfdfee237f2"
+    },
+    {
+      "path": "models/manifest.json",
+      "sha256": "2ba693c7569c71a60f06863f0cea32c7f532fb518ef810d278e341ea1472c5ef"
+    },
+    {
+      "path": "models/megalodon.glb",
+      "sha256": "25342d9fd0d84efc147838684c376fec201f1e7282c897ca66b0c492a53a1090"
+    },
+    {
+      "path": "models/mosasaurus.glb",
+      "sha256": "8f24a95e1da246d2055a15dccd5bae8dc37bb82444b5ec8912e7af32e33ccef4"
+    },
+    {
+      "path": "models/opabinia.glb",
+      "sha256": "952c15bd13bcfcce63f24cacf36cf2ec926b251677dd9be87691a08bdd125165"
+    },
+    {
+      "path": "models/stegosaurus.glb",
+      "sha256": "866e70b637d95bd41d6e6e3d2eee571bf72b3be67e8ea3d90fe92fa8415ad031"
+    },
+    {
+      "path": "models/triceratops.glb",
+      "sha256": "e55739c34295eca3edbbbdf3c22fb63f08d8c5498c4ff38bf52cff76edb6a2b4"
+    },
+    {
+      "path": "models/tyrannosaurus.glb",
+      "sha256": "db9ac047e63a20bd1f33dd3094415fbca2c003ac08b08bd92d4a998f8659061d"
+    },
+    {
+      "path": "offline-manifest.json",
+      "sha256": "00e547e9ad46f8161742922e7ccefa036835bf57027eb8e49ab6b704aa353639"
+    },
+    {
+      "path": "sw.js",
+      "sha256": "5513fb3853922be93e711404777fa329d65cf88e3d9a3c0377f3d2525e13bd6e"
+    }
+  ],
+  "independentlyDiscoveredTestCount": 90,
+  "method": "Fetched every manifest resource, final sw.js and offline-manifest.json with cache-busting URLs. SHA-256 of sorted JSON [relative path, file SHA-256] pairs matches the CI build and its passing browser report; no assumption of identical Windows checkout bytes."
+}

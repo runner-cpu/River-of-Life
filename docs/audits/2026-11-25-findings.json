@@ -771,7 +771,7 @@
     "unitTestsPassed": 255,
     "browserTestsPassed": 90,
     "finalBranchReview": "original_findings_addressed_with_adjudicated_residuals",
-    "deployment": "pending",
+    "deployment": "success_verified_against_ci_bytes",
     "evidence": "evidence/audit-2026-11-25/validation.json",
     "note": "Original kind names, baseline evidence and review decisions are preserved; resolution is appended separately.",
     "finalReviewFindings": 4,
@@ -794,6 +794,11 @@
         "issue": "GameStore.badge now returns award status instead of void, deviating from original return-shape constraint.",
         "ruling": "Private static app; existing callers compatible; synchronous operation, persisted schemas and reward behavior remain stable. Explicitly documented plan deviation."
       }
-    ]
+    ],
+    "deploymentCommit": "b97206e8f7c0d45ce6038d5975340244cbf73106",
+    "workflowUrl": "https://github.com/runner-cpu/River-of-Life/actions/runs/45564047027",
+    "publicationEvidence": "evidence/publication-verification-2026-11-25.json",
+    "ciBrowserTestsPassed": 90,
+    "liveVerifiedFileCount": 34
   }
 }

@@ -1,0 +1,14 @@
+{
+  "builtAt": "2026-11-25T06:54:37.588Z",
+  "indexSha256": "f69a99c7704160495b204945ff93a2270ca653206b124f504f8511aeb3ae1030",
+  "releaseContentSha256": "c8b429d22586484477b2400d55506c8597413213d57c6ddde45f16db13f68d95",
+  "serviceWorkerRevision": "adb0eb8a09b2",
+  "manifestSha256": "2ba693c7569c71a60f06863f0cea32c7f532fb518ef810d278e341ea1472c5ef",
+  "jsCssGzipBytes": 561089,
+  "models": 13,
+  "modelBytes": 11989972,
+  "appChunkGzipBytes": 441202,
+  "nonModelGzipBytes": 647591,
+  "gzipMethod": "Independent files, gzip level 6, mtime 0 (Node zlib).",
+  "releaseContentHashMethod": "SHA-256 of JSON [relative path, lowercase SHA-256 of file bytes] pairs, sorted by relative path and encoded as UTF-8. Covers every delivered site file, including sw.js and offline-manifest.json."
+}

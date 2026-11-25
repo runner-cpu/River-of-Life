@@ -242,3 +242,15 @@ GitHub Pages 工作流已有安装、单元、构建、生产浏览器测试与�
 - [桌面关系图](../../evidence/audit-2026-11-25/uncertain-reference-1440.png)、[320px关系图](../../evidence/audit-2026-11-25/uncertain-reference-320.png)；历史截图与采样保留原文件，本轮采样另存日期目录。
 
 本次未重生成PDF或比赛包，未增加外部模型，也未开展真人教学、科学审校或物理设备验收。原14项独立缺陷中12项修复、1项仅缓解、1项等待视觉验证；终审另发现的四项已关闭，新增可恢复升级占锁问题保留。发布结果另记，不能由本地测试推定线上已更新。
+
+
+### 6.9 发布与线上字节核验
+
+2026年11月25日将 `b97206e` 推送到main。[Publish museum运行](https://github.com/runner-cpu/River-of-Life/actions/runs/45564047027)的构建与部署均成功；CI重新执行单元、内容/模型/TypeScript/生产构建、全部90项Chromium和构建核验。下载该运行的验证制品后，将CI浏览器报告与当前独立用例清单及CI构建摘要再次核对，全部匹配。
+
+随后重新请求[线上站点](https://runner-cpu.github.io/River-of-Life/)全部 **34个文件**，包括最终Service Worker和离线清单。排序路径与每个文件字节的完整SHA-256为 `c8b429d22586484477b2400d55506c8597413213d57c6ddde45f16db13f68d95`，与CI被测构建完全一致；线上worker修订为 `adb0eb8a09b2`。这是发布后的实际核验，未以Windows本地摘要代替Linux发布字节。
+
+- [线上核验记录](../../evidence/publication-verification-2026-11-25.json)
+- [CI构建报告](../../evidence/audit-2026-11-25/ci/build-verification.json)、[CI浏览器报告](../../evidence/audit-2026-11-25/ci/e2e-results.json)、[成功运行记录](../../evidence/audit-2026-11-25/ci/workflow.json)
+
+后续仅记录本次结果的文档与证据提交标为 `[skip ci]`，不改变已部署站点。6.8节保留项及第5节真实使用验证仍未完成。

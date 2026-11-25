@@ -1,0 +1,9 @@
+# Task 4 re-review, round 1, eabd4f2..231f6c2
+
+1. **Neutral inquiry categories — ADDRESSED.** The four serialized category keys retain their original values. The visible support, irrelevant and oppose labels now explicitly name the classification reference. Tests assert the shared wording in the graph, exported report, classification buttons and imported peer column (`src/core/inquiry.ts:3`, `tests/inquiry-record.test.ts:81`, `tests/e2e/teaching-feedback.spec.ts:26`, `:52`).
+2. **Unknown historical reference — ADDRESSED.** Comparison handles a missing reference on either or both sides before comparing known identities. It identifies the affected side, states that agreement cannot be determined and preserves the caution about equal labels. The three missing-side combinations and known matches/differences have targeted assertions (`src/core/inquiry-comparison.ts:25`, `:31`, `tests/inquiry-comparison.test.ts:43`, `:57`).
+3. **Feedback points to visible card headings — ADDRESSED.** The generated question explanation, source feedback and specimen card share field labels. The card explicitly labels the definition and exposes the cited fact and misconception headings. The browser regressions follow both sections through opening the card and checking its content (`src/content/specimen-fields.ts:4`, `src/content/questions.ts:78`, `src/modes/quiz.ts:9`, `src/modes/specimen.ts:26`, `tests/e2e/teaching-feedback.spec.ts:119`).
+
+**Spec compliance — PASS. Code quality — APPROVED.** All three Important findings are addressed. No new breakage identified in the fix diff. The previously recorded Minor mistake-cycle issue remains outside this round.
+
+**Validation evidence.** The implementation report records all 46 focused tests passing and a clean TypeScript check. The browser regressions await the root production run. This review inspected the changes without rerunning the tests.

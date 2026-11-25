@@ -8,6 +8,8 @@
 
 网站已上线：[https://runner-cpu.github.io/River-of-Life/](https://runner-cpu.github.io/River-of-Life/)。源码与文档见[GitHub仓库](https://github.com/runner-cpu/River-of-Life)。推送main后自动测试并发布，状态见[发布工作流](https://github.com/runner-cpu/River-of-Life/actions/workflows/pages.yml)。
 
+2026年11月25日修复版已发布，GitHub Actions构建与部署成功；线上34个文件逐字节匹配通过90项浏览器测试的CI构建，见[本次发布核验](../evidence/publication-verification-2026-11-25.json)。实际站点对应 `b97206e`，后续文档提交不改变线上内容。
+
 ## 已实现
 
 | 领域 | 当前实现 |
