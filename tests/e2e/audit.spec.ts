@@ -69,7 +69,8 @@ test('reset requires a second decision and keyboard import rejects oversized fil
   expect(await page.evaluate(key=>localStorage.getItem(key),saveKey)).toBe(before);
   const chooserPromise=page.waitForEvent('filechooser');await page.locator('#import-save-trigger').focus();await page.keyboard.press('Enter');
   const chooser=await chooserPromise;await chooser.setFiles({name:'oversized.json',mimeType:'application/json',buffer:Buffer.alloc(250001,32)});
-  await expect(page.locator('.toast-region')).toContainText('记录文件过大');
+  const importStatus=page.getByRole('dialog',{name:'让探索，适合你的节奏',exact:true}).getByRole('status').and(page.locator('#import-status'));
+  await expect(importStatus).toBeVisible();await expect(importStatus).toHaveText('记录文件过大。');
   expect(await page.evaluate(key=>localStorage.getItem(key),saveKey)).toBe(before);
 });
 

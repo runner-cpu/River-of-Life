@@ -63,7 +63,8 @@ test('legacy import migrates without awards and invalid import preserves current
   const migrated = await saved(page); expect(migrated.version).toBe(2); expect(migrated.points).toBe(before.points);
   await page.locator('#settings').click();
   await page.locator('#import-save').setInputFiles({name:'invalid.json',mimeType:'application/json',buffer:Buffer.from(JSON.stringify({...legacy,totalEarned:999}))});
-  await expect(page.locator('#toasts')).toContainText('不一致'); expect(await saved(page)).toEqual(migrated);
+  const importStatus=page.getByRole('dialog',{name:'让探索，适合你的节奏',exact:true}).getByRole('status').and(page.locator('#import-status'));
+  await expect(importStatus).toBeVisible(); await expect(importStatus).toHaveText('累计演化点与学习记录不一致。'); expect(await saved(page)).toEqual(migrated);
   await page.reload(); expect((await saved(page)).badges).toEqual(['legacy']);
 });
 
