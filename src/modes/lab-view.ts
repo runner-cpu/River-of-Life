@@ -28,9 +28,10 @@ export function mountLab(container: HTMLElement, store: GameStore) {
   container.querySelector<HTMLInputElement>('#predation')!.addEventListener('input', e => { predation = Number((e.target as HTMLInputElement).value) / 100; container.querySelector('#predation-value')!.textContent = `${Math.round(predation * 100)}%`; });
   const comparison=document.createElement('section');comparison.className='lab-comparison';comparison.id='lab-comparison';comparison.tabIndex=-1;comparison.setAttribute('aria-label','同起点对照实验');container.append(comparison);
   const refreshComparison = mountComparison(comparison,()=>({drought,predation}), id => { if (store.inquiryBadge(id)) container.querySelector('#lab-insight')!.textContent = '你记录了一次换种子重跑与备注。行为记录不评估科学能力，也不增加演化点。'; });
-  container.addEventListener('input',event => {
+  const refreshEnvironmentComparison = (event: Event) => {
     if (event.target instanceof HTMLInputElement && ['drought','predation'].includes(event.target.id)) refreshComparison();
-  });
+  };
+  container.addEventListener('input',refreshEnvironmentComparison);
   container.querySelectorAll<HTMLButtonElement>('[data-lab-target]').forEach(button => button.addEventListener('click',() => {
     const target=container.querySelector<HTMLElement>(`#${button.dataset.labTarget}`)!;
     target.focus({preventScroll:true});
@@ -39,5 +40,5 @@ export function mountLab(container: HTMLElement, store: GameStore) {
   const suspend = () => {if(running && (document.hidden || document.querySelector('dialog[open]'))){stop();container.querySelector('#lab-run-status')!.textContent='切换窗口或打开弹窗时已暂停。返回后可手动继续，世代不会悄悄推进。';}};
   document.addEventListener('visibilitychange',suspend);
   const dialogs=new MutationObserver(suspend);dialogs.observe(document.body,{childList:true});
-  paint(); return () => { clearInterval(timer);dialogs.disconnect();document.removeEventListener('visibilitychange',suspend); };
+  paint(); return () => { clearInterval(timer);dialogs.disconnect();document.removeEventListener('visibilitychange',suspend);container.removeEventListener('input',refreshEnvironmentComparison); };
 }

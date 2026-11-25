@@ -1,7 +1,10 @@
-import { describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import * as THREE from 'three';
 import { createCreature } from '../src/scene/creatures';
 import { releaseObjectResources, retainObjectResources } from '../src/scene/resource-lifetime';
+
+class TestImageBitmap { close = vi.fn(); }
+afterEach(() => vi.unstubAllGlobals());
 
 describe('resources shared by simultaneously open museum views', () => {
   it('disposes shadow targets allocated after a chapter was retained', () => {
@@ -28,10 +31,38 @@ describe('resources shared by simultaneously open museum views', () => {
   });
 
   it('keeps a shared texture alive until the final material owner closes', () => {
-    const texture = new THREE.Texture(), first = new THREE.Mesh(new THREE.BoxGeometry(), new THREE.MeshBasicMaterial({ map: texture })), second = new THREE.Mesh(new THREE.BoxGeometry(), new THREE.MeshBasicMaterial({ map: texture }));
+    vi.stubGlobal('ImageBitmap', TestImageBitmap);
+    const image = new TestImageBitmap();
+    const texture = new THREE.Texture(image), first = new THREE.Mesh(new THREE.BoxGeometry(), new THREE.MeshBasicMaterial({ map: texture })), second = new THREE.Mesh(new THREE.BoxGeometry(), new THREE.MeshBasicMaterial({ map: texture }));
     retainObjectResources(first); retainObjectResources(second); const dispose = vi.spyOn(texture, 'dispose');
-    releaseObjectResources(first); expect(dispose).not.toHaveBeenCalled();
-    releaseObjectResources(second); expect(dispose).toHaveBeenCalledTimes(1);
+    releaseObjectResources(first); expect(dispose).not.toHaveBeenCalled(); expect(image.close).not.toHaveBeenCalled();
+    releaseObjectResources(second); expect(dispose).toHaveBeenCalledTimes(1); expect(image.close).toHaveBeenCalledTimes(1);
+    releaseObjectResources(second); expect(dispose).toHaveBeenCalledTimes(1); expect(image.close).toHaveBeenCalledTimes(1);
+  });
+
+  it('keeps one bitmap alive across different texture wrappers until the final view closes', () => {
+    vi.stubGlobal('ImageBitmap', TestImageBitmap);
+    const image = new TestImageBitmap(), firstTexture = new THREE.Texture(image), secondTexture = new THREE.Texture(image);
+    const first = new THREE.Mesh(new THREE.BoxGeometry(), new THREE.MeshBasicMaterial({ map: firstTexture }));
+    const second = new THREE.Mesh(new THREE.BoxGeometry(), new THREE.MeshBasicMaterial({ map: secondTexture }));
+    const firstDispose = vi.spyOn(firstTexture, 'dispose'), secondDispose = vi.spyOn(secondTexture, 'dispose');
+    retainObjectResources(first); retainObjectResources(second);
+    releaseObjectResources(first);
+    expect(firstDispose).toHaveBeenCalledTimes(1); expect(image.close).not.toHaveBeenCalled();
+    releaseObjectResources(second); releaseObjectResources(second);
+    expect(secondDispose).toHaveBeenCalledTimes(1); expect(image.close).toHaveBeenCalledTimes(1);
+  });
+
+  it('disposes textures with ordinary images without calling unrelated close methods', () => {
+    vi.stubGlobal('ImageBitmap', TestImageBitmap);
+    for (const image of [{ width: 32, height: 32 }, { width: 32, height: 32, close: vi.fn() }]) {
+      const texture = new THREE.Texture(image);
+      const mesh = new THREE.Mesh(new THREE.BoxGeometry(), new THREE.MeshBasicMaterial({ map: texture }));
+      const dispose = vi.spyOn(texture, 'dispose');
+      retainObjectResources(mesh); releaseObjectResources(mesh); releaseObjectResources(mesh);
+      expect(dispose).toHaveBeenCalledTimes(1);
+      if ('close' in image) expect(image.close).not.toHaveBeenCalled();
+    }
   });
 
   it('releases a lazily created bone texture only after the last skeleton owner closes', () => {

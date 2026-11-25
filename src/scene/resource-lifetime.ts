@@ -3,6 +3,26 @@ import * as THREE from 'three';
 type Resource = THREE.BufferGeometry | THREE.Material | THREE.Texture | THREE.Skeleton | THREE.LightShadow;
 const owners = new WeakMap<THREE.Object3D, Set<Resource>>();
 const references = new WeakMap<Resource, number>();
+const textureBitmaps = new WeakMap<THREE.Texture, Set<ImageBitmap>>();
+const bitmapReferences = new WeakMap<ImageBitmap, number>();
+
+function retainTextureBitmaps(texture: THREE.Texture) {
+  // GLTFLoader can create different texture wrappers for one decoded bitmap.
+  // Track that underlying allocation separately; DOM images are not ours to close.
+  const images: unknown[] = Array.isArray(texture.image) ? texture.image : [texture.image];
+  const bitmaps = new Set(images.filter((image): image is ImageBitmap => typeof ImageBitmap !== 'undefined' && image instanceof ImageBitmap));
+  textureBitmaps.set(texture, bitmaps);
+  bitmaps.forEach(bitmap => bitmapReferences.set(bitmap, (bitmapReferences.get(bitmap) || 0) + 1));
+}
+
+function releaseTextureBitmaps(texture: THREE.Texture) {
+  textureBitmaps.get(texture)?.forEach(bitmap => {
+    const remaining = bitmapReferences.get(bitmap)! - 1;
+    if (remaining) bitmapReferences.set(bitmap, remaining);
+    else { bitmapReferences.delete(bitmap); bitmap.close(); }
+  });
+  textureBitmaps.delete(texture);
+}
 
 // Creature factories share cached resources across scene and specimen renderers.
 // Count live mesh owners so closing either view cannot invalidate the other.
@@ -23,7 +43,11 @@ export function retainObjectResources(root: THREE.Object3D) {
       }
     } else return;
     owners.set(object, resources);
-    resources.forEach(resource => references.set(resource, (references.get(resource) || 0) + 1));
+    resources.forEach(resource => {
+      const count = references.get(resource) || 0;
+      if (!count && resource instanceof THREE.Texture) retainTextureBitmaps(resource);
+      references.set(resource, count + 1);
+    });
   });
 }
 
@@ -34,7 +58,10 @@ export function releaseObjectResources(root: THREE.Object3D) {
     resources.forEach(resource => {
       const remaining = (references.get(resource) || 1) - 1;
       if (remaining) references.set(resource, remaining);
-      else { references.delete(resource); resource.dispose(); }
+      else {
+        references.delete(resource); resource.dispose();
+        if (resource instanceof THREE.Texture) releaseTextureBitmaps(resource);
+      }
     });
   });
 }
