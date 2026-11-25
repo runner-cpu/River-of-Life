@@ -49,7 +49,7 @@ function harness() {
       self: { registration: { scope }, location: new URL(scope), skipWaiting,
         clients: { claim: vi.fn() },
         addEventListener: (name: string, fn: (event: object) => void) => events.set(name, fn) },
-      caches, fetch: network, crypto: webcrypto, URL, Request, Response, AbortSignal, setTimeout, clearTimeout,
+      caches, fetch: network, crypto: webcrypto, URL, Request, Response, Headers, AbortSignal, setTimeout, clearTimeout,
     });
     const lifecycle = async (event: string, extra = {}) => {
       let work: Promise<unknown> | undefined;
@@ -111,7 +111,7 @@ it('remembers late completion across offline activation and restart, then recove
   h.site.content = release('A'); expect(await a.prepare()).toBe(true);
   h.site.online = false; await b.lifecycle('activate');
   const restarted = h.worker(B);
-  expect(await restarted.get('', true)).toBe('A index.html');
+  expect(await restarted.get('', true)).toMatch(/startLegacyPreview[\s\S]*A index\.html/);
   expect(await restarted.get('assets/lazy-A.js')).toBe('A assets/lazy-A.js');
   expect(await restarted.get('models/shared.glb')).toBe('A models/shared.glb');
   h.site.online = true; h.site.content = release('B');
@@ -144,14 +144,14 @@ it.each([true, false])('serves coherent A without free space even after restart 
   h.site.content = release('A'); expect(await a.prepare()).toBe(true);
   h.site.online = false; h.site.quota = quotaDuringActivation; await b.lifecycle('activate');
   h.site.quota = true;
-  expect(await h.worker(B).get('', true, 'old-tab')).toBe('A index.html');
+  expect(await h.worker(B).get('', true, 'old-tab')).toMatch(/startLegacyPreview[\s\S]*A index\.html/);
   expect(await h.worker(B).get('models/shared.glb', false, 'old-tab')).toBe('A models/shared.glb');
   h.site.quota = false; h.site.online = true; h.site.content = release('B'); expect(await b.prepare()).toBe(true);
   h.site.online = false; h.site.quota = true;
-  expect(await h.worker(B).get('', true, 'quota-tab')).toBe('A index.html');
+  expect(await h.worker(B).get('', true, 'quota-tab')).toMatch(/startLegacyPreview[\s\S]*A index\.html/);
   expect(await h.worker(B).get('models/shared.glb', false, 'quota-tab')).toBe('A models/shared.glb');
   h.site.quota = false;
-  expect(await h.worker(B).get('', true, '')).toBe('A index.html');
+  expect(await h.worker(B).get('', true, '')).toMatch(/startLegacyPreview[\s\S]*A index\.html/);
   expect(await h.worker(B).get('models/shared.glb', false, '')).toBe('A models/shared.glb');
   expect(await h.worker(B).get('', true, 'new-tab')).toBe('B index.html');
   expect(await h.worker(B).get('models/shared.glb', false, 'new-tab')).toBe('B models/shared.glb');

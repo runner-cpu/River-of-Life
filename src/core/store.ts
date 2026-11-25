@@ -286,7 +286,11 @@ export class GameStore {
     this.state.points -= cost; this.state.unlockedChapters.push(chapter); this.state.chapter = chapter; this.changed(); return '';
   }
   setChapter(chapter: number) { if (this.canWrite() && this.state.unlockedChapters.includes(chapter)) { this.state.chapter = chapter; this.changed(); } }
-  badge(name: string) { if (this.canWrite() && !this.state.badges.includes(name)) { this.state.badges.push(name); this.changed(); } }
+  badge(name: string) {
+    if (!this.canWrite()) return 'readonly';
+    if (this.state.badges.includes(name)) return 'existing';
+    this.state.badges.push(name); this.changed(); return 'awarded';
+  }
   inquiryBadge(id: InquiryBadgeId) {
     if (!this.canWrite() || this.options.persist === false || !isInquiryBadge(id) || this.state.badges.includes(id)) return false;
     this.state.badges.push(id); this.changed(); return true;

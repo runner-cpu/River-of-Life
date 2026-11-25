@@ -51,6 +51,42 @@ test('only one same-context page writes, and a fresh reload takes ownership afte
   expect(JSON.parse((await saved(second))!).observed).toEqual(['cyanobacteria', 'stromatolites']);
 });
 
+test('read-only visitors can toggle sound, inspect specimens, and finish badge practice without changing either replica', async ({page, context}) => {
+  await page.goto('/#codex'); await observe(page);
+  const reader = await context.newPage(); await reader.goto('/'); await expect(reader.locator('#progress-access')).toBeVisible();
+  const before = await snapshot(reader), local = await saved(reader), database = await databaseSaved(reader);
+  const gainTargets = await reader.evaluateHandle(() => {
+    const targets: number[] = [], original = AudioParam.prototype.setTargetAtTime;
+    AudioParam.prototype.setTargetAtTime = function(value,time,constant) { targets.push(value); return original.call(this,value,time,constant); };
+    return targets;
+  });
+  const sound = reader.locator('#scene-sound'); await sound.click(); await expect(sound).toHaveAttribute('aria-pressed', 'true');
+  await sound.click(); await expect(sound).toHaveAttribute('aria-pressed', 'false');
+  expect(await gainTargets.jsonValue()).toEqual([.025,0]);
+  await reader.locator('[data-mode="codex"]').click(); await reader.locator('[data-codex-id="stromatolites"]').click();
+  await expect(reader.locator('dialog')).toContainText('只读浏览'); await expect(reader.locator('#mark-read')).toBeDisabled();
+  await expect(reader.locator('#mark-read')).toContainText('未记录阅读'); await expect(reader.locator('#collect-species')).toBeDisabled();
+  await reader.locator('#compare-model').click(); await expect(reader.locator('dialog')).toContainText('成人身高参照');
+  await reader.locator('#specimen-lab').click(); await expect(reader.locator('#lab-step')).toBeVisible();
+  for (let i=0; i<15; i++) await reader.locator('#lab-step').click();
+  await expect(reader.locator('#lab-insight')).toContainText('只读练习，本次不记录徽章');
+  await reader.locator('[data-mode="quiz"]').click(); await reader.locator('[data-kind="timeline"]').click();
+  const order = await reader.locator('.sort-item').evaluateAll(items => items.map(el => (el as HTMLElement).dataset.speciesId!));
+  const desired = order.map(id => species.find(s=>s.id===id)!).sort((a,b)=>b.startMya-a.startMya);
+  for (const [position,s] of desired.entries()) {
+    for (let i=order.indexOf(s.id); i>position; i--) {
+      await reader.locator(`[data-move="${i},-1"]`).click(); [order[i-1],order[i]]=[order[i],order[i-1]];
+    }
+  }
+  await reader.locator('#check-order').click(); await expect(reader.locator('#sort-feedback')).toContainText('顺序正确！只读练习，本次不记录徽章');
+  await reader.locator('[data-kind="match"]').click();
+  for (const select of await reader.locator('[data-match]').all()) {
+    const id = await select.getAttribute('data-match'); await select.selectOption(species.find(s=>s.id===id)!.diet);
+  }
+  await reader.locator('#check-match').click(); await expect(reader.locator('#match-feedback')).toContainText('全部连线正确！只读练习，本次不记录徽章');
+  expect(await snapshot(reader)).toEqual(before); expect(await saved(reader)).toBe(local); expect(await databaseSaved(reader)).toEqual(database);
+});
+
 test('an old read-only snapshot cannot resurrect progress after the writer resets', async ({ page, context }) => {
   await page.goto('/#codex'); await observe(page);
   const second = await context.newPage(); await second.goto('/#codex'); await expect(second.locator('#progress-access')).toBeVisible();

@@ -19,7 +19,7 @@
 
 ## 来源和推断边界
 
-主题采用仓库[学习来源登记](../../src/content/learning-sources.ts)中的 Natural History Museum 始祖鸟材料。实际页面链接、级别和具体核对段落以登记和活动界面为准；教师应重新打开核对。羽毛、牙齿、长骨尾和有爪前肢的组合用于特征比较，不为全部尺寸、颜色、运动或直接祖先关系背书。
+主题采用英国自然历史博物馆的 [What were the first birds like?](https://www.nhm.ac.uk/discover/what-were-the-first-birds-like.html)。活动登记为 B 级机构来源，核对段落为“What did the earliest bird-like animals look like?”；教师应重新打开核对。羽毛、牙齿、长骨尾和有爪前肢的组合用于特征比较，不为全部尺寸、颜色、运动或直接祖先关系背书。
 
 始祖鸟展台是化石板扫描；近似结构观察点帮助寻找位置，不是精密解剖标定。显示不清的结构改用文字证据，不要求学习者声称自己看见了。
 

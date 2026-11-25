@@ -1,3 +1,4 @@
+import { practiceBadge } from './practice-badge';
 import type { GameStore } from '../core/store';
 import { EvolutionLab } from '../core/lab';
 import { icon, escape } from '../core/ui';
@@ -18,7 +19,7 @@ export function mountLab(container: HTMLElement, store: GameStore) {
     container.querySelector('#gene-chart')!.setAttribute('aria-label',`第 ${firstGeneration} 至 ${lab.state.generation} 代耐旱等位基因频率，当前 ${Math.round(lab.frequency()*100)}%`);
     if(lab.state.generation===0)container.querySelector('#lab-insight')!.textContent='基因不会因为「需要」而出现。环境影响不同遗传变体留下后代的机会。';
     container.querySelector('#energy-audit')!.textContent = `累计输入 ${lab.state.energyIn} · 输出 ${lab.state.energyOut} · 在体 ${lab.state.population.length * 10} · 守恒残差 ${lab.audit()}`;
-    if (lab.state.generation >= 12 && lab.frequency() > .8 && drought > .6) { store.badge('自然选择观察者'); container.querySelector('#lab-insight')!.textContent = '你观察到了耐旱变体的频率上升！已获得「自然选择观察者」徽章。将干旱调到 0，再比较几代的变化。'; }
+    if (lab.state.generation >= 12 && lab.frequency() > .8 && drought > .6) { container.querySelector('#lab-insight')!.textContent = `你观察到了耐旱变体的频率上升！${practiceBadge(store, '自然选择观察者')}将干旱调到 0，再比较几代的变化。`; }
   }
   const stop = () => { running = false; clearInterval(timer); container.querySelector('#lab-play')!.setAttribute('aria-pressed','false'); container.querySelector('#lab-play')!.innerHTML = `${icon('Play', 17)} 开始观察`; };
   const step = () => { if (lab.state.generation >= 300) { stop();container.querySelector('#lab-run-status')!.textContent='已到达 300 代上限。可重置后更换条件再观察。'; return; } lab.step(drought, predation); paint(); };

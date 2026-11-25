@@ -58,3 +58,13 @@ it('renders escaped text, safe clickable links and table links while preserving 
   expect(() => renderMarkdown('[bad](javascript:alert)')).toThrow('Unsafe');
   expect(() => renderMarkdown('[bad](//example.org)')).toThrow('Unsafe');
 });
+
+it('collects the real Archaeopteryx teacher sheet and verifies its packaged links', () => {
+  const { target } = fixture();
+  const sheet = 'docs/competition/archaeopteryx-teacher-review.md';
+  const materials = collectMaterials(process.cwd(), target, [sheet]);
+  const html = renderMarkdown(materials.markdownForHtml(sheet));
+  expect(html).toContain('href="https://www.nhm.ac.uk/discover/what-were-the-first-birds-like.html"');
+  writeFileSync(join(target, 'teacher.html'), html);
+  expect(() => verifyMaterialLinks(target)).not.toThrow();
+});
