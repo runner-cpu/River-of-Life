@@ -82,7 +82,7 @@ expect(await caches.has(unrelatedCache)).toBe(true);
 
 **Interfaces:** retain `mountLab` cleanup signature and retain/releaseObjectResources APIs. Resource ownership accounts for both texture wrappers and the shared underlying closable image object.
 
-- [ ] Add a regression with two different Texture objects sharing one closable image: releasing first view does not close; releasing final view closes once; double-release stays idempotent. Also test two owners of one texture and ordinary images without close.
+- [x] Add a regression with two different Texture objects sharing one closable image: releasing first view does not close; releasing final view closes once; double-release stays idempotent. Also test two owners of one texture and ordinary images without close.
 
 ```ts
 releaseObjectResources(first);
@@ -92,9 +92,9 @@ releaseObjectResources(second);
 expect(close).toHaveBeenCalledTimes(1);
 ```
 
-- [ ] Reference-count loader-owned image bitmaps separately from texture references, only closing on final release. Preserve shared procedural geometries/materials, skeletons and lazy bone textures. Do not call arbitrary close on unrelated DOM images. Check late stale GLTF completion uses retain/release cleanup.
-- [ ] Give delegated laboratory input a named handler (or mount-scoped AbortController) and remove it in cleanup. Keep timer/observer/visibility cleanup. Browser regression mounts/leaves repeatedly and proves retained input-listener count returns to baseline; current comparison updates once.
-- [ ] Run targeted units, commit and report. No unsupported memory saving or FPS claim.
+- [x] Reference-count loader-owned image bitmaps separately from texture references, only closing on final release. Preserve shared procedural geometries/materials, skeletons and lazy bone textures. Do not call arbitrary close on unrelated DOM images. Check late stale GLTF completion uses retain/release cleanup.
+- [x] Give delegated laboratory input a named handler (or mount-scoped AbortController) and remove it in cleanup. Keep timer/observer/visibility cleanup. Browser regression mounts/leaves repeatedly and proves retained input-listener count returns to baseline; current comparison updates once.
+- [x] Run targeted units, commit and report. No unsupported memory saving or FPS claim.
 
 ### Task 4: 教学反馈与练习覆盖
 
@@ -102,18 +102,18 @@ expect(close).toHaveBeenCalledTimes(1);
 
 **Interfaces:** add internal reference-claim metadata/helper and optional v1 export field `classificationReference?: { kind: 'activity-claim'; claimId: string }`. No new required fields, version bump, answer-index or category change. Register stable semantic IDs `feathers-multiple-features-v1`, `sea-classification-evidence-v1`, `fins-feature-combination-v1` with their respective existing topics and explicit uncertainty indices. New uncertain records include the ID; definite records omit it. Reject explicit unknown/mismatched IDs or wrong-answer pairings. Old uncertain records without the field remain readable and display “旧记录未记载归类参照”; never infer their historical proposition from a new display helper. Comparison must explain missing/different references and must not infer same reasoning from equal category labels.
 
-- [ ] Define for each uncertain option a clear proposition to examine, derived from the existing scientifically scoped question content. Show original uncertainty separately from that proposition. Use the same reference in categorization, graph, HTML export and peer display. Change introductory wording from finding support to checking support/contradiction/insufficient evidence. Keep category enum values and initial answer indices.
-- [ ] Test all three uncertain routes and original definite routes, JSON roundtrip with unchanged schema, HTML escaping, original answer preservation and personal Progress invariance. Where the old protocol cannot distinguish historical uncertain categories, explicitly mark the reference as unspecified rather than asserting new meaning.
-- [ ] Quiz feedback states the corresponding species card/field, provides reachable source links with declared scope, and does not imply sources[0] validates every field. Escape rendered content.
-- [ ] Mitigate repeated-distractor novelty within one quiz round: each species appears at most once, unattempted questions get priority on later rounds, original IDs and rewards remain. Track honest limitation: distractor quality and answer-length cues still need content review; do not claim psychometric validity.
-- [ ] Timeline exercises choose distinct approximate ages across unlocked chapters and include current chapter when possible, rather than always the oldest five. Preserve first-chapter completion, keyboard focus restoration and zero-point badge behavior.
+- [x] Define for each uncertain option a clear proposition to examine, derived from the existing scientifically scoped question content. Show original uncertainty separately from that proposition. Use the same reference in categorization, graph, HTML export and peer display. Change introductory wording from finding support to checking support/contradiction/insufficient evidence. Keep category enum values and initial answer indices.
+- [x] Test all three uncertain routes and original definite routes, JSON roundtrip with unchanged schema, HTML escaping, original answer preservation and personal Progress invariance. Where the old protocol cannot distinguish historical uncertain categories, explicitly mark the reference as unspecified rather than asserting new meaning.
+- [x] Quiz feedback states the corresponding species card/field, provides reachable source links with declared scope, and does not imply sources[0] validates every field. Escape rendered content.
+- [x] Mitigate repeated-distractor novelty within one quiz round: each species appears at most once, unattempted questions get priority on later rounds, original IDs and rewards remain. Track honest limitation: distractor quality and answer-length cues still need content review; do not claim psychometric validity.
+- [x] Timeline exercises choose distinct approximate ages across unlocked chapters and include current chapter when possible, rather than always the oldest five. Preserve first-chapter completion, keyboard focus restoration and zero-point badge behavior.
 
 ```ts
 expect(new Set(round.map(q => q.speciesId)).size).toBe(round.length);
 expect(timeline.some(s => s.chapter === currentChapter)).toBe(true);
 ```
 
-- [ ] Run targeted units, commit and report with remaining external content-validation work.
+- [x] Run targeted units, commit and report with remaining external content-validation work.
 
 ### Task 5: 发布证据绑定构建内容
 
@@ -121,15 +121,15 @@ expect(timeline.some(s => s.chapter === currentChapter)).toBe(true);
 
 **Interfaces:** reuse Task 2's `scripts/build-identity.ts`. Complete release hash covers sorted production paths plus bytes including final `sw.js` and `offline-manifest.json`; cache revision separately includes the worker template to avoid circular self-hashing. Browser report config metadata records `releaseContentSha256` for its actual production output. Packaging requires full passing run and identical digest, rather than relying on index mtime as identity. A worker-only or manifest-only change must invalidate an old report.
 
-- [ ] Add regression fixtures: valid A digest with complete passing B browser report is rejected; changing only worker bytes or manifest bytes also rejects the old report; matching A is accepted regardless of incidental file timestamps; missing identity, filtered/sharded/incomplete/flaky/skipped runs remain rejected.
+- [x] Add regression fixtures: valid A digest with complete passing B browser report is rejected; changing only worker bytes or manifest bytes also rejects the old report; matching A is accepted regardless of incidental file timestamps; missing identity, filtered/sharded/incomplete/flaky/skipped runs remain rejected.
 
 ```ts
 expect(() => verifyBrowserEvidence(reportForB, digestA, requiredSuites)).toThrow();
 expect(() => verifyBrowserEvidence(reportForA, digestA, requiredSuites)).not.toThrow();
 ```
 
-- [ ] Compute the production hash at browser configuration/run setup, record it with test-source identity if useful, and detect output changes during the run. Packaging recomputes current bytes and compares. Preserve document hashes and all existing package checks.
-- [ ] Run focused tests/typecheck, commit and report. No new competition package is claimed without separately refreshing and reviewing its PDF/materials.
+- [x] Compute the production hash at browser configuration/run setup, record it with test-source identity if useful, and detect output changes during the run. Packaging recomputes current bytes and compares. Preserve document hashes and all existing package checks. Review fix independently discovers the current Playwright project/file/title identities; reports missing a case fail even when their own totals remain consistent.
+- [x] Run focused tests/typecheck, commit and report. No new competition package is claimed without separately refreshing and reviewing its PDF/materials.
 
 ## Completion and evidence
 
