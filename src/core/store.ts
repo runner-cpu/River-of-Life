@@ -4,18 +4,38 @@ import { openProgressDatabase, readCurrentProgress } from './persistence';
 
 const SAVE_KEY = 'life-museum-save-v1';
 const UNLOCK_COST = 150;
-// Four-digit years retain historical/legacy formatting and leave the JS date
-// boundary unreachable. Imports receive a local revision, not the file's clock.
+// updatedAt doubles as a bounded local revision, not a trusted civil clock.
+// Serial-number ordering is unambiguous within half this ring (~5000 years).
+// Keep ordinary saved strings unchanged; only newly allocated revisions use ISO.
 const MIN_TIMESTAMP = -62167219200000;
 const MAX_TIMESTAMP = 253402300799999;
-// Recover clocks in the final supported year before using a snapshot for writes.
-// Healthy replicas outrank these clocks; if all copies have one, recover their
-// newest ledger with a fresh local clock and archive the original copies.
+const REVISION_RANGE = MAX_TIMESTAMP - MIN_TIMESTAMP + 1;
 const RECOVER_CLOCK_FROM = Date.parse('9999-01-01T00:00:00.000Z');
-function revisionAfter(timestamp: string): string {
-  const previous = Date.parse(timestamp);
-  const next = Math.max(Date.now(), previous + 1);
-  if (!Number.isSafeInteger(next) || next <= previous || next > MAX_TIMESTAMP) throw new Error('记录时间已超出可继续保存的安全范围，请导出备份后重新开始。');
+
+function revisionTime(timestamp: string): number {
+  const value = Date.parse(timestamp);
+  if (!Number.isSafeInteger(value) || value < MIN_TIMESTAMP || value > MAX_TIMESTAMP) throw new Error('记录中的时间戳无效或超出安全范围。');
+  return value;
+}
+
+export function compareProgressRevisions(a: string, b: string): number {
+  const first = revisionTime(a), second = revisionTime(b);
+  const distance = (first - second + REVISION_RANGE) % REVISION_RANGE;
+  if (!distance) return 0;
+  // Exactly half a ring has no chronological answer; use the greater numeric
+  // timestamp consistently, regardless of storage source or argument order.
+  if (distance === REVISION_RANGE / 2) return Math.sign(first - second);
+  return distance < REVISION_RANGE / 2 ? 1 : -1;
+}
+
+export function allocateProgressRevision(timestamp: string, now = Date.now()): string {
+  const previous = revisionTime(timestamp);
+  if (!Number.isSafeInteger(now) || now < MIN_TIMESTAMP || now > MAX_TIMESTAMP) throw new Error('当前时间超出保存记录的安全范围。');
+  const current = new Date(now).toISOString();
+  if (compareProgressRevisions(current, timestamp) > 0) return current;
+  // Both the increment and the ring span are safe integers, and both endpoints
+  // are valid JS dates. Wrapping is one strictly newer step in the same order.
+  const next = previous === MAX_TIMESTAMP ? MIN_TIMESTAMP : previous + 1;
   return new Date(next).toISOString();
 }
 const publishable = (s: Species) => s.status === 'published' && s.sources.length > 0;
@@ -124,7 +144,7 @@ export class GameStore {
     if (this.options.persist !== false && this.options.canWrite?.() === false) return false;
     // All public actions call this before touching the ledger, including actions
     // that later return early. Allocation failure cannot leave a partial award.
-    this.pendingRevision = revisionAfter(this.state.updatedAt);
+    this.pendingRevision = allocateProgressRevision(this.state.updatedAt);
     return true;
   }
   onNotice(fn: (message: string) => void) { this.notice = fn; this.pendingNotices.splice(0).forEach(fn); }
@@ -133,14 +153,14 @@ export class GameStore {
   async init() {
     if (this.options.persist === false) return;
     const candidates: Progress[] = [];
-    const clockRecovery: Progress[] = [];
     const validate = (value: unknown, source: string) => {
       try {
         const progress = validateProgress(value, this.species, this.questions);
+        candidates.push(progress);
         if (Date.parse(progress.updatedAt) >= RECOVER_CLOCK_FROM) {
-          clockRecovery.push(progress); this.notify(`${source}记录的时间过远，已保留原记录；将优先使用正常副本，或恢复进度并重建本地保存时间。`); return false;
+          this.notify(`${source}记录的时间过远，已保留原记录；将按本地修订顺序恢复，并在下次保存时更新记录时间。`); return false;
         }
-        candidates.push(progress); return true;
+        return true;
       }
       catch { this.notify(`${source}记录无效，已保留原记录；将尝试恢复另一份有效记录。`); return false; }
     };
@@ -156,11 +176,7 @@ export class GameStore {
       const database = await readCurrentProgress(this.db);
       if (database !== undefined && !validate(database, '数据库')) this.invalidDatabase = database;
     } catch { this.db?.close?.();this.db=undefined;this.notify('数据库暂不可用，已使用本地记录继续探索。建议导出一份备份。'); }
-    if (candidates.length) this.state = candidates.reduce((latest, candidate) => Date.parse(candidate.updatedAt) > Date.parse(latest.updatedAt) ? candidate : latest);
-    else if (clockRecovery.length) {
-      this.state = clockRecovery.reduce((latest, candidate) => Date.parse(candidate.updatedAt) > Date.parse(latest.updatedAt) ? candidate : latest);
-      this.state.updatedAt = new Date().toISOString();
-    }
+    if (candidates.length) this.state = candidates.reduce((latest, candidate) => compareProgressRevisions(candidate.updatedAt, latest.updatedAt) > 0 ? candidate : latest);
   }
   private changed(revision = this.pendingRevision!) {
     // Several learning actions can happen within one clock tick; keep revisions ordered.

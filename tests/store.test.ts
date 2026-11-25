@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { GameStore, validateProgress } from '../src/core/store';
+import { allocateProgressRevision, compareProgressRevisions, GameStore, validateProgress } from '../src/core/store';
 import { species } from '../src/content/species';
 import { questions } from '../src/content/questions';
 
@@ -161,6 +161,42 @@ describe('museum progression and economy', () => {
   });
 });
 
+describe('bounded progress revision ordering', () => {
+  const first = '0000-01-01T00:00:00.000Z', last = '9999-12-31T23:59:59.999Z';
+  const firstTime = Date.parse(first), lastTime = Date.parse(last), span = lastTime - firstTime + 1;
+
+  it.each([
+    ['October 30, 1996 12:00:00 GMT', '2026-11-25T00:00:00.000Z'],
+    ['9998-12-31T23:59:59.999Z', '9999-01-01T00:00:00.000Z'],
+    ['9999-12-31T23:59:59.998Z', last],
+    [last, first],
+    [last, '2026-11-25T00:00:00.000Z'],
+  ])('orders the forward transition from %s to %s consistently', (older, newer) => {
+    expect(compareProgressRevisions(newer, older)).toBe(1); expect(compareProgressRevisions(older, newer)).toBe(-1);
+  });
+
+  it('has deterministic source-independent ordering at exactly half the range', () => {
+    const middle = new Date(firstTime + span / 2).toISOString();
+    expect(compareProgressRevisions(middle, first)).toBe(1); expect(compareProgressRevisions(first, middle)).toBe(-1);
+    expect(compareProgressRevisions(allocateProgressRevision(first, Date.parse(middle)), first)).toBe(1);
+    expect(compareProgressRevisions(allocateProgressRevision(middle, firstTime), middle)).toBe(1);
+    expect(compareProgressRevisions('1996-10-30T12:00:00.000Z', 'October 30, 1996 12:00:00 GMT')).toBe(0);
+  });
+
+  it.each([first, '1996-10-30T12:00:00.000Z', '9998-12-31T23:59:59.999Z', last])('allocates a strictly newer valid revision from %s', previous => {
+    for (const now of [firstTime, Date.parse('2026-11-25T00:00:00.000Z'), lastTime]) {
+      const next = allocateProgressRevision(previous, now);
+      expect(compareProgressRevisions(next, previous)).toBe(1); expect(Number.isFinite(Date.parse(next))).toBe(true);
+      expect(Date.parse(next)).toBeGreaterThanOrEqual(firstTime); expect(Date.parse(next)).toBeLessThanOrEqual(lastTime);
+    }
+  });
+
+  it('wraps the terminal timestamp by exactly one revision when the wall clock cannot advance it', () => {
+    expect(allocateProgressRevision(last, lastTime)).toBe(first);
+    expect(allocateProgressRevision(first, lastTime)).toBe('0000-01-01T00:00:00.001Z');
+  });
+});
+
 describe('safe save handling', () => {
   it('guards every persistent mutation before changing state, notices or either storage copy', async () => {
     let writable = true;
@@ -237,7 +273,7 @@ describe('safe save handling', () => {
     const newer = { ...JSON.parse(original.export()), updatedAt: '9999-12-31T23:59:59.998Z' };
     storage.setItem(saveKey, JSON.stringify(older)); const database = databaseStorage(newer); storage.setItem.mockClear();
     const store = create(); await store.init();
-    expect(store.state.points).toBe(8); expect(store.state.read).toEqual([species[0].id]); expect(store.state.updatedAt).toBe('2026-11-25T00:00:00.000Z');
+    expect(store.state.points).toBe(8); expect(store.state.read).toEqual([species[0].id]); expect(store.state.updatedAt).toBe(newer.updatedAt);
     expect(storage.setItem).not.toHaveBeenCalled(); expect(database.put).not.toHaveBeenCalled();
     expect(storage.getItem(saveKey)).toBe(JSON.stringify(older)); expect(database.records.get('current')).toEqual(newer);
     store.observe(species[1].id); store.read(species[1].id); await Promise.resolve();
@@ -258,11 +294,30 @@ describe('safe save handling', () => {
     expect(() => next.read(species[1].id)).not.toThrow(); expect(next.state.points).toBe(16);
   });
 
-  it('allocates each action revision before any ledger changes and never saturates at a boundary', () => {
+  it.each(['local', 'database'] as const)('preserves the surviving write across clock recovery when %s fails', async failed => {
+    const original = create(); original.observe(species[0].id);
+    const starting = { ...JSON.parse(original.export()), updatedAt: '9998-12-31T23:59:59.999Z' };
+    vi.useFakeTimers(); vi.setSystemTime(new Date(starting.updatedAt));
+    storage.setItem(saveKey, JSON.stringify(starting)); const database = databaseStorage(starting);
+    const store = create(); await store.init(); expect(store.state.updatedAt).toBe(starting.updatedAt);
+    if (failed === 'local') storage.setItem.mockImplementation(() => { throw new Error('quota'); });
+    else database.abortNextWrite();
+    store.read(species[0].id); await Promise.resolve();
+    expect(store.state.updatedAt).toBe('9999-01-01T00:00:00.000Z');
+    const surviving = failed === 'local' ? database.records.get('current') : JSON.parse(storage.getItem(saveKey)!);
+    expect((surviving as { read: string[] }).read).toEqual([species[0].id]);
+    const next = create(); await next.init(); expect(next.state.read).toEqual([species[0].id]); expect(next.state.points).toBe(8);
+    next.observe(species[1].id); await Promise.resolve();
+    const final = create(); await final.init(); expect(final.state.points).toBe(13); expect(final.state.read).toEqual([species[0].id]);
+    expect(final.state.observed).toEqual([species[0].id, species[1].id]);
+  });
+
+  it('keeps a terminal revision writable by allocating a newer ring revision before each action', () => {
     const store = create(); store.state.updatedAt = '9999-12-31T23:59:59.999Z';
-    const before = store.export(); storage.setItem.mockClear();
     for (const action of [() => store.observe(species[0].id), () => store.settings({ projection: true }), () => store.import(create().export()), () => store.reset()]) {
-      expect(action).toThrow('安全范围'); expect(store.export()).toBe(before); expect(storage.setItem).not.toHaveBeenCalled();
+      const previous = store.state.updatedAt;
+      expect(action).not.toThrow(); expect(compareProgressRevisions(store.state.updatedAt, previous)).toBe(1);
+      expect(() => validateProgress(JSON.parse(store.export()), species, questions)).not.toThrow();
     }
   });
 
